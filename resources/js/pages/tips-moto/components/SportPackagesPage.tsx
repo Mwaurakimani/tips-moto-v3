@@ -1,14 +1,14 @@
-import { 
-  ArrowLeft,
-  ArrowRight,
-  Crown,
-  Zap,
-  CheckCircle,
-  Star,
-  Clock,
-  Target,
-  Shield,
-  Send
+import {
+    ArrowLeft,
+    ArrowRight,
+    Crown,
+    Zap,
+    CheckCircle,
+    Star,
+    Clock,
+    Target,
+    Shield,
+    Send, MessageCircle
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useState, useEffect } from 'react';
@@ -232,7 +232,7 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
         <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-8">
           Get access to our expert football predictions and start winning with Kenya's most trusted betting tips platform.
         </p>
-        
+
         {/* Stats */}
         <div className="flex flex-wrap justify-center gap-6 mb-12">
           <div className="text-center">
@@ -262,14 +262,14 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
                 </Badge>
               </div>
             )}
-            
+
             <CardHeader className="text-center pb-4">
               <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${pkg.color} flex items-center justify-center`}>
                 <Shield className="h-8 w-8 text-white" />
               </div>
               <CardTitle className="text-xl text-white">{pkg.name}</CardTitle>
               <CardDescription className="text-gray-400">{pkg.description}</CardDescription>
-              
+
               <div className="mt-4 space-y-2">
                 <div className="flex items-center justify-center space-x-2">
                   <span className="text-3xl font-bold text-white">{pkg.price}</span>
@@ -291,7 +291,7 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent className="space-y-6">
               <div className="space-y-3">
                 {pkg.features.map((feature, index) => (
@@ -301,12 +301,12 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
                   </div>
                 ))}
               </div>
-              
+
               <Button className={`w-full bg-gradient-to-r ${pkg.color} hover:opacity-90 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg`}>
                 Select {pkg.name}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
-              
+
 
             </CardContent>
           </Card>
@@ -364,10 +364,10 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
         <p className="text-gray-400 mb-6">
           Subscribe to get notified when {sportName.toLowerCase()} betting packages become available. We'll send you exclusive early access offers!
         </p>
-        
+
         <div className="flex flex-col sm:flex-row gap-3">
-          <input 
-            type="email" 
+          <input
+            type="email"
             placeholder="Enter your email address"
             className="flex-1 px-4 py-3 bg-black/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
           />
@@ -380,9 +380,9 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
 
       <div className="text-center">
         <p className="text-gray-400 mb-4">In the meantime, check out our football betting packages!</p>
-        <Button 
+        <Button
           onClick={onBackToSports}
-          variant="outline" 
+          variant="outline"
           className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
         >
           Browse Football Tips
@@ -395,7 +395,7 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <UserHeader 
+      <UserHeader
         currentPage="tips"
         onNavigateHome={() => {
           onBackToHome();
@@ -429,7 +429,7 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
       </main>
 
       {/* Footer */}
-      <UserFooter 
+      <UserFooter
         onNavigateHome={() => {
           onBackToHome();
           window.scrollTo({ top: 0, behavior: 'smooth' });

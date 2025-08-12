@@ -27,7 +27,9 @@ import { createAuthHandlers } from './pages/tips-moto/utils/auth-handlers';
 import { createMatchHandlers } from './pages/tips-moto/utils/match-handlers';
 
 interface AppContainerProps {
-  children?: React.ReactNode;
+    children?: React.ReactNode;
+    forceApp?: boolean;       // 👈 NEW: render full app shell even if children exist
+    showToaster?: boolean;    // 👈 optional: avoid double Toaster when nested
 }
 
 export default function AppContainer({ children }: AppContainerProps) {
