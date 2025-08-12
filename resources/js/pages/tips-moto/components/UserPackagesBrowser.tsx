@@ -1,0 +1,475 @@
+import { useState } from 'react';
+import { 
+  Package, 
+  Star, 
+  Clock, 
+  Target, 
+  Shield, 
+  CheckCircle, 
+  Crown,
+  Zap,
+  Filter,
+  Search,
+  CreditCard,
+  ArrowRight
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+
+interface UserPackagesBrowserProps {
+  allMatches: any[];
+  currentUser: any;
+}
+
+export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBrowserProps) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedDuration, setSelectedDuration] = useState('all');
+  const [selectedPackage, setSelectedPackage] = useState<any>(null);
+
+  // Package data from admin (matching SportPackagesPage)
+  const availablePackages = [
+    {
+      id: 1435,
+      name: 'Full-Time Scores Daily',
+      description: 'Professional match outcome predictions',
+      price: 99,
+      originalPrice: 149,
+      duration: 'Daily',
+      tips: '15 Tips',
+      accuracy: '88%+',
+      category: 'match-outcomes',
+      features: [
+        'Home/Away/Draw predictions',
+        'Double chance selections',
+        'Professional match analysis',
+        'Risk level indicators',
+        '24/7 Customer support'
+      ],
+      popular: false,
+      color: 'from-blue-500 to-blue-600'
+    },
+    {
+      id: 1436,
+      name: 'Full-Time Scores Weekly',
+      description: 'Complete weekly match predictions',
+      price: 599,
+      originalPrice: 899,
+      duration: 'Weekly',
+      tips: '17 Tips/Day',
+      accuracy: '90%+',
+      category: 'match-outcomes',
+      features: [
+        'Daily professional predictions',
+        'Multiple leagues coverage',
+        'Home/Away/Draw analysis',
+        'Double chance options',
+        'Risk assessment reports',
+        'Telegram VIP group access',
+        'Priority customer support'
+      ],
+      popular: true,
+      color: 'from-orange-500 to-red-500'
+    },
+    {
+      id: 1437,
+      name: 'Over & Under Markets Daily',
+      description: 'Goal-based market predictions',
+      price: 29,
+      originalPrice: 49,
+      duration: 'Daily',
+      tips: '5 Tips',
+      accuracy: '86%+',
+      category: 'goal-markets',
+      features: [
+        'Over/Under 1.5 goals',
+        'Over/Under 2.5 goals',
+        'Over/Under 3.5 goals',
+        'Goal market analysis',
+        'Low risk selections'
+      ],
+      popular: false,
+      color: 'from-green-500 to-green-600'
+    },
+    {
+      id: 1438,
+      name: 'Over & Under Markets Weekly',
+      description: 'Weekly goal market coverage',
+      price: 199,
+      originalPrice: 299,
+      duration: 'Weekly',
+      tips: '7 Tips/Day',
+      accuracy: '88%+',
+      category: 'goal-markets',
+      features: [
+        'Daily goal predictions',
+        'Multiple over/under markets',
+        'Statistical analysis',
+        'Form-based selections',
+        'WhatsApp support',
+        'Weekly performance reports'
+      ],
+      popular: false,
+      color: 'from-teal-500 to-teal-600'
+    },
+    {
+      id: 1439,
+      name: 'Mega Jackpot Prediction',
+      description: 'Multi-fixture jackpot tips',
+      price: 49,
+      originalPrice: 79,
+      duration: 'Weekly',
+      tips: '15 Fixtures',
+      accuracy: '85%+',
+      category: 'jackpots',
+      features: [
+        '15-fixture jackpot tips',
+        'Multiple outcome analysis',
+        'Risk-balanced selections',
+        'Jackpot-specific strategy',
+        'Historical performance data'
+      ],
+      popular: false,
+      color: 'from-purple-500 to-purple-600'
+    },
+    {
+      id: 1440,
+      name: 'Daily Jackpot Premium',
+      description: 'Daily multi-bet jackpot tips',
+      price: 39,
+      originalPrice: 59,
+      duration: 'Daily',
+      tips: '13 Fixtures',
+      accuracy: '87%+',
+      category: 'jackpots',
+      features: [
+        '13-fixture daily jackpot',
+        'Professional analysis',
+        'Multi-bet strategy',
+        'Fixture-specific tips',
+        'Daily performance tracking'
+      ],
+      popular: false,
+      color: 'from-indigo-500 to-indigo-600'
+    },
+    {
+      id: 1443,
+      name: 'Both Teams Score Daily',
+      description: 'BTTS specialized predictions',
+      price: 39,
+      originalPrice: 59,
+      duration: 'Daily',
+      tips: '8 Tips',
+      accuracy: '89%+',
+      category: 'btts',
+      features: [
+        'Both teams to score tips',
+        'Goal/No Goal analysis',
+        'Team scoring patterns',
+        'Defensive analysis',
+        'High accuracy selections'
+      ],
+      popular: false,
+      color: 'from-red-500 to-red-600'
+    },
+    {
+      id: 1444,
+      name: 'Goal Goal/No Goal Weekly',
+      description: 'Weekly BTTS comprehensive package',
+      price: 149,
+      originalPrice: 229,
+      duration: 'Weekly',
+      tips: '10 Tips/Day',
+      accuracy: '91%+',
+      category: 'btts',
+      features: [
+        'Daily BTTS predictions',
+        'GG/NG market analysis',
+        'Team form assessment',
+        'Scoring statistics',
+        'Weekly strategy reports',
+        'Telegram group access'
+      ],
+      popular: false,
+      color: 'from-pink-500 to-pink-600'
+    },
+    {
+      id: 1447,
+      name: 'Weekend Accumulator',
+      description: 'High-value weekend acca tips',
+      price: 199,
+      originalPrice: 299,
+      duration: 'Weekly',
+      tips: '15 Tips',
+      accuracy: '84%+',
+      category: 'accumulators',
+      features: [
+        'Weekend accumulator bets',
+        'High-value selections',
+        'Multi-league coverage',
+        'Accumulator strategy',
+        'Risk management advice',
+        'Premium analysis reports'
+      ],
+      popular: true,
+      color: 'from-yellow-500 to-orange-500'
+    }
+  ];
+
+  // Filter packages based on search and filters
+  const filteredPackages = availablePackages.filter(pkg => {
+    const matchesSearch = pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || pkg.category === selectedCategory;
+    const matchesDuration = selectedDuration === 'all' || pkg.duration.toLowerCase() === selectedDuration;
+    
+    return matchesSearch && matchesCategory && matchesDuration;
+  });
+
+  const handlePurchase = (packageData: any) => {
+    // Mock purchase logic - in real app this would call payment API
+    console.log('Purchasing package:', packageData);
+    setSelectedPackage(null);
+    // Show success toast or redirect to payment
+  };
+
+  return (
+    <div className="space-y-6 pb-20 xl:pb-6">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Browse Packages</h2>
+          <p className="text-muted-foreground">Discover and purchase betting tip packages</p>
+        </div>
+        
+        {/* User's current subscription info */}
+        <Card className="lg:w-80 border-none shadow-lg bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/30 dark:to-red-950/30">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-orange-500/20 rounded-full">
+                <Crown className="h-5 w-5 text-orange-500" />
+              </div>
+              <div>
+                <p className="font-semibold text-orange-900 dark:text-orange-100">{currentUser.subscriptionTier} Member</p>
+                <p className="text-sm text-orange-700 dark:text-orange-300">Access to premium tips</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <Card className="border-none shadow-lg">
+        <CardContent className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search packages..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="match-outcomes">Match Outcomes</SelectItem>
+                <SelectItem value="goal-markets">Goal Markets</SelectItem>
+                <SelectItem value="jackpots">Jackpots</SelectItem>
+                <SelectItem value="btts">BTTS</SelectItem>
+                <SelectItem value="accumulators">Accumulators</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedDuration} onValueChange={setSelectedDuration}>
+              <SelectTrigger>
+                <SelectValue placeholder="Duration" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Durations</SelectItem>
+                <SelectItem value="daily">Daily</SelectItem>
+                <SelectItem value="weekly">Weekly</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button variant="outline" className="w-full">
+              <Filter className="h-4 w-4 mr-2" />
+              More Filters
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Packages Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredPackages.map((pkg) => (
+          <Card key={pkg.id} className={`relative border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 ${pkg.popular ? 'ring-2 ring-orange-500/30' : ''}`}>
+            {pkg.popular && (
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1">
+                  <Crown className="h-3 w-3 mr-1" />
+                  Most Popular
+                </Badge>
+              </div>
+            )}
+            
+            <CardHeader className="text-center pb-4">
+              <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${pkg.color} flex items-center justify-center`}>
+                <Package className="h-8 w-8 text-white" />
+              </div>
+              
+              <CardTitle className="text-lg">{pkg.name}</CardTitle>
+              <p className="text-sm text-muted-foreground">{pkg.description}</p>
+              
+              <div className="mt-4 space-y-2">
+                <div className="flex items-center justify-center space-x-2">
+                  <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                    KES {pkg.price}
+                  </span>
+                  <span className="text-lg text-gray-500 line-through">
+                    KES {pkg.originalPrice}
+                  </span>
+                </div>
+                
+                <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
+                  <span className="flex items-center">
+                    <Clock className="h-3 w-3 mr-1" />
+                    {pkg.duration}
+                  </span>
+                  <span className="flex items-center">
+                    <Target className="h-3 w-3 mr-1" />
+                    {pkg.tips}
+                  </span>
+                  <span className="flex items-center">
+                    <Star className="h-3 w-3 mr-1" />
+                    {pkg.accuracy}
+                  </span>
+                </div>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                {pkg.features.slice(0, 3).map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                    <span className="text-sm">{feature}</span>
+                  </div>
+                ))}
+                {pkg.features.length > 3 && (
+                  <p className="text-sm text-muted-foreground">
+                    +{pkg.features.length - 3} more features
+                  </p>
+                )}
+              </div>
+              
+              <Dialog open={selectedPackage?.id === pkg.id} onOpenChange={(open) => !open && setSelectedPackage(null)}>
+                <DialogTrigger asChild>
+                  <Button 
+                    className={`w-full bg-gradient-to-r ${pkg.color} hover:opacity-90 text-white`}
+                    onClick={() => setSelectedPackage(pkg)}
+                  >
+                    View Details
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </DialogTrigger>
+                
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl">{pkg.name}</DialogTitle>
+                    <DialogDescription>
+                      View detailed information about this betting tips package and make a purchase.
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-6">
+                    <div className="text-center">
+                      <div className={`w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${pkg.color} flex items-center justify-center`}>
+                        <Package className="h-10 w-10 text-white" />
+                      </div>
+                      <p className="text-muted-foreground mb-4">{pkg.description}</p>
+                      
+                      <div className="flex items-center justify-center space-x-2 mb-4">
+                        <span className="text-3xl font-bold">KES {pkg.price}</span>
+                        <span className="text-xl text-muted-foreground line-through">KES {pkg.originalPrice}</span>
+                        <Badge className="bg-green-500 text-white">
+                          {Math.round(((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100)}% OFF
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <Clock className="h-5 w-5 mx-auto mb-1 text-blue-500" />
+                        <p className="text-sm font-medium">{pkg.duration}</p>
+                        <p className="text-xs text-muted-foreground">Duration</p>
+                      </div>
+                      <div>
+                        <Target className="h-5 w-5 mx-auto mb-1 text-green-500" />
+                        <p className="text-sm font-medium">{pkg.tips}</p>
+                        <p className="text-xs text-muted-foreground">Tips</p>
+                      </div>
+                      <div>
+                        <Star className="h-5 w-5 mx-auto mb-1 text-yellow-500" />
+                        <p className="text-sm font-medium">{pkg.accuracy}</p>
+                        <p className="text-xs text-muted-foreground">Accuracy</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold mb-3">What's Included:</h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {pkg.features.map((feature, index) => (
+                          <div key={index} className="flex items-center space-x-2">
+                            <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            <span className="text-sm">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex space-x-3">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => setSelectedPackage(null)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        className={`flex-1 bg-gradient-to-r ${pkg.color} hover:opacity-90 text-white`}
+                        onClick={() => handlePurchase(pkg)}
+                      >
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        Purchase Now
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {filteredPackages.length === 0 && (
+        <Card className="text-center py-12">
+          <CardContent>
+            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No packages found</h3>
+            <p className="text-muted-foreground">Try adjusting your search or filters</p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
