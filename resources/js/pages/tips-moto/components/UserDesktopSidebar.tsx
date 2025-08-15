@@ -1,7 +1,7 @@
-import { 
-  Home, 
-  Package, 
-  Target, 
+import {
+  Home,
+  Package,
+  Target,
   User,
   TrendingUp,
   Crown
@@ -19,7 +19,7 @@ interface UserDesktopSidebarProps {
 export function UserDesktopSidebar({ currentPage, onPageChange, currentUser, isOpen }: UserDesktopSidebarProps) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'packages', label: 'Packages', icon: Package },
+    // { id: 'packages', label: 'Packages', icon: Package },
     { id: 'my-tips', label: 'My Tips', icon: Target },
     { id: 'account', label: 'Account', icon: User },
   ];
@@ -52,8 +52,8 @@ export function UserDesktopSidebar({ currentPage, onPageChange, currentUser, isO
               </p>
               <div className="flex items-center space-x-2 mt-1">
                 <Badge className={`text-xs ${
-                  currentUser?.subscriptionTier === 'VIP' 
-                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white' 
+                  currentUser?.subscriptionTier === 'VIP'
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white'
                     : 'bg-blue-500 text-white'
                 }`}>
                   {currentUser?.subscriptionTier === 'VIP' && <Crown className="h-3 w-3 mr-1" />}
@@ -73,7 +73,7 @@ export function UserDesktopSidebar({ currentPage, onPageChange, currentUser, isO
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentPage === item.id;
-              
+
               return (
                 <li key={item.id}>
                   <button
@@ -94,22 +94,6 @@ export function UserDesktopSidebar({ currentPage, onPageChange, currentUser, isO
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-orange-500/20">
-          <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/30 dark:to-red-950/30 rounded-xl p-4">
-            <div className="flex items-center space-x-2 mb-2">
-              <Crown className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-              <span className="font-medium text-orange-900 dark:text-orange-100 text-sm">
-                Upgrade to VIP
-              </span>
-            </div>
-            <p className="text-xs text-orange-700 dark:text-orange-300 mb-3">
-              Get access to premium tips and exclusive features
-            </p>
-            <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-medium py-2 rounded-lg hover:from-orange-600 hover:to-red-600 transition-all">
-              Upgrade Now
-            </button>
-          </div>
-        </div>
       </div>
     </aside>
   );

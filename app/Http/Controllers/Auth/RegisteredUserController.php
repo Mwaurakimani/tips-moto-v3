@@ -30,21 +30,26 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        $data = $request->validate([
+            'firstName' => 'required|string|max:120',
+            'lastName' => 'required|string|max:120',
+            'phone' => 'required|string|max:32|unique:users,phone',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+        $fullName = trim($data['firstName'] . ' ' . $data['lastName']);
+
+        $user = \App\Models\User::create([
+            'first_name' => $data['firstName'],
+            'last_name' => $data['lastName'],
+            'phone' => $data['phone'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
         ]);
 
-        event(new Registered($user));
-
-        Auth::login($user);
+        Auth::login($user); // Sanctum session login
+        $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

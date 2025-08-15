@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { 
-  Package, 
-  Star, 
-  Clock, 
-  Target, 
-  Shield, 
-  CheckCircle, 
+import {
+  Package,
+  Star,
+  Clock,
+  Target,
+  Shield,
+  CheckCircle,
   Crown,
   Zap,
   Filter,
@@ -226,14 +226,14 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                          pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || pkg.category === selectedCategory;
     const matchesDuration = selectedDuration === 'all' || pkg.duration.toLowerCase() === selectedDuration;
-    
+
     return matchesSearch && matchesCategory && matchesDuration;
   });
 
   const handlePurchase = (packageData: any) => {
+      alert("You are currently on the free package. Enjoy Free tips for the next 3 Days")
     // Mock purchase logic - in real app this would call payment API
-    console.log('Purchasing package:', packageData);
-    setSelectedPackage(null);
+    // setSelectedPackage(null);
     // Show success toast or redirect to payment
   };
 
@@ -245,21 +245,21 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Browse Packages</h2>
           <p className="text-muted-foreground">Discover and purchase betting tip packages</p>
         </div>
-        
+
         {/* User's current subscription info */}
-        <Card className="lg:w-80 border-none shadow-lg bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/30 dark:to-red-950/30">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-orange-500/20 rounded-full">
-                <Crown className="h-5 w-5 text-orange-500" />
-              </div>
-              <div>
-                <p className="font-semibold text-orange-900 dark:text-orange-100">{currentUser.subscriptionTier} Member</p>
-                <p className="text-sm text-orange-700 dark:text-orange-300">Access to premium tips</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/*<Card className="lg:w-80 border-none shadow-lg bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/30 dark:to-red-950/30">*/}
+        {/*  <CardContent className="p-4">*/}
+        {/*    <div className="flex items-center space-x-3">*/}
+        {/*      <div className="p-2 bg-orange-500/20 rounded-full">*/}
+        {/*        <Crown className="h-5 w-5 text-orange-500" />*/}
+        {/*      </div>*/}
+        {/*      <div>*/}
+        {/*        <p className="font-semibold text-orange-900 dark:text-orange-100">{currentUser.subscriptionTier} Member</p>*/}
+        {/*        <p className="text-sm text-orange-700 dark:text-orange-300">Access to premium tips</p>*/}
+        {/*      </div>*/}
+        {/*    </div>*/}
+        {/*  </CardContent>*/}
+        {/*</Card>*/}
       </div>
 
       {/* Filters */}
@@ -275,7 +275,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                 className="pl-10"
               />
             </div>
-            
+
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
               <SelectTrigger>
                 <SelectValue placeholder="Category" />
@@ -301,10 +301,10 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
               </SelectContent>
             </Select>
 
-            <Button variant="outline" className="w-full">
-              <Filter className="h-4 w-4 mr-2" />
-              More Filters
-            </Button>
+            {/*<Button variant="outline" className="w-full">*/}
+            {/*  <Filter className="h-4 w-4 mr-2" />*/}
+            {/*  More Filters*/}
+            {/*</Button>*/}
           </div>
         </CardContent>
       </Card>
@@ -321,15 +321,15 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                 </Badge>
               </div>
             )}
-            
+
             <CardHeader className="text-center pb-4">
               <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${pkg.color} flex items-center justify-center`}>
                 <Package className="h-8 w-8 text-white" />
               </div>
-              
+
               <CardTitle className="text-lg">{pkg.name}</CardTitle>
               <p className="text-sm text-muted-foreground">{pkg.description}</p>
-              
+
               <div className="mt-4 space-y-2">
                 <div className="flex items-center justify-center space-x-2">
                   <span className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -339,7 +339,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                     KES {pkg.originalPrice}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
                   <span className="flex items-center">
                     <Clock className="h-3 w-3 mr-1" />
@@ -356,7 +356,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 {pkg.features.slice(0, 3).map((feature, index) => (
@@ -371,10 +371,10 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                   </p>
                 )}
               </div>
-              
+
               <Dialog open={selectedPackage?.id === pkg.id} onOpenChange={(open) => !open && setSelectedPackage(null)}>
                 <DialogTrigger asChild>
-                  <Button 
+                  <Button
                     className={`w-full bg-gradient-to-r ${pkg.color} hover:opacity-90 text-white`}
                     onClick={() => setSelectedPackage(pkg)}
                   >
@@ -382,7 +382,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 </DialogTrigger>
-                
+
                 <DialogContent className="max-w-2xl">
                   <DialogHeader>
                     <DialogTitle className="text-xl">{pkg.name}</DialogTitle>
@@ -390,14 +390,14 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                       View detailed information about this betting tips package and make a purchase.
                     </DialogDescription>
                   </DialogHeader>
-                  
+
                   <div className="space-y-6">
                     <div className="text-center">
                       <div className={`w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${pkg.color} flex items-center justify-center`}>
                         <Package className="h-10 w-10 text-white" />
                       </div>
                       <p className="text-muted-foreground mb-4">{pkg.description}</p>
-                      
+
                       <div className="flex items-center justify-center space-x-2 mb-4">
                         <span className="text-3xl font-bold">KES {pkg.price}</span>
                         <span className="text-xl text-muted-foreground line-through">KES {pkg.originalPrice}</span>
@@ -438,14 +438,14 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                     </div>
 
                     <div className="flex space-x-3">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         className="flex-1"
                         onClick={() => setSelectedPackage(null)}
                       >
                         Cancel
                       </Button>
-                      <Button 
+                      <Button
                         className={`flex-1 bg-gradient-to-r ${pkg.color} hover:opacity-90 text-white`}
                         onClick={() => handlePurchase(pkg)}
                       >

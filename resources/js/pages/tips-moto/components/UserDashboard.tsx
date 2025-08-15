@@ -17,13 +17,13 @@ interface UserDashboardProps {
   currentUser?: any;
 }
 
-export function UserDashboard({ 
-  onBackToHomepage, 
-  onLogout, 
-  allMatches, 
-  userEmail = "user@example.com", 
-  userName = "John Doe", 
-  currentUser: propCurrentUser 
+export function UserDashboard({
+  onBackToHomepage,
+  onLogout,
+  allMatches,
+  userEmail = "user@example.com",
+  userName = "John Doe",
+  currentUser: propCurrentUser
 }: UserDashboardProps) {
   const [currentPage, setCurrentPage] = useState('dashboard');
 
@@ -32,7 +32,7 @@ export function UserDashboard({
     name: userName,
     email: userEmail,
     avatar: '',
-    subscriptionTier: propCurrentUser?.subscriptionStatus === 'trial' ? 'Trial' : 'VIP',
+    subscriptionTier: propCurrentUser?.subscriptionStatus === 'VIP' ? 'VIP' : 'Trial',
     subscriptionStatus: propCurrentUser?.subscriptionStatus || 'active',
     subscriptionExpiry: '2025-02-15',
     totalSpent: 2450,
@@ -48,7 +48,7 @@ export function UserDashboard({
       case 'packages':
         return <UserPackagesBrowser allMatches={allMatches} currentUser={currentUser} />;
       case 'my-tips':
-        return <UserMyTips allMatches={allMatches} currentUser={currentUser} />;
+        return <UserMyTips />;
       case 'account':
         return <UserAccountPage currentUser={currentUser} />;
       default:

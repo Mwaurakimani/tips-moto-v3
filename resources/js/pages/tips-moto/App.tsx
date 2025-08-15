@@ -20,8 +20,6 @@ import { UserLoginPage } from './components/UserLoginPage';
 import { UserSignUpPage } from './components/UserSignUpPage';
 import { Toaster } from './components/ui/sonner';
 
-console.log("test")
-
 // Import utilities
 import { getTodayDateString, getYesterdayDateString } from './utils/date-utils';
 import { generateMatches, markTodaysFreeTips } from './utils/match-data';
@@ -38,62 +36,39 @@ export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
-  
+
   // Global state for matches - diverse dataset
   const [allMatches, setAllMatches] = useState(() => {
     const matches = generateMatches();
     // Mark exactly 3 random tips from today as free
     markTodaysFreeTips(matches);
-    
+
     // Enhanced Debug: Log detailed test data verification
-    console.log('=== Enhanced Test Data Verification ===');
-    console.log('Total matches generated:', matches.length);
-    
+
     const todayString = getTodayDateString();
     const yesterdayString = getYesterdayDateString();
-    
-    console.log('Today\'s date string:', todayString);
-    console.log('Yesterday\'s date string:', yesterdayString);
-    
+
     const todayMatches = matches.filter(match => match.date === todayString);
     const yesterdayMatches = matches.filter(match => match.date === yesterdayString);
-    
-    console.log('Today\'s matches:', todayMatches.length);
-    console.log('Yesterday\'s matches:', yesterdayMatches.length);
-    
+
     if (yesterdayMatches.length > 0) {
-      console.log('Yesterday\'s match details:', yesterdayMatches.map(m => ({
-        id: m.id,
-        teams: `${m.homeTeam} vs ${m.awayTeam}`,
-        league: m.league,
-        tips: m.tipsData.length,
-        winningTips: m.tipsData.filter((tip: any) => tip.winningStatus === 'won').length
-      })));
-      
+
       const allYesterdayTips = yesterdayMatches.reduce((total, match) => total + match.tipsData.length, 0);
-      const winningYesterdayTips = yesterdayMatches.reduce((total, match) => 
+      const winningYesterdayTips = yesterdayMatches.reduce((total, match) =>
         total + match.tipsData.filter((tip: any) => tip.winningStatus === 'won').length, 0);
-      
-      console.log('Yesterday\'s total tips:', allYesterdayTips);
-      console.log('Yesterday\'s winning tips:', winningYesterdayTips);
+
     } else {
-      console.log('❌ No matches found for yesterday!');
     }
-    
+
     if (todayMatches.length > 0) {
-      const todayFreeTips = todayMatches.reduce((total, match) => 
+      const todayFreeTips = todayMatches.reduce((total, match) =>
         total + match.tipsData.filter((tip: any) => tip.free).length, 0);
-      console.log('Today\'s free tips:', todayFreeTips);
     }
-    
+
     // Sample recent matches for verification
     const recentMatches = matches.slice(0, 10);
-    console.log('Sample recent matches:', recentMatches.map(m => ({
-      date: m.date,
-      teams: `${m.homeTeam} vs ${m.awayTeam}`,
-      tips: m.tipsData.length
-    })));
-    
+
+
     return matches;
   });
 
@@ -107,9 +82,9 @@ export default function App() {
   const getTodaysFreeTips = () => {
     const todayDateString = getTodayDateString();
     const todayMatches = allMatches.filter(match => match.date === todayDateString);
-    
+
     const freeTips: any[] = [];
-    
+
     todayMatches.forEach(match => {
       match.tipsData.forEach((tip: any) => {
         if (tip.free) {
@@ -140,7 +115,7 @@ export default function App() {
       case 'matches':
         return (
           <div className="w-full">
-            <MatchesPage 
+            <MatchesPage
               matches={allMatches}
               onAddMatch={matchHandlers.handleAddMatch}
               onMatchSave={matchHandlers.handleMatchSave}
@@ -151,8 +126,8 @@ export default function App() {
       case 'tips':
         return (
           <div className="w-full">
-            <TipsPage 
-              matches={allMatches} 
+            <TipsPage
+              matches={allMatches}
               onTipUpdate={matchHandlers.handleTipUpdate}
               onViewHomepage={() => setAuthState('homepage')}
             />
@@ -185,7 +160,7 @@ export default function App() {
       case 'profile':
         return (
           <div className="w-full">
-            <ProfilePage 
+            <ProfilePage
               currentAdmin={currentAdmin}
               onPageChange={setCurrentPage}
             />
@@ -212,7 +187,7 @@ export default function App() {
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-                {currentPage === 'marketing' ? 'Marketing' : 
+                {currentPage === 'marketing' ? 'Marketing' :
                  currentPage === 'affiliate' ? 'Affiliate' :
                  currentPage === 'system' ? 'System' :
                  currentPage === 'model' ? 'Model' :
@@ -232,7 +207,7 @@ export default function App() {
     case 'adminLogin':
       return (
         <>
-          <AdminLoginPage 
+          <AdminLoginPage
             onAdminLogin={authHandlers.handleAdminLogin}
             onGoToUserLogin={() => setAuthState('userLogin')}
             onBackToHomepage={() => setAuthState('homepage')}
@@ -244,7 +219,7 @@ export default function App() {
     case 'userLogin':
       return (
         <>
-          <UserLoginPage 
+          <UserLoginPage
             onUserLogin={authHandlers.handleUserLogin}
             onGoToSignUp={() => setAuthState('userSignUp')}
             onGoToAdminLogin={() => setAuthState('adminLogin')}
@@ -257,7 +232,7 @@ export default function App() {
     case 'userSignUp':
       return (
         <>
-          <UserSignUpPage 
+          <UserSignUpPage
             onUserLogin={authHandlers.handleUserLogin}
             onGoToLogin={() => setAuthState('userLogin')}
             onGoToAdminLogin={() => setAuthState('adminLogin')}
@@ -270,7 +245,7 @@ export default function App() {
     case 'userDashboard':
       return (
         <>
-          <UserDashboard 
+          <UserDashboard
             onBackToHomepage={() => {
               setAuthState('homepage');
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -288,15 +263,15 @@ export default function App() {
     case 'adminDashboard':
       return (
         <div className="flex h-screen bg-gray-50 dark:bg-black">
-          <Sidebar 
-            collapsed={sidebarCollapsed} 
+          <Sidebar
+            collapsed={sidebarCollapsed}
             onToggle={setSidebarCollapsed}
             currentPage={currentPage}
             onPageChange={setCurrentPage}
           />
           <div className={`flex-1 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'} min-w-0`}>
-            <DashboardHeader 
-              currentPage={currentPage} 
+            <DashboardHeader
+              currentPage={currentPage}
               onPageChange={setCurrentPage}
               currentAdmin={currentAdmin}
               onGoToHomepage={() => setAuthState('homepage')}
@@ -314,8 +289,8 @@ export default function App() {
     default:
       return (
         <>
-          <UserHomepage 
-            onBackToAdmin={() => setAuthState('adminLogin')} 
+          <UserHomepage
+            onBackToAdmin={() => setAuthState('adminLogin')}
             todaysFreeTips={getTodaysFreeTips()}
             allMatches={allMatches}
             onUserSignIn={authHandlers.handleUserSignIn}

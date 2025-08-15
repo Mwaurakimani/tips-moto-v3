@@ -107,7 +107,6 @@ export function AddPackageDialog({ open, onClose, onAddPackage }: AddPackageDial
       resetForm();
       onClose();
     } catch (error) {
-      console.error('Error adding package:', error);
       toast.error('Failed to add package', {
         description: 'Please try again or contact support if the problem persists.'
       });

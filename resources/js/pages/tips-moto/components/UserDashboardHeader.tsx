@@ -27,9 +27,9 @@ interface UserDashboardHeaderProps {
   onBackToHomepage: () => void;
 }
 
-export function UserDashboardHeader({ 
-  currentUser, 
-  onLogout, 
+export function UserDashboardHeader({
+  currentUser,
+  onLogout,
   onBackToHomepage
 }: UserDashboardHeaderProps) {
   const { theme, toggleTheme } = useTheme();
@@ -66,7 +66,7 @@ export function UserDashboardHeader({
       <div className="flex h-16 items-center justify-between px-4 w-full">
         {/* Logo */}
         <div className="flex items-center">
-          <button 
+          <button
             onClick={onBackToHomepage}
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
@@ -96,49 +96,49 @@ export function UserDashboardHeader({
           </Button>
 
           {/* Notifications */}
-          <DropdownMenu open={notificationsOpen} onOpenChange={setNotificationsOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="relative">
-                <Bell className="h-4 w-4" />
-                {unreadCount > 0 && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-medium">{unreadCount}</span>
-                  </div>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              align="end" 
-              className="w-80 notification-dropdown"
-              sideOffset={8}
-            >
-              <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="font-semibold">Notifications</h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {unreadCount} unread notifications
-                </p>
-              </div>
-              
-              <div className="max-h-80 overflow-y-auto">
-                {mockNotifications.map((notification) => (
-                  <DropdownMenuItem
-                    key={notification.id}
-                    className={`p-4 cursor-pointer notification-item ${
-                      notification.unread ? 'notification-unread bg-orange-50/50 dark:bg-orange-950/20' : ''
-                    }`}
-                  >
-                    <div className="w-full">
-                      <div className="flex justify-between items-start mb-1">
-                        <p className="font-medium text-sm">{notification.title}</p>
-                        <span className="text-xs text-gray-500">{notification.time}</span>
-                      </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{notification.message}</p>
-                    </div>
-                  </DropdownMenuItem>
-                ))}
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/*<DropdownMenu open={notificationsOpen} onOpenChange={setNotificationsOpen}>*/}
+          {/*  <DropdownMenuTrigger asChild>*/}
+          {/*    <Button variant="ghost" size="sm" className="relative">*/}
+          {/*      <Bell className="h-4 w-4" />*/}
+          {/*      {unreadCount > 0 && (*/}
+          {/*        <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">*/}
+          {/*          <span className="text-xs text-white font-medium">{unreadCount}</span>*/}
+          {/*        </div>*/}
+          {/*      )}*/}
+          {/*    </Button>*/}
+          {/*  </DropdownMenuTrigger>*/}
+          {/*  <DropdownMenuContent */}
+          {/*    align="end" */}
+          {/*    className="w-80 notification-dropdown"*/}
+          {/*    sideOffset={8}*/}
+          {/*  >*/}
+          {/*    <div className="p-4 border-b border-gray-200 dark:border-gray-700">*/}
+          {/*      <h3 className="font-semibold">Notifications</h3>*/}
+          {/*      <p className="text-xs text-gray-500 dark:text-gray-400">*/}
+          {/*        {unreadCount} unread notifications*/}
+          {/*      </p>*/}
+          {/*    </div>*/}
+          {/*    */}
+          {/*    <div className="max-h-80 overflow-y-auto">*/}
+          {/*      {mockNotifications.map((notification) => (*/}
+          {/*        <DropdownMenuItem*/}
+          {/*          key={notification.id}*/}
+          {/*          className={`p-4 cursor-pointer notification-item ${*/}
+          {/*            notification.unread ? 'notification-unread bg-orange-50/50 dark:bg-orange-950/20' : ''*/}
+          {/*          }`}*/}
+          {/*        >*/}
+          {/*          <div className="w-full">*/}
+          {/*            <div className="flex justify-between items-start mb-1">*/}
+          {/*              <p className="font-medium text-sm">{notification.title}</p>*/}
+          {/*              <span className="text-xs text-gray-500">{notification.time}</span>*/}
+          {/*            </div>*/}
+          {/*            <p className="text-xs text-gray-600 dark:text-gray-400">{notification.message}</p>*/}
+          {/*          </div>*/}
+          {/*        </DropdownMenuItem>*/}
+          {/*      ))}*/}
+          {/*    </div>*/}
+          {/*  </DropdownMenuContent>*/}
+          {/*</DropdownMenu>*/}
 
           {/* User Menu */}
           <DropdownMenu>
@@ -162,12 +162,12 @@ export function UserDashboardHeader({
                 </div>
               </div>
               <DropdownMenuSeparator />
-              
+
               <div className="p-2">
                 <div className="flex items-center space-x-2 mb-2">
                   <Badge className={`${
-                    currentUser?.subscriptionTier === 'VIP' 
-                      ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white' 
+                    currentUser?.subscriptionTier === 'VIP'
+                      ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white'
                       : 'bg-blue-500 text-white'
                   }`}>
                     {currentUser?.subscriptionTier === 'VIP' && <Crown className="h-3 w-3 mr-1" />}
@@ -178,23 +178,23 @@ export function UserDashboardHeader({
                   }`} />
                 </div>
               </div>
-              
+
               <DropdownMenuSeparator />
-              
+
               <DropdownMenuItem className="cursor-pointer">
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              
+
               <DropdownMenuItem className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
-              
+
               <DropdownMenuSeparator />
-              
-              <DropdownMenuItem 
-                className="cursor-pointer text-red-600 dark:text-red-400" 
+
+              <DropdownMenuItem
+                className="cursor-pointer text-red-600 dark:text-red-400"
                 onClick={onLogout}
               >
                 <LogOut className="mr-2 h-4 w-4" />

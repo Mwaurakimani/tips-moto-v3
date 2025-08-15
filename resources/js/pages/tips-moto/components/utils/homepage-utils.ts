@@ -1,4 +1,6 @@
 // Date utility functions
+import { api } from '@/api/client';
+
 export const getYesterdayDateString = () => {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -13,9 +15,9 @@ export const getYesterdayDateString = () => {
 export const getYesterdaysWinningTips = (allMatches: any[]) => {
   const yesterdayDateString = getYesterdayDateString();
   const yesterdayMatches = allMatches.filter(match => match.date === yesterdayDateString);
-  
+
   const winningTips: any[] = [];
-  
+
   yesterdayMatches.forEach(match => {
     match.tipsData?.forEach((tip: any) => {
       if (tip.winningStatus === 'won') {
@@ -48,16 +50,37 @@ export const getYesterdaysWinningTips = (allMatches: any[]) => {
 };
 
 // Function to process today's free tips with fallback data
-export const processTodaysFreeTips = (todaysFreeTips: any[]) => {
-  return todaysFreeTips.length > 0 ? todaysFreeTips : [
-    {
-      match: 'No free tips available',
-      league: 'Check back tomorrow',
-      time: '---',
-      tip: 'Premium tips available',
-      odds: '---',
-      confidence: 'High',
-      free: false
+export const fetchAndProcessTodaysFreeTips = async () => {
+    try {
+        const res = await api.get('/api/tips/free-today');
+        const todaysFreeTips = res.data?.data ?? [];
+
+        return todaysFreeTips.length > 0
+            ? todaysFreeTips
+            : [
+                {
+                    match: 'No free tips available',
+                    league: 'Check back tomorrow',
+                    time: '---',
+                    tip: 'Premium tips available',
+                    odds: '---',
+                    confidence: 'High',
+                    free: false
+                }
+            ];
+    } catch (err) {
+        console.error('Error fetching free tips:', err);
+        return [
+            {
+                match: 'Error loading tips',
+                league: 'Try again later',
+                time: '---',
+                tip: '---',
+                odds: '---',
+                confidence: '---',
+                free: false
+            }
+        ];
     }
-  ];
 };
+

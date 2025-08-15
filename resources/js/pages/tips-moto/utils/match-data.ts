@@ -159,19 +159,19 @@ export const matchTimes = [
 // Generate tips for a match
 export const generateTipsForMatch = (isYesterday = false) => {
   const winningStatuses = ['pending', 'won', 'lost', 'void'];
-  
+
   // For yesterday's matches, heavily favor 'won' status to ensure we have winning tips to display
-  const winningStatusWeights = isYesterday 
+  const winningStatusWeights = isYesterday
     ? [0.1, 0.75, 0.1, 0.05] // 75% won for yesterday
     : [0.25, 0.45, 0.25, 0.05]; // Normal distribution for other dates
-    
+
   const riskLevels = ['low', 'mid', 'high'];
 
   // Helper function to get weighted random status
   const getWeightedRandomStatus = () => {
     const rand = Math.random();
     let cumulativeWeight = 0;
-    
+
     for (let i = 0; i < winningStatuses.length; i++) {
       cumulativeWeight += winningStatusWeights[i];
       if (rand <= cumulativeWeight) {
@@ -182,26 +182,26 @@ export const generateTipsForMatch = (isYesterday = false) => {
   };
 
   // For yesterday, generate more tips (4-6) to ensure we have enough winning ones
-  const numTips = isYesterday 
+  const numTips = isYesterday
     ? Math.floor(Math.random() * 3) + 4 // 4-6 tips
     : Math.floor(Math.random() * 4) + 2; // 2-5 tips
-    
+
   const selectedTips = [];
   const usedTipTypes = new Set(); // Prevent duplicate tip types for the same match
-  
+
   for (let i = 0; i < numTips; i++) {
     let tipIndex, tip;
     let attempts = 0;
-    
+
     // Try to get a unique tip type for this match
     do {
       tipIndex = Math.floor(Math.random() * tipTypes.length);
       tip = tipTypes[tipIndex];
       attempts++;
     } while (usedTipTypes.has(tip.type) && attempts < 10);
-    
+
     usedTipTypes.add(tip.type);
-    
+
     selectedTips.push({
       id: tipIdCounter++, // Use incrementing counter for truly unique IDs
       tipType: tip.type,
@@ -213,19 +213,19 @@ export const generateTipsForMatch = (isYesterday = false) => {
       free: false // All tips are premium by default
     });
   }
-  
+
   return selectedTips;
 };
 
 // Generate match data with diverse leagues and teams
 export const generateMatches = () => {
   const matches = [];
-  
+
   // Get date strings for realistic test data
   const recentDates = getRecentDateStrings(); // Past 7 days
   const futureDates = getFutureDateStrings(); // Next 30 days
   const allDates = [...recentDates, ...futureDates];
-  
+
   const todayDate = getTodayDateString();
   const yesterdayDate = getYesterdayDateString();
 
@@ -235,10 +235,10 @@ export const generateMatches = () => {
     const teams = teamsByLeague[league.name];
     const teamPair = teams[Math.floor(Math.random() * teams.length)];
     const randomTime = matchTimes[Math.floor(Math.random() * matchTimes.length)];
-    
+
     let selectedDate;
     let isYesterday = false;
-    
+
     // Ensure we have specific matches for testing
     if (i < 8) {
       // First 8 matches: 2 for today, 4 for yesterday, 2 for recent dates
@@ -255,12 +255,12 @@ export const generateMatches = () => {
       selectedDate = allDates[Math.floor(Math.random() * allDates.length)];
       isYesterday = selectedDate === yesterdayDate;
     }
-    
+
     // More realistic status distribution based on date
     const matchDate = new Date(selectedDate);
     const today = new Date();
     let randomStatus;
-    
+
     if (matchDate < today) {
       randomStatus = Math.random() > 0.1 ? 'completed' : 'cancelled';
     } else if (matchDate.toDateString() === today.toDateString()) {
@@ -271,7 +271,7 @@ export const generateMatches = () => {
     } else {
       randomStatus = 'pending';
     }
-    
+
     const tipsData = generateTipsForMatch(isYesterday);
     const dateTime = createDateTime(selectedDate, randomTime);
 
@@ -297,10 +297,10 @@ export const generateMatches = () => {
 export const markTodaysFreeTips = (matches: any[]) => {
   const todayDateString = getTodayDateString();
   const todayMatches = matches.filter(match => match.date === todayDateString);
-  
+
   // Collect all tips from today's matches
   const todayTips: { matchIndex: number; tipIndex: number; tip: any }[] = [];
-  
+
   todayMatches.forEach(match => {
     const matchIndex = matches.findIndex(m => m.id === match.id);
     match.tipsData.forEach((tip: any, tipIndex: number) => {
@@ -311,7 +311,7 @@ export const markTodaysFreeTips = (matches: any[]) => {
   // Randomly select 3 tips to make free (or all if less than 3)
   const tipsToMakeFree = Math.min(3, todayTips.length);
   const shuffledTips = [...todayTips].sort(() => Math.random() - 0.5);
-  
+
   for (let i = 0; i < tipsToMakeFree; i++) {
     const { matchIndex, tipIndex } = shuffledTips[i];
     matches[matchIndex].tipsData[tipIndex].free = true;

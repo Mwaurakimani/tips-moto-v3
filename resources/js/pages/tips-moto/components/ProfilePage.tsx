@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Calendar, Clock, Shield, Award, Activity, MapPin, Mail, Phone, Building, Users, CheckCircle, TrendingUp, BarChart3, Settings, Edit } from 'lucide-react';
+import { Calendar, Clock, Shield, Activity, Mail, Phone, Building, Users, CheckCircle, TrendingUp, BarChart3, Settings } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
@@ -22,7 +21,7 @@ interface ProfilePageProps {
   onPageChange: (page: string) => void;
 }
 
-export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
+export function ProfilePage({ currentAdmin }: ProfilePageProps) {
   const [activeTab, setActiveTab] = useState('overview');
 
   // Mock data for demonstration - in real app, this would come from API
@@ -157,7 +156,7 @@ export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
                   <div className="h-2 w-2 bg-white rounded-full"></div>
                 </div>
               </div>
-              
+
               <div className="space-y-2 flex-1">
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -174,7 +173,7 @@ export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
                     </Badge>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center space-x-2">
                     <Mail className="h-4 w-4" />
@@ -195,9 +194,9 @@ export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
                 </div>
               </div>
             </div>
-            
+
             <Separator />
-            
+
             <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3">
               <Shield className="h-4 w-4" />
               <span>Profile information is managed through Account Settings</span>
@@ -286,7 +285,7 @@ export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
                   </div>
                   <Progress value={94} className="h-2" />
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Response Time</span>
@@ -294,7 +293,7 @@ export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
                   </div>
                   <Progress value={87} className="h-2" />
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Security Compliance</span>
@@ -318,9 +317,9 @@ export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
                       {profileStats.privilegeLevel}
                     </Badge>
                   </div>
-                  
+
                   <Separator />
-                  
+
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Active Permissions</span>
                     <div className="flex flex-wrap gap-2">
@@ -331,9 +330,9 @@ export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
                       ))}
                     </div>
                   </div>
-                  
+
                   <Separator />
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Projects Overseen</span>
                     <span className="text-sm text-muted-foreground">{profileStats.projectsOverseen}</span>
@@ -398,8 +397,8 @@ export function ProfilePage({ currentAdmin, onPageChange }: ProfilePageProps) {
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                           {achievement.description}
                         </p>
-                        <Badge 
-                          variant={achievement.earned ? "default" : "secondary"} 
+                        <Badge
+                          variant={achievement.earned ? "default" : "secondary"}
                           className={`mt-2 ${achievement.earned ? 'bg-orange-500 hover:bg-orange-600' : ''}`}
                         >
                           {achievement.earned ? 'Earned' : 'In Progress'}

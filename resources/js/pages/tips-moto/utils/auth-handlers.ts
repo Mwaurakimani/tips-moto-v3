@@ -1,4 +1,5 @@
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
+import { router } from '@inertiajs/react';
 
 // Authentication handler factory
 export const createAuthHandlers = (
@@ -19,14 +20,26 @@ export const createAuthHandlers = (
     toast.success(`Welcome, ${adminData.firstName}!`);
   };
 
-  const handleLogout = () => {
-    setCurrentUser(null);
-    setCurrentAdmin(null);
-    setAuthState('homepage');
-    toast.success('Logged out successfully');
-  };
 
-  // Handle sign in action from homepage
+    const handleLogout = () => {
+        // 1️⃣ Call Laravel logout
+        router.post(route('logout'), {}, {
+            onSuccess: () => {
+                // 2️⃣ Reset local state after server confirms logout
+                setCurrentUser(null);
+                setCurrentAdmin(null);
+                setAuthState('homepage');
+                toast.success('Logged out successfully');
+            },
+            onError: (errors) => {
+                toast.error('Logout failed. Please try again.');
+                console.error(errors);
+            }
+        });
+    };
+
+
+    // Handle sign in action from homepage
   const handleUserSignIn = () => {
     setAuthState('userLogin');
   };

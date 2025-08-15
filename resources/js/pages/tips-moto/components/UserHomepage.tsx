@@ -6,16 +6,16 @@ import { UserFooter } from './UserFooter';
 import { HeroSection } from './sections/HeroSection';
 import { FeaturesVisualContent } from './sections/FeaturesVisualContent';
 import { stats, features, testimonials } from './constants/homepage-data';
-import { getYesterdaysWinningTips, processTodaysFreeTips } from './utils/homepage-utils';
+import { fetchAndProcessTodaysFreeTips, getYesterdaysWinningTips } from './utils/homepage-utils';
 
 // Import remaining icons and components for other sections
-import { 
-  TrendingUp, 
-  Shield, 
-  Users, 
-  Trophy, 
-  Star, 
-  ArrowRight, 
+import {
+  TrendingUp,
+  Shield,
+  Users,
+  Trophy,
+  Star,
+  ArrowRight,
   Target,
   BarChart3,
   Clock,
@@ -48,13 +48,12 @@ import { Label } from './ui/label';
 
 interface UserHomepageProps {
   onBackToAdmin: () => void;
-  todaysFreeTips: any[];
   allMatches?: any[];
   onUserSignIn?: () => void;
   onUserGetStarted?: () => void;
 }
 
-export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], onUserSignIn, onUserGetStarted }: UserHomepageProps) {
+export function UserHomepage({ onBackToAdmin, allMatches = [], onUserSignIn, onUserGetStarted }: UserHomepageProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
   const [activeFeature, setActiveFeature] = useState(0);
@@ -64,10 +63,23 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
   const [betAmount, setBetAmount] = useState([500]); // KES
   const [tipsPerWeek, setTipsPerWeek] = useState([10]);
   const [timeFrame, setTimeFrame] = useState([12]); // months
+  const [freeTips, setFreeTips] = useState<[]>([]);
 
   const yesterdaysWinningTips = getYesterdaysWinningTips(allMatches);
-  const featuredTips = processTodaysFreeTips(todaysFreeTips);
 
+  useEffect(() => {
+    let on = true; // cleanup guard
+    (async () => {
+      try {
+        const fetched = await fetchAndProcessTodaysFreeTips();
+        if (on) setFreeTips(fetched);       // ✅ set with fetched result
+      } catch (err) {
+        console.error('Failed to load free tips', err);
+        if (on) setFreeTips([]);            // fallback
+      }
+    })();
+    return () => { on = false; };
+  }, []);
   // Calculate profit projection
   const calculateProfit = () => {
     const avgSuccessRate = 0.88; // 88% success rate
@@ -75,13 +87,13 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
     const totalTips = tipsPerWeek[0] * 4.33 * timeFrame[0]; // Tips per week * weeks per month * months
     const successfulTips = Math.floor(totalTips * avgSuccessRate);
     const failedTips = totalTips - successfulTips;
-    
+
     const totalWinnings = successfulTips * betAmount[0] * (avgOdds - 1);
     const totalLosses = failedTips * betAmount[0];
     const netProfit = totalWinnings - totalLosses;
     const totalInvestment = totalTips * betAmount[0];
     const roi = ((netProfit / totalInvestment) * 100);
-    
+
     return {
       totalTips,
       successfulTips,
@@ -134,7 +146,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
       const featureHeight = sectionHeight / features.length;
       const activeIndex = Math.floor((scrollY - sectionTop) / featureHeight);
       const boundedIndex = Math.max(0, Math.min(features.length - 1, activeIndex));
-      
+
       if (boundedIndex !== activeFeature) {
         setActiveFeature(boundedIndex);
       }
@@ -148,11 +160,11 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
 
   // Show tips page if selected
   if (currentPage === 'blank') {
-    return <UserTipsPage 
+    return <UserTipsPage
       onBackToHome={() => {
         setCurrentPage('home');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      }} 
+      }}
       onBackToAdmin={onBackToAdmin}
       onNavigateAbout={() => setCurrentPage('about')}
       onSignIn={handleSignIn}
@@ -182,7 +194,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
   return (
     <div className="min-h-screen bg-black">
       {/* Header */}
-      <UserHeader 
+      <UserHeader
         currentPage="home"
         onNavigateHome={() => {
           setCurrentPage('home');
@@ -195,10 +207,10 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
         onGetStarted={handleGetStarted}
       />
 
-      {/* Hero Section */}
-      <HeroSection 
-        featuredTips={featuredTips}
-        todaysFreeTips={todaysFreeTips}
+       {/*Hero Section*/}
+      <HeroSection
+        featuredTips={freeTips}
+        todaysFreeTips={freeTips}
         onSignIn={handleSignIn}
         onGetStarted={handleGetStarted}
         onViewTips={handleViewTips}
@@ -245,7 +257,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
             <div className="space-y-8">
               <div className="bg-gray-900/50 backdrop-blur-sm rounded-3xl p-8 border border-gray-700/50">
                 <h3 className="text-2xl font-bold text-white mb-8">Customize Your Parameters</h3>
-                
+
                 {/* Bet Amount Slider */}
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between items-center">
@@ -322,7 +334,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
                       KES {calculations.netProfit > 0 ? '+' : ''}{calculations.netProfit.toLocaleString()}
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div className="bg-black/30 rounded-xl p-4">
                       <div className="text-green-400 font-bold text-xl">{calculations.roi}%</div>
@@ -404,7 +416,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
                   <div className="text-sm text-gray-400">
                     <p className="font-medium text-white mb-2">Important Disclaimer</p>
                     <p>
-                      These calculations are projections based on historical performance and are not guaranteed. 
+                      These calculations are projections based on historical performance and are not guaranteed.
                       Past performance does not guarantee future results. Please bet responsibly and only with money you can afford to lose.
                     </p>
                   </div>
@@ -412,8 +424,8 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
               </div>
 
               {/* CTA Button */}
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 onClick={handleGetStarted}
                 className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 text-lg rounded-xl shadow-lg shadow-orange-500/25"
               >
@@ -426,18 +438,18 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
       </section>
 
       {/* Features Section */}
-      <section 
-        id="features" 
+      <section
+        id="features"
         ref={featuresRef}
         className="bg-black features-section"
-        style={{ 
-          '--features-count': features.length 
+        style={{
+          '--features-count': features.length
         } as React.CSSProperties}
       >
         <div className="sticky top-0 h-screen flex items-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-              
+
               {/* Left Side - Text Content */}
               <div className="space-y-6 lg:space-y-8">
                 <div className="mb-8 lg:mb-12">
@@ -450,7 +462,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
                 </div>
 
                 <div className="space-y-4 lg:space-y-6">
-                  <div 
+                  <div
                     key={activeFeature}
                     className="transition-all duration-700 ease-out"
                     style={{
@@ -467,11 +479,11 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
                       </div>
                       <div className="w-16 lg:w-20 h-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
                     </div>
-                    
+
                     <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 lg:mb-6">
                       {features[activeFeature].title}
                     </h3>
-                    
+
                     <p className="text-base lg:text-xl text-gray-400 leading-relaxed max-w-lg">
                       {features[activeFeature].description}
                     </p>
@@ -484,8 +496,8 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
                     <div
                       key={index}
                       className={`h-2 rounded-full transition-all duration-500 ${
-                        index === activeFeature 
-                          ? 'w-12 bg-gradient-to-r from-orange-500 to-red-500 shadow-sm shadow-orange-500/50' 
+                        index === activeFeature
+                          ? 'w-12 bg-gradient-to-r from-orange-500 to-red-500 shadow-sm shadow-orange-500/50'
                           : 'w-8 bg-gray-700'
                       }`}
                     />
@@ -495,7 +507,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
 
               {/* Right Side - Enhanced Visual Content */}
               <div className="relative">
-                <FeaturesVisualContent 
+                <FeaturesVisualContent
                   activeFeature={activeFeature}
                   features={features}
                 />
@@ -513,7 +525,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
               <h2 className="text-3xl font-bold text-white mb-4">Yesterday's Winners</h2>
               <p className="text-gray-400">See the winning tips from yesterday's matches</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {yesterdaysWinningTips.slice(0, 8).map((tip, index) => (
                 <Card key={index} className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
@@ -543,7 +555,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
             <h2 className="text-3xl font-bold text-white mb-4">What Our Members Say</h2>
             <p className="text-gray-400">Join thousands of satisfied bettors</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="bg-gray-900 border-gray-800">
@@ -580,17 +592,17 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
             Join over 5,000 successful bettors and start your winning journey today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               onClick={handleGetStarted}
               className="bg-white text-orange-500 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-2xl"
             >
               Get Started Now
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
+            <Button
+              size="lg"
+              variant="outline"
               onClick={() => setCurrentPage('about')}
               className="border-2 border-white text-white hover:bg-white hover:text-orange-500 px-8 py-4 text-lg rounded-2xl"
             >
@@ -601,7 +613,7 @@ export function UserHomepage({ onBackToAdmin, todaysFreeTips, allMatches = [], o
       </section>
 
       {/* Footer */}
-      <UserFooter 
+      <UserFooter
         onNavigateHome={() => {
           setCurrentPage('home');
           window.scrollTo({ top: 0, behavior: 'smooth' });

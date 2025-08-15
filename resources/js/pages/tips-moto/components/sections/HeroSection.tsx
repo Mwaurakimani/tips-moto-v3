@@ -117,19 +117,20 @@ export function HeroSection({ featuredTips, todaysFreeTips, onSignIn, onGetStart
 
                   <div className="space-y-4">
                     {featuredTips.slice(0, 3).map((tip, index) => (
+
                       <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <p className="text-white font-semibold">{tip.match}</p>
-                            <p className="text-gray-300 text-sm">{tip.league} • {tip.time}</p>
+                            <p className="text-white font-semibold">{tip.match.home_team} vs {tip.match.away_team}</p>
+                            <p className="text-gray-300 text-sm">{tip.match.league} • {tip.match.kickoff_at}</p>
                           </div>
                           <Badge className="bg-green-500 text-white">
                             Free
                           </Badge>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-orange-400 font-bold">{tip.tip}</span>
-                          <span className="text-white font-bold">{tip.odds}</span>
+                          <span className="text-orange-400 font-bold">{tip.pick_label}</span>
+                          {/*<span className="text-white font-bold">{tip.odds}</span>*/}
                         </div>
                       </div>
                     ))}

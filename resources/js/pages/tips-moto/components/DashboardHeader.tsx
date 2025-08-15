@@ -142,7 +142,6 @@ export function DashboardHeader({ currentPage, onPageChange, currentAdmin, onGoT
       // 5. Update last login time in backend
 
       // For demo purposes, we'll just show the logout success
-      console.log('Admin logged out:', currentAdmin.email);
     }, 1500);
   };
 

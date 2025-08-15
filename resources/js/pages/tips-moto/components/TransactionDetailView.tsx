@@ -61,12 +61,10 @@ export function TransactionDetailView({ transaction, onBack }: TransactionDetail
 
   const handleDownload = () => {
     // Mock download functionality
-    console.log('Downloading transaction receipt...');
   };
 
   const handleViewInGateway = () => {
     // Mock external gateway link
-    console.log('Opening transaction in payment gateway...');
   };
 
   return (

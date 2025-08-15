@@ -29,12 +29,10 @@ export function UserDetailView({ user, onBack, onUserUpdate }: UserDetailViewPro
   const [editedStatus, setEditedStatus] = useState(user.status || 'active');
 
   const handleSuspend = () => {
-    console.log('Suspend user:', user.id);
     // Handle suspend action
   };
 
   const handleDelete = () => {
-    console.log('Delete user:', user.id);
     // Handle delete action
   };
 
@@ -100,7 +98,7 @@ export function UserDetailView({ user, onBack, onUserUpdate }: UserDetailViewPro
   // Mock subscriptions data
   const subscriptions: any[] = [];
 
-  // Mock transactions data  
+  // Mock transactions data
   const transactions: any[] = [];
 
   return (
@@ -368,7 +366,7 @@ export function UserDetailView({ user, onBack, onUserUpdate }: UserDetailViewPro
                     Manage and view all subscription packages for this user
                   </p>
                 </div>
-                
+
                 {subscriptions.length > 0 ? (
                   <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                     <Table>
@@ -424,7 +422,7 @@ export function UserDetailView({ user, onBack, onUserUpdate }: UserDetailViewPro
                     View all payment transactions and purchase history
                   </p>
                 </div>
-                
+
                 {transactions.length > 0 ? (
                   <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                     <Table>

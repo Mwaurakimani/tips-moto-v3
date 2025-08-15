@@ -55,13 +55,11 @@ export function UserProfileSettings({ currentUser }: UserProfileSettingsProps) {
 
   const handleSaveProfile = () => {
     // Mock save functionality
-    console.log('Saving profile:', formData);
     setIsEditing(false);
   };
 
   const handleSaveNotifications = () => {
     // Mock save functionality
-    console.log('Saving notifications:', notifications);
   };
 
   return (
