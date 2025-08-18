@@ -1,9 +1,9 @@
-import { 
-  TrendingUp, 
-  Menu, 
-  X, 
-  Phone, 
-  Mail, 
+import {
+  TrendingUp,
+  Menu,
+  X,
+  Phone,
+  Mail,
   MapPin,
   ArrowRight,
   Instagram,
@@ -112,7 +112,7 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <button 
+              <button
                 onClick={onBackToHome}
                 className="text-gray-300 hover:text-orange-500 transition-colors"
               >
@@ -129,14 +129,14 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
               <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white">
                 Get Started
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={onBackToAdmin}
-                className="text-gray-400 hover:text-gray-200"
-              >
-                Admin
-              </Button>
+              {/*<Button */}
+              {/*  variant="ghost" */}
+              {/*  size="sm" */}
+              {/*  onClick={onBackToAdmin}*/}
+              {/*  className="text-gray-400 hover:text-gray-200"*/}
+              {/*>*/}
+              {/*  Admin*/}
+              {/*</Button>*/}
             </div>
 
             {/* Mobile menu button */}
@@ -157,7 +157,7 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-800 bg-black">
             <div className="px-4 py-4 space-y-3">
-              <button 
+              <button
                 onClick={() => {
                   onBackToHome();
                   setMobileMenuOpen(false);
@@ -170,9 +170,9 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
               <div className="pt-3 border-t border-gray-800 space-y-2">
                 <Button variant="outline" size="sm" className="w-full border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white bg-transparent transition-all duration-300">Sign In</Button>
                 <Button size="sm" className="w-full bg-orange-500 hover:bg-orange-600 text-white">Get Started</Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={onBackToAdmin}
                   className="w-full text-gray-400"
                 >
@@ -193,7 +193,7 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
                 Choose a Sport
               </span>
             </h1>
-            
+
             <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
               Select your preferred sport to get premium betting tips and insights from our expert analysts.
             </p>
@@ -208,8 +208,8 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
                 disabled={!sport.available}
                 className={`
                   group relative aspect-[3/4] rounded-2xl overflow-hidden transition-all duration-300
-                  ${sport.available 
-                    ? 'hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20 cursor-pointer' 
+                  ${sport.available
+                    ? 'hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20 cursor-pointer'
                     : 'cursor-not-allowed opacity-60'
                   }
                   ${selectedSport === sport.id ? 'ring-2 ring-orange-500 scale-105' : ''}
@@ -233,10 +233,10 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
                 {/* Gloss effect overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-30"></div>
-                
+
                 {/* Hover gloss enhancement */}
                 <div className={`
-                  absolute inset-0 bg-gradient-to-t from-orange-500/40 via-orange-500/10 to-transparent 
+                  absolute inset-0 bg-gradient-to-t from-orange-500/40 via-orange-500/10 to-transparent
                   opacity-0 group-hover:opacity-100 transition-opacity duration-300
                   ${sport.available ? '' : 'hidden'}
                 `}></div>
@@ -254,7 +254,7 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
                   <h3 className="text-white font-bold text-sm mb-1 text-center relative z-10 drop-shadow-lg">
                     {sport.name}
                   </h3>
-                  
+
                   {/* Status Indicator */}
                   <div className="flex items-center justify-center">
                     {sport.available ? (
@@ -284,10 +284,10 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
       <footer className="bg-black text-white">
         <div className="pt-12 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
+
             {/* Main Footer Content */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
-              
+
               {/* Brand Section - 2 columns */}
               <div className="lg:col-span-2 space-y-6">
                 <div className="flex items-center space-x-3">
@@ -301,11 +301,11 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
                     <p className="text-xs text-orange-400 uppercase tracking-wide">Expert Predictions</p>
                   </div>
                 </div>
-                
+
                 <p className="text-gray-300 leading-relaxed max-w-sm">
                   Transform your betting experience with Kenya's most trusted sports prediction platform. Join thousands who've improved their success rates.
                 </p>
-                
+
                 {/* Contact Info */}
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3 text-gray-300">
@@ -399,7 +399,7 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
             <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/60 backdrop-blur-sm rounded-3xl p-6 lg:p-8 border border-gray-700/50 mb-8 relative overflow-hidden">
               {/* Background decoration */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-full blur-2xl"></div>
-              
+
               <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
                 <div className="lg:col-span-8">
                   <h3 className="text-xl font-bold text-white mb-2">Get Daily Free Tips</h3>
@@ -408,8 +408,8 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
                 <div className="lg:col-span-4">
                   <div className="flex flex-col sm:flex-row gap-3">
                     <div className="flex-1">
-                      <input 
-                        type="email" 
+                      <input
+                        type="email"
                         placeholder="Enter your email"
                         className="w-full px-4 py-3 bg-black/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors text-sm"
                       />
@@ -435,7 +435,7 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
                   <span>Designed for Kenya</span>
                 </div>
               </div>
-              
+
               {/* Social Links & Stats */}
               <div className="flex items-center space-x-6 mt-4 lg:mt-0">
                 <div className="flex items-center space-x-4">
@@ -449,7 +449,7 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
                     <div className="text-xs text-gray-500">Members</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gray-800/80 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
                     <Instagram className="h-3 w-3 text-gray-400 group-hover:text-white" />
