@@ -12,12 +12,14 @@ use Illuminate\Support\Carbon;
 
 class TipController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $q = Tip::with('match.league')
-            ->whereHas('match', function ($query) {
-                $query->whereDate('kickoff_at', now()->toDateString());
-            });
+            ->whereHas('match', function($q) {
+                $q->whereDate('kickoff_at', now()->toDateString());
+            })
+            ->join('matches', 'tips.match_id', '=', 'matches.id')
+            ->select('tips.*');
 
         if ($request->boolean('free_today')) {
             $q->where('is_free', true)
@@ -29,10 +31,9 @@ class TipController extends Controller
         }
 
         return TipResource::collection(
-            $q->orderBy('match.kickoff_at', 'asc')->paginate(50)
+            $q->orderBy('matches.kickoff_at', 'asc')->paginate(50)
         );
     }
-
 
     public function show(Tip $tip) {
         return new TipResource($tip->load('match.league'));
