@@ -12,14 +12,27 @@ use Illuminate\Support\Carbon;
 
 class TipController extends Controller
 {
-    public function index(Request $request) {
-        $q = Tip::with('match.league');
+    public function index(Request $request)
+    {
+        $q = Tip::with('match.league')
+            ->whereHas('match', function ($query) {
+                $query->whereDate('kick_off', now()->toDateString());
+            });
+
         if ($request->boolean('free_today')) {
-            $q->where('is_free', true)->whereDate('free_for_date', now()->toDateString());
+            $q->where('is_free', true)
+                ->whereDate('free_for_date', now()->toDateString());
         }
-        if ($request->filled('match_id')) $q->where('match_id', $request->query('match_id'));
-        return TipResource::collection($q->orderByDesc('publish_at')->paginate(50));
+
+        if ($request->filled('match_id')) {
+            $q->where('match_id', $request->query('match_id'));
+        }
+
+        return TipResource::collection(
+            $q->orderBy('match.kick_off', 'asc')->paginate(50)
+        );
     }
+
 
     public function show(Tip $tip) {
         return new TipResource($tip->load('match.league'));
