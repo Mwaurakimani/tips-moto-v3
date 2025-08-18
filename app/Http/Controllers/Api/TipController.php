@@ -16,7 +16,7 @@ class TipController extends Controller
     {
         $q = Tip::with('match.league')
             ->whereHas('match', function ($query) {
-                $query->whereDate('kick_off', now()->toDateString());
+                $query->whereDate('kickoff_at', now()->toDateString());
             });
 
         if ($request->boolean('free_today')) {
