@@ -29,7 +29,7 @@ class TipController extends Controller
         }
 
         return TipResource::collection(
-            $q->orderBy('match.kick_off', 'asc')->paginate(50)
+            $q->orderBy('match.kickoff_at', 'asc')->paginate(50)
         );
     }
 
