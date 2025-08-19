@@ -518,35 +518,35 @@ export function UserHomepage({ onBackToAdmin, allMatches = [], onUserSignIn, onU
       </section>
 
       {/* Yesterday's Winners Section */}
-      {yesterdaysWinningTips.length > 0 && (
-        <section className="py-16 bg-gray-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">Yesterday's Winners</h2>
-              <p className="text-gray-400">See the winning tips from yesterday's matches</p>
-            </div>
+      {/*{yesterdaysWinningTips.length > 0 && (*/}
+      {/*  <section className="py-16 bg-gray-900">*/}
+      {/*    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">*/}
+      {/*      <div className="text-center mb-12">*/}
+      {/*        <h2 className="text-3xl font-bold text-white mb-4">Yesterday's Winners</h2>*/}
+      {/*        <p className="text-gray-400">See the winning tips from yesterday's matches</p>*/}
+      {/*      </div>*/}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {yesterdaysWinningTips.slice(0, 8).map((tip, index) => (
-                <Card key={index} className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <Badge className="bg-green-500 text-white text-xs">WON</Badge>
-                    </div>
-                    <h4 className="text-white font-semibold text-sm mb-1">{tip.match}</h4>
-                    <p className="text-gray-400 text-xs mb-2">{tip.league}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-orange-400 font-medium text-sm">{tip.tip}</span>
-                      <span className="text-white font-bold">{tip.odds}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/*      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">*/}
+      {/*        {yesterdaysWinningTips.slice(0, 8).map((tip, index) => (*/}
+      {/*          <Card key={index} className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">*/}
+      {/*            <CardContent className="p-4">*/}
+      {/*              <div className="flex items-center space-x-2 mb-2">*/}
+      {/*                <CheckCircle className="h-4 w-4 text-green-500" />*/}
+      {/*                <Badge className="bg-green-500 text-white text-xs">WON</Badge>*/}
+      {/*              </div>*/}
+      {/*              <h4 className="text-white font-semibold text-sm mb-1">{tip.match}</h4>*/}
+      {/*              <p className="text-gray-400 text-xs mb-2">{tip.league}</p>*/}
+      {/*              <div className="flex justify-between items-center">*/}
+      {/*                <span className="text-orange-400 font-medium text-sm">{tip.tip}</span>*/}
+      {/*                <span className="text-white font-bold">{tip.odds}</span>*/}
+      {/*              </div>*/}
+      {/*            </CardContent>*/}
+      {/*          </Card>*/}
+      {/*        ))}*/}
+      {/*      </div>*/}
+      {/*    </div>*/}
+      {/*  </section>*/}
+      {/*)}*/}
 
       {/* Testimonials Section */}
       <section className="py-16 bg-black">
