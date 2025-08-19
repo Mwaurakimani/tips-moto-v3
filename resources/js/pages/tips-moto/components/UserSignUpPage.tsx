@@ -113,9 +113,9 @@ export function UserSignUpPage({ onUserLogin, onGoToLogin, onGoToAdminLogin, onB
                     <span className="text-xl font-bold">Tips Moto</span>
                 </button>
 
-                <button onClick={onGoToAdminLogin} className="text-sm text-gray-400 hover:text-gray-300">
-                    Admin Access
-                </button>
+                {/*<button onClick={onGoToAdminLogin} className="text-sm text-gray-400 hover:text-gray-300">*/}
+                {/*    Admin Access*/}
+                {/*</button>*/}
             </div>
 
             {/* Background decorative elements */}

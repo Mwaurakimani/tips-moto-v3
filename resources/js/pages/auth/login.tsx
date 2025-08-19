@@ -63,12 +63,12 @@ export function UserLoginPage({
                     </div>
                     <span className="text-xl font-bold">Tips Moto</span>
                 </button>
-                <button
-                    onClick={onGoToAdminLogin}
-                    className="text-gray-400 hover:text-gray-300 text-sm"
-                >
-                    Admin Access
-                </button>
+                {/*<button*/}
+                {/*    onClick={onGoToAdminLogin}*/}
+                {/*    className="text-gray-400 hover:text-gray-300 text-sm"*/}
+                {/*>*/}
+                {/*    Admin Access*/}
+                {/*</button>*/}
             </div>
 
             {/* Login Section */}
