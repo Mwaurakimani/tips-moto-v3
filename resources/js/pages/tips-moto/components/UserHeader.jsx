@@ -61,11 +61,11 @@ export function UserHeader({ currentPage, onNavigateHome, onNavigateTips, onNavi
                         <Button size="sm" onClick={onGetStarted} className="bg-orange-500 text-white hover:bg-orange-600">
                             Get Started
                         </Button>
-                        {onBackToAdmin && (
-                            <Button variant="ghost" size="sm" onClick={onBackToAdmin} className="text-gray-400 hover:text-gray-200">
-                                Admin
-                            </Button>
-                        )}
+                        {/*{onBackToAdmin && (*/}
+                        {/*    <Button variant="ghost" size="sm" onClick={onBackToAdmin} className="text-gray-400 hover:text-gray-200">*/}
+                        {/*        Admin*/}
+                        {/*    </Button>*/}
+                        {/*)}*/}
                     </div>
                 );
             } else {
