@@ -36,7 +36,6 @@ export function UserLoginPage({
 
         post(route('login'), {
             onSuccess: (page) => {
-                console.log("logged in");
             },
             onError: () => {
                 setError('Invalid email or password.');

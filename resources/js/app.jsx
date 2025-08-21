@@ -5,6 +5,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 import AppContainer from './app-container';
+import AdminLayout from './layouts/AdminLayout/adminLayout.jsx';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -14,17 +15,22 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        // Wrap the Inertia app with our AppContainer
+        const isAdmin = window.location.pathname.startsWith('/adminDashboard');
+
         root.render(
-            <AppContainer>
-                <App {...props} />
-            </AppContainer>
+            isAdmin ? (
+                    <App {...props} />
+            ) : (
+                <AppContainer {...props}>
+                    <App {...props} />
+                </AppContainer>
+            )
         );
     },
     progress: {
         color: '#4B5563',
     },
-}).then(r => console.log("loaded..."));
+})
 
 // This will set light / dark mode on load...
 initializeTheme();

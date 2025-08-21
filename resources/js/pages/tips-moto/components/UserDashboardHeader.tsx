@@ -1,11 +1,12 @@
-import { Crown, Home, LogOut, Moon, Settings, Sun, TrendingUp, User } from 'lucide-react';
-import { useState } from 'react';
+import { Link } from '@inertiajs/react';
+import axios from 'axios';
+import { Crown, Home, LogOut, Moon, Settings, ShieldUser, Sun, TrendingUp, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTheme } from './contexts/ThemeContext';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
-import { Link } from '@inertiajs/react';
 
 interface UserDashboardHeaderProps {
     currentUser: any;
@@ -15,33 +16,41 @@ interface UserDashboardHeaderProps {
 
 export function UserDashboardHeader({ currentUser, onLogout, onBackToHomepage }: UserDashboardHeaderProps) {
     const { theme, toggleTheme } = useTheme();
-    const [notificationsOpen, setNotificationsOpen] = useState(false);
+    // const [notificationsOpen, setNotificationsOpen] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
 
-    const mockNotifications = [
-        {
-            id: 1,
-            title: 'New Premium Tips Available',
-            message: "Today's VIP package is now ready",
-            time: '2 min ago',
-            unread: true,
-        },
-        {
-            id: 2,
-            title: "Yesterday's Results",
-            message: '8/10 tips won! Great performance',
-            time: '1 hour ago',
-            unread: true,
-        },
-        {
-            id: 3,
-            title: 'Subscription Renewal',
-            message: 'Your VIP plan renews in 3 days',
-            time: '2 hours ago',
-            unread: false,
-        },
-    ];
+    useEffect(() => {
+        axios
+            .get(route('is_admin'))
+            .then(({ data }) => setIsAdmin(data.is_admin))
+            .catch(console.error);
+    }, []);
 
-    const unreadCount = mockNotifications.filter((n) => n.unread).length;
+    // const mockNotifications = [
+    //     {
+    //         id: 1,
+    //         title: 'New Premium Tips Available',
+    //         message: "Today's VIP package is now ready",
+    //         time: '2 min ago',
+    //         unread: true,
+    //     },
+    //     {
+    //         id: 2,
+    //         title: "Yesterday's Results",
+    //         message: '8/10 tips won! Great performance',
+    //         time: '1 hour ago',
+    //         unread: true,
+    //     },
+    //     {
+    //         id: 3,
+    //         title: 'Subscription Renewal',
+    //         message: 'Your VIP plan renews in 3 days',
+    //         time: '2 hours ago',
+    //         unread: false,
+    //     },
+    // ];
+
+    // const unreadCount = mockNotifications.filter((n) => n.unread).length;
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-orange-500/20 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-black/95 dark:supports-[backdrop-filter]:bg-black/60">
@@ -61,9 +70,16 @@ export function UserDashboardHeader({ currentUser, onLogout, onBackToHomepage }:
                 {/* User Section */}
                 <div className="flex items-center space-x-3">
                     {/* Theme Toggle */}
+
+                    {isAdmin && (
+                        <Link className={'mx-5'} href={route('adminDashboard')}>
+                            <ShieldUser className="h-5 w-5 text-gray-600 dark:text-gray-400"></ShieldUser>
+                        </Link>
+                    )}
                     <Link href={route('home')}>
                         <Home className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                     </Link>
+
                     <Button variant="ghost" size="sm" onClick={toggleTheme} className="relative">
                         {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
                     </Button>

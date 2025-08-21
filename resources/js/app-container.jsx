@@ -177,7 +177,6 @@ export default function AppContainer({ children,defaultPage }) {
         );
     }
 
-    console.log(authState);
     // Render different views based on auth state
     switch (authState) {
         case 'adminLogin':

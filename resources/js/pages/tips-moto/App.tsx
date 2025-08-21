@@ -35,7 +35,7 @@ export default function App() {
   // Admin dashboard states
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  // const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
   // Global state for matches - diverse dataset
   const [allMatches, setAllMatches] = useState(() => {
@@ -51,14 +51,14 @@ export default function App() {
     const todayMatches = matches.filter(match => match.date === todayString);
     const yesterdayMatches = matches.filter(match => match.date === yesterdayString);
 
-    if (yesterdayMatches.length > 0) {
-
-      const allYesterdayTips = yesterdayMatches.reduce((total, match) => total + match.tipsData.length, 0);
-      const winningYesterdayTips = yesterdayMatches.reduce((total, match) =>
-        total + match.tipsData.filter((tip: any) => tip.winningStatus === 'won').length, 0);
-
-    } else {
-    }
+    // if (yesterdayMatches.length > 0) {
+    //
+    //   const allYesterdayTips = yesterdayMatches.reduce((total, match) => total + match.tipsData.length, 0);
+    //   const winningYesterdayTips = yesterdayMatches.reduce((total, match) =>
+    //     total + match.tipsData.filter((tip: any) => tip.winningStatus === 'won').length, 0);
+    //
+    // } else {
+    // }
 
     if (todayMatches.length > 0) {
       const todayFreeTips = todayMatches.reduce((total, match) =>
