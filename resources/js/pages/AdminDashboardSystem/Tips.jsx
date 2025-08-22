@@ -10,11 +10,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '../tips-moto/component
 import { Input } from '../tips-moto/components/ui/input.js';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../tips-moto/components/ui/select.js';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../tips-moto/components/ui/table.js';
+import DebugJson from '@/components/ui/JsonDebug.js';
 
 export default function TipsPage() {
     const { matches, onTipUpdate, onViewHomepage } = usePage().props;
 
-    return (<p>Here</p>)
+
 
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -35,6 +36,7 @@ export default function TipsPage() {
         });
     };
 
+
     // Extract all tips from all matches and combine with match data
     const allTips = useMemo(() => {
         const tips = [];
@@ -44,7 +46,7 @@ export default function TipsPage() {
                 tips.push({
                     ...tip,
                     matchId: match.id,
-                    league: match.league,
+                    league: match.league.name,
                     homeTeam: match.homeTeam,
                     awayTeam: match.awayTeam,
                     matchDate: match.date,
@@ -56,6 +58,8 @@ export default function TipsPage() {
 
         return tips.sort((a, b) => b.matchId - a.matchId); // Sort by newest matches first
     }, [matches]);
+
+    // return (<DebugJson data={matches} />)
 
     // Count today's free tips across all matches
     const countTodaysFreeTips = () => {
@@ -97,24 +101,52 @@ export default function TipsPage() {
     // Filter tips based on search term and filters
     const filteredTips = useMemo(() => {
         return allTips.filter((tip) => {
+            const safeIncludes = (val) =>
+                typeof val === "string" && val.toLowerCase().includes(searchTerm.toLowerCase());
+
             const matchesSearch =
-                searchTerm === '' ||
-                tip.league.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                tip.homeTeam.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                tip.awayTeam.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                tip.prediction.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                tip.tipType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                tip.matchId.toString().includes(searchTerm);
+                searchTerm === "" ||
+                safeIncludes(tip.league) ||
+                safeIncludes(tip.homeTeam) ||
+                safeIncludes(tip.awayTeam) ||
+                safeIncludes(tip.prediction) ||
+                safeIncludes(tip.tipType) ||
+                (tip.matchId && tip.matchId.toString().includes(searchTerm));
 
-            const matchesStatus = statusFilter === 'all' || tip.winningStatus === statusFilter;
-            const matchesRisk = riskFilter === 'all' || tip.riskLevel === riskFilter;
+            const matchesStatus =
+                statusFilter === "all" || tip.winningStatus === statusFilter;
 
-            // Date filter logic
-            const matchesDate = dateFilter === 'all' || (dateFilter === 'today' && tip.matchDate === getTodayDateString());
+            const matchesRisk =
+                riskFilter === "all" || tip.riskLevel === riskFilter;
+
+            const matchesDate =
+                dateFilter === "all" ||
+                (dateFilter === "today" && tip.matchDate === getTodayDateString());
 
             return matchesSearch && matchesStatus && matchesRisk && matchesDate;
         });
     }, [allTips, searchTerm, statusFilter, riskFilter, dateFilter]);
+
+    // const filteredTips = useMemo(() => {
+    //     return allTips.filter((tip) => {
+    //         const matchesSearch =
+    //             searchTerm === '' ||
+    //             tip.league.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //             tip.homeTeam.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //             tip.awayTeam.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //             tip.prediction.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //             tip.tipType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //             tip.matchId.toString().includes(searchTerm);
+    //
+    //         const matchesStatus = statusFilter === 'all' || tip.winningStatus === statusFilter;
+    //         const matchesRisk = riskFilter === 'all' || tip.riskLevel === riskFilter;
+    //
+    //         // Date filter logic
+    //         const matchesDate = dateFilter === 'all' || (dateFilter === 'today' && tip.matchDate === getTodayDateString());
+    //
+    //         return matchesSearch && matchesStatus && matchesRisk && matchesDate;
+    //     });
+    // }, [allTips, searchTerm, statusFilter, riskFilter, dateFilter]);
 
     // Paginate filtered tips
     const paginatedTips = useMemo(() => {
