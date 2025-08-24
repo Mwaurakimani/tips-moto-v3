@@ -20,7 +20,7 @@ Route::get('integration', function () {
 })->name('integration');
 
 
-Route::get('integration/callback', function (Request $request) {
+Route::post('integration/callback', function (Request $request) {
     Log::info(json_encode($request->all()));
 })->name('integration');
 
