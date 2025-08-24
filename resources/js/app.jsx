@@ -5,7 +5,6 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 import AppContainer from './app-container';
-import AdminLayout from './layouts/AdminLayout/adminLayout.jsx';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

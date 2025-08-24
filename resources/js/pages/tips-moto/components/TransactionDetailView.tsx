@@ -12,6 +12,7 @@ interface Transaction {
   amount: number;
   date: string;
   time: string;
+  phone:string;
   status: string;
   reference: string;
 }
@@ -93,14 +94,14 @@ export function TransactionDetailView({ transaction, onBack }: TransactionDetail
             <Printer className="h-4 w-4 mr-2" />
             Print
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownload}>
-            <Download className="h-4 w-4 mr-2" />
-            Download
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleViewInGateway}>
-            <ExternalLink className="h-4 w-4 mr-2" />
-            View in Gateway
-          </Button>
+          {/*<Button variant="outline" size="sm" onClick={handleDownload}>*/}
+          {/*  <Download className="h-4 w-4 mr-2" />*/}
+          {/*  Download*/}
+          {/*</Button>*/}
+          {/*<Button variant="outline" size="sm" onClick={handleViewInGateway}>*/}
+          {/*  <ExternalLink className="h-4 w-4 mr-2" />*/}
+          {/*  View in Gateway*/}
+          {/*</Button>*/}
         </div>
       </div>
 
@@ -130,12 +131,12 @@ export function TransactionDetailView({ transaction, onBack }: TransactionDetail
                       {transaction.reference}
                     </code>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">External ID</span>
-                    <code className="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded font-mono">
-                      {mockDetails.transactionId}
-                    </code>
-                  </div>
+                  {/*<div className="flex items-center justify-between">*/}
+                  {/*  <span className="text-sm text-gray-600 dark:text-gray-400">External ID</span>*/}
+                  {/*  <code className="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded font-mono">*/}
+                  {/*    {mockDetails.transactionId}*/}
+                  {/*  </code>*/}
+                  {/*</div>*/}
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
                     <Badge className={getStatusBadgeStyle(transaction.status)}>
@@ -151,24 +152,24 @@ export function TransactionDetailView({ transaction, onBack }: TransactionDetail
                       KES {transaction.amount.toFixed(2)}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Fees</span>
-                    <span className="text-sm text-gray-900 dark:text-gray-100">
-                      KES {mockDetails.fees.toFixed(2)}
-                    </span>
-                  </div>
+                  {/*<div className="flex items-center justify-between">*/}
+                  {/*  <span className="text-sm text-gray-600 dark:text-gray-400">Fees</span>*/}
+                  {/*  <span className="text-sm text-gray-900 dark:text-gray-100">*/}
+                  {/*    KES {mockDetails.fees.toFixed(2)}*/}
+                  {/*  </span>*/}
+                  {/*</div>*/}
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Net Amount</span>
                     <span className="font-semibold text-gray-900 dark:text-gray-100">
                       KES {mockDetails.netAmount.toFixed(2)}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Processing Time</span>
-                    <span className="text-sm text-gray-900 dark:text-gray-100">
-                      {mockDetails.processingTime}
-                    </span>
-                  </div>
+                  {/*<div className="flex items-center justify-between">*/}
+                  {/*  <span className="text-sm text-gray-600 dark:text-gray-400">Processing Time</span>*/}
+                  {/*  <span className="text-sm text-gray-900 dark:text-gray-100">*/}
+                  {/*    {mockDetails.processingTime}*/}
+                  {/*  </span>*/}
+                  {/*</div>*/}
                 </div>
               </div>
             </CardContent>
@@ -195,26 +196,7 @@ export function TransactionDetailView({ transaction, onBack }: TransactionDetail
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 dark:text-gray-400">Phone Number</label>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">{mockDetails.phoneNumber}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm text-gray-600 dark:text-gray-400">Location</label>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">{mockDetails.location}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-gray-600 dark:text-gray-400">Device ID</label>
-                    <code className="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded font-mono">
-                      {mockDetails.deviceId}
-                    </code>
-                  </div>
-                  <div>
-                    <label className="text-sm text-gray-600 dark:text-gray-400">IP Address</label>
-                    <code className="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded font-mono">
-                      {mockDetails.ipAddress}
-                    </code>
+                    <p className="font-medium text-gray-900 dark:text-gray-100">{transaction.phone}</p>
                   </div>
                 </div>
               </div>
@@ -235,20 +217,20 @@ export function TransactionDetailView({ transaction, onBack }: TransactionDetail
                   <label className="text-sm text-gray-600 dark:text-gray-400">Package Name</label>
                   <p className="font-medium text-gray-900 dark:text-gray-100">{transaction.package}</p>
                 </div>
-                <div>
-                  <label className="text-sm text-gray-600 dark:text-gray-400">Package Type</label>
-                  <Badge variant="outline" className="ml-2">
-                    {transaction.package.includes('daily') ? 'Daily' :
-                     transaction.package.includes('weekly') ? 'Weekly' : 'Premium'}
-                  </Badge>
-                </div>
-                <div>
-                  <label className="text-sm text-gray-600 dark:text-gray-400">Access Period</label>
-                  <p className="text-sm text-gray-900 dark:text-gray-100">
-                    {transaction.package.includes('daily') ? '24 hours' :
-                     transaction.package.includes('weekly') ? '7 days' : '30 days'}
-                  </p>
-                </div>
+                {/*<div>*/}
+                {/*  <label className="text-sm text-gray-600 dark:text-gray-400">Package Type</label>*/}
+                {/*  <Badge variant="outline" className="ml-2">*/}
+                {/*    {transaction.package.includes('daily') ? 'Daily' :*/}
+                {/*     transaction.package.includes('weekly') ? 'Weekly' : 'Premium'}*/}
+                {/*  </Badge>*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <label className="text-sm text-gray-600 dark:text-gray-400">Access Period</label>*/}
+                {/*  <p className="text-sm text-gray-900 dark:text-gray-100">*/}
+                {/*    {transaction.package.includes('daily') ? '24 hours' :*/}
+                {/*     transaction.package.includes('weekly') ? '7 days' : '30 days'}*/}
+                {/*  </p>*/}
+                {/*</div>*/}
               </div>
             </CardContent>
           </Card>
@@ -273,18 +255,18 @@ export function TransactionDetailView({ transaction, onBack }: TransactionDetail
                 <span className="text-sm text-gray-600 dark:text-gray-400">Gateway</span>
                 <span className="font-medium text-gray-900 dark:text-gray-100">{mockDetails.gateway}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Auth Code</span>
-                <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
-                  {mockDetails.authCode}
-                </code>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Receipt No.</span>
-                <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
-                  {mockDetails.receiptNumber}
-                </code>
-              </div>
+              {/*<div className="flex items-center justify-between">*/}
+              {/*  <span className="text-sm text-gray-600 dark:text-gray-400">Auth Code</span>*/}
+              {/*  <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">*/}
+              {/*    {mockDetails.authCode}*/}
+              {/*  </code>*/}
+              {/*</div>*/}
+              {/*<div className="flex items-center justify-between">*/}
+              {/*  <span className="text-sm text-gray-600 dark:text-gray-400">Receipt No.</span>*/}
+              {/*  <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">*/}
+              {/*    {mockDetails.receiptNumber}*/}
+              {/*  </code>*/}
+              {/*</div>*/}
             </CardContent>
           </Card>
 
@@ -305,79 +287,49 @@ export function TransactionDetailView({ transaction, onBack }: TransactionDetail
                 <span className="text-sm text-gray-600 dark:text-gray-400">Time</span>
                 <span className="font-medium text-gray-900 dark:text-gray-100">{transaction.time}</span>
               </div>
-              <Separator />
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Initiated</span>
-                  <span className="text-gray-900 dark:text-gray-100">{transaction.time}</span>
-                </div>
-                {transaction.status === 'successful' && (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Processed</span>
-                      <span className="text-gray-900 dark:text-gray-100">
-                        {new Date(new Date().getTime() + 2300).toLocaleTimeString('en-US', {
-                          hour12: false,
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Completed</span>
-                      <span className="text-green-600 dark:text-green-400">
-                        {new Date(new Date().getTime() + 5000).toLocaleTimeString('en-US', {
-                          hour12: false,
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
-                    </div>
-                  </>
-                )}
-                {transaction.status === 'failed' && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Failed</span>
-                    <span className="text-red-600 dark:text-red-400">
-                      {new Date(new Date().getTime() + 1500).toLocaleTimeString('en-US', {
-                        hour12: false,
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Security Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="h-5 w-5" />
-                <span>Security Information</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm text-gray-600 dark:text-gray-400">Merchant Code</label>
-                <code className="block mt-1 text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded font-mono">
-                  {mockDetails.merchantCode}
-                </code>
-              </div>
-              <div>
-                <label className="text-sm text-gray-600 dark:text-gray-400">User Agent</label>
-                <p className="text-xs text-gray-900 dark:text-gray-100 break-all mt-1">
-                  {mockDetails.userAgent}
-                </p>
-              </div>
-              <div className="pt-2">
-                <Badge variant="outline" className="text-green-600 border-green-600">
-                  <Shield className="h-3 w-3 mr-1" />
-                  Verified Transaction
-                </Badge>
-              </div>
+              {/*<Separator />*/}
+              {/*<div className="space-y-3 text-sm">*/}
+              {/*  <div className="flex items-center justify-between">*/}
+              {/*    <span className="text-gray-600 dark:text-gray-400">Initiated</span>*/}
+              {/*    <span className="text-gray-900 dark:text-gray-100">{transaction.time}</span>*/}
+              {/*  </div>*/}
+              {/*  {transaction.status === 'successful' && (*/}
+              {/*    <>*/}
+              {/*      <div className="flex items-center justify-between">*/}
+              {/*        <span className="text-gray-600 dark:text-gray-400">Processed</span>*/}
+              {/*        <span className="text-gray-900 dark:text-gray-100">*/}
+              {/*          {new Date(new Date().getTime() + 2300).toLocaleTimeString('en-US', {*/}
+              {/*            hour12: false,*/}
+              {/*            hour: '2-digit',*/}
+              {/*            minute: '2-digit'*/}
+              {/*          })}*/}
+              {/*        </span>*/}
+              {/*      </div>*/}
+              {/*      <div className="flex items-center justify-between">*/}
+              {/*        <span className="text-gray-600 dark:text-gray-400">Completed</span>*/}
+              {/*        <span className="text-green-600 dark:text-green-400">*/}
+              {/*          {new Date(new Date().getTime() + 5000).toLocaleTimeString('en-US', {*/}
+              {/*            hour12: false,*/}
+              {/*            hour: '2-digit',*/}
+              {/*            minute: '2-digit'*/}
+              {/*          })}*/}
+              {/*        </span>*/}
+              {/*      </div>*/}
+              {/*    </>*/}
+              {/*  )}*/}
+              {/*  {transaction.status === 'failed' && (*/}
+              {/*    <div className="flex items-center justify-between">*/}
+              {/*      <span className="text-gray-600 dark:text-gray-400">Failed</span>*/}
+              {/*      <span className="text-red-600 dark:text-red-400">*/}
+              {/*        {new Date(new Date().getTime() + 1500).toLocaleTimeString('en-US', {*/}
+              {/*          hour12: false,*/}
+              {/*          hour: '2-digit',*/}
+              {/*          minute: '2-digit'*/}
+              {/*        })}*/}
+              {/*      </span>*/}
+              {/*    </div>*/}
+              {/*  )}*/}
+              {/*</div>*/}
             </CardContent>
           </Card>
         </div>

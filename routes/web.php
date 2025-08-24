@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->get('/is-admin', function (Request $request) 
 })->name('is_admin');
 
 
+require __DIR__ . '/integration.php';
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/AdminRoutes/Accounts.php';
