@@ -32,10 +32,12 @@ class LedgerController extends Controller
 //            ]
 //        );
 
+        $unique_id = str_pad(random_int(1, 999999999), 9, "0", STR_PAD_LEFT);
+
         $onit = new OnitAuthorisation();
         $onit->authenticate();
         $response = $onit->deposit([
-            "originatorRequestId" => "AD-" . str_pad(random_int(1, 999999999), 9, "0", STR_PAD_LEFT),
+            "originatorRequestId" => "AD-".$unique_id,
             "destinationAccount"  => "0001650000001",
             "sourceAccount"       => "254759469851",
             "amount"              => $request->get('amount'),
