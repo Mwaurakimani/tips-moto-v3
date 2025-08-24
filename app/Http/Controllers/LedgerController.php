@@ -32,7 +32,8 @@ class LedgerController extends Controller
 //            ]
 //        );
 
-        $unique_id = str_pad(random_int(1, 999999999), 9, "0", STR_PAD_LEFT);
+        $unique_id = str_pad(random_int(1, 999999999), 9, "0", STR_PAD_LEFT);\
+
 
         $onit = new OnitAuthorisation();
         $onit->authenticate();
