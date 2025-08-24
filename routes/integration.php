@@ -22,7 +22,9 @@ Route::get('integration', function () {
 
 Route::post('integration/callback', function (Request $request) {
     Log::info(json_encode($request->all()));
-})->name('integration');
+})
+    ->withoutMiddleware([VerifyCsrfToken::class])
+    ->name('integration');
 
 Route::resource('/ledger', LedgerController::class)
     ->withoutMiddleware([VerifyCsrfToken::class]);
