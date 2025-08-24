@@ -46,7 +46,7 @@ class LedgerController extends Controller
             "product"             => "CA05",
             "event"               => "",
             "narration"           => "Chequemate-ID_001",
-            "callbackUrl"         => "http://nexusgaming.co.ke/integration/callback"
+            "callbackUrl"         => "https://nexusgaming.co.ke/integration/callback"
         ]);
 
         dd($response);
