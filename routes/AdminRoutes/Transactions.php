@@ -3,6 +3,7 @@
 use App\Http\Controllers\Onit\OnitAuthorisation;
 use App\Models\SubscriptionPlan;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,12 +57,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('adminDashboard.transactions');
 
     Route::post('package/purchase', function (Request $request) {
-        $phohe = $request->input('phohe');
+        $phoneNumber = $request->data['phoneNumber'];
 //        $package = $request->input('package');
 
         $package = 8;
         $package = SubscriptionPlan::find($package);
-        $request_id = 'ONIT-' . Str::uuid()->toString();
+        do {
+            $short = strtoupper(substr(str_replace('-', '', (string) Str::uuid()), 0, 7));
+            $request_id = 'ONIT-' . $short;
+        } while (Transaction::where('provider_ref', $request_id)->exists());
+
         $transaction = new Transaction();
 
         $transaction->user_id = auth()->user()->id;
@@ -79,15 +84,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $response = $onit->deposit([
             "originatorRequestId" => "AD-" . $request_id,
             "destinationAccount" => "0001650000001",
-            "sourceAccount" => $phohe,
-            "amount" => $package->price,
+            "sourceAccount" => $phoneNumber,
+            "amount" => intVal($package->price),
             "channel" => "MPESA",
             "product" => "CA05",
             "event" => "",
-            "narration" => "",
+            "narration" => "Test",
             "callbackUrl" => route('onit_callback')
         ]);
 
-        dd($response);
+        Log::info('Transaction processed', $response);
+
+        return json_encode($response);
     })->name('package.purchase');
 });
