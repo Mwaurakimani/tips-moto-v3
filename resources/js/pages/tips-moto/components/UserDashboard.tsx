@@ -48,7 +48,7 @@ export function UserDashboard({
       case 'packages':
         return <UserPackagesBrowser allMatches={allMatches} currentUser={currentUser} />;
       case 'my-tips':
-        return <UserMyTips />;
+        return <UserMyTips onGoToPackages={setCurrentPage} />;
       case 'account':
         return <UserAccountPage currentUser={currentUser} />;
       default:

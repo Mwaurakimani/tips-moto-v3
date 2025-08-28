@@ -1,16 +1,5 @@
 import axios from 'axios';
-import {
-    AlertTriangle,
-    Calendar,
-    CheckCircle,
-    Clock,
-    Download,
-    Eye,
-    Package,
-    Target,
-    Trophy,
-    XCircle
-} from 'lucide-react';
+import { AlertTriangle, Calendar, CheckCircle, Clock, Download, Eye, Package, Target, Trophy, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -18,34 +7,38 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
-export function UserMyTips() {
+interface UserMyTipsProps {
+    onGoToPackages: (page: string) => void;
+}
+
+export function UserMyTips({ onGoToPackages }: UserMyTipsProps) {
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
 
     // Mock user's purchased packages
     const userPackages = [
-        {
-            id: 1436,
-            name: 'Full-Time Scores Weekly',
-            purchaseDate: '2025-01-01',
-            expiryDate: '2025-01-31',
-            status: 'active',
-            price: 599,
-            tipsAccessed: 45,
-            totalTips: 120,
-            winRate: 89.2
-        },
-        {
-            id: 1447,
-            name: 'Weekend Accumulator',
-            purchaseDate: '2024-12-15',
-            expiryDate: '2025-01-15',
-            status: 'expired',
-            price: 199,
-            tipsAccessed: 24,
-            totalTips: 24,
-            winRate: 75.0
-        }
+        // {
+        //     id: 1436,
+        //     name: 'Full-Time Scores Weekly',
+        //     purchaseDate: '2025-01-01',
+        //     expiryDate: '2025-01-31',
+        //     status: 'active',
+        //     price: 599,
+        //     tipsAccessed: 45,
+        //     totalTips: 120,
+        //     winRate: 89.2
+        // },
+        // {
+        //     id: 1447,
+        //     name: 'Weekend Accumulator',
+        //     purchaseDate: '2024-12-15',
+        //     expiryDate: '2025-01-15',
+        //     status: 'expired',
+        //     price: 199,
+        //     tipsAccessed: 24,
+        //     totalTips: 24,
+        //     winRate: 75.0
+        // }
     ];
 
     const [mytips, setMyTips] = useState([]);
@@ -92,11 +85,10 @@ export function UserMyTips() {
             won: 'bg-green-500 text-white',
             lost: 'bg-red-500 text-white',
             pending: 'bg-yellow-500 text-white',
-            void: 'bg-gray-500 text-white'
+            void: 'bg-gray-500 text-white',
         };
 
-        return <Badge
-            className={variants[status as keyof typeof variants] || variants.void}>{status.toUpperCase()}</Badge>;
+        return <Badge className={variants[status as keyof typeof variants] || variants.void}>{status.toUpperCase()}</Badge>;
     };
 
     const getRiskLevelColor = (riskLevel: string) => {
@@ -112,39 +104,45 @@ export function UserMyTips() {
         }
     };
 
-    function getPredictionText(tip:any) {
-        if (!tip || !tip.prediction_type) return "";
+    function getPredictionText(tip: any) {
+        if (!tip || !tip.prediction_type) return '';
 
         switch (tip.prediction_type) {
-            case "1_X_2":
-                switch (tip.prediction_value) { // assuming you have a field like prediction_result
+            case '1_X_2':
+                switch (
+                    tip.prediction_value // assuming you have a field like prediction_result
+                ) {
                     case -1:
-                        return "Home Win";
+                        return 'Home Win';
                     case 0:
-                        return "Draw";
+                        return 'Draw';
                     default:
-                        return "Away Win";
+                        return 'Away Win';
                 }
 
-            case "1X_X2_12":
-                switch (tip.prediction_value) { // assuming you have a field like prediction_result
+            case '1X_X2_12':
+                switch (
+                    tip.prediction_value // assuming you have a field like prediction_result
+                ) {
                     case -1:
-                        return "Home Win/Draw ";
+                        return 'Home Win/Draw ';
                     case 0:
-                        return "Away Win/Draw";
+                        return 'Away Win/Draw';
                     default:
-                        return "Home Win/Away Win";
+                        return 'Home Win/Away Win';
                 }
-            case "GG-NG":
-                switch (tip.prediction_value) { // assuming you have a field like prediction_result
+            case 'GG-NG':
+                switch (
+                    tip.prediction_value // assuming you have a field like prediction_result
+                ) {
                     case -1:
-                        return "GG";
+                        return 'GG';
                     default:
-                        return "NG";
+                        return 'NG';
                 }
             // add more cases if needed
             default:
-                return "Unknown";
+                return 'Unknown';
         }
     }
 
@@ -251,7 +249,9 @@ export function UserMyTips() {
                                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                                         <div className="flex-1">
                                             <div className="mb-2 flex items-center space-x-2">
-                                                <h3 className="font-semibold">{tip.match.home_team} vs {tip.match.away_team}</h3>
+                                                <h3 className="font-semibold">
+                                                    {tip.match.home_team} vs {tip.match.away_team}
+                                                </h3>
                                                 {tip.isFree && (
                                                     <Badge variant="outline" className="border-green-600 text-green-600">
                                                         FREE
@@ -259,15 +259,13 @@ export function UserMyTips() {
                                                 )}
                                             </div>
 
-                                            <div
-                                                className="mb-2 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                                            <div className="mb-2 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                                                 <span className="flex items-center">
                                                     <Calendar className="mr-1 h-3 w-3" />
                                                     {tip.match.kickoff_at}
                                                 </span>
                                                 <span>{tip.match.league}</span>
-                                                <Badge variant="outline"
-                                                       className={`${getRiskLevelColor(tip.risk_level)} border-0`}>
+                                                <Badge variant="outline" className={`${getRiskLevelColor(tip.risk_level)} border-0`}>
                                                     {tip.risk_level.toUpperCase()} RISK
                                                 </Badge>
                                             </div>
@@ -314,9 +312,9 @@ export function UserMyTips() {
                                 <Target className="mx-auto mb-4 h-12 w-12 text-gray-400" />
                                 <h3 className="mb-2 text-lg font-semibold">No tips found</h3>
                                 <p className="mb-4 text-muted-foreground">
-                                    {totalTips === 0 ? 'You haven\'t accessed any tips yet' : 'No tips match your current filters'}
+                                    {totalTips === 0 ? "You haven't accessed any tips yet" : 'No tips match your current filters'}
                                 </p>
-                                <Button>Browse Packages</Button>
+                                <Button onClick={() => onGoToPackages('packages')}>Browse Packages</Button>
                             </CardContent>
                         </Card>
                     )}
@@ -325,13 +323,11 @@ export function UserMyTips() {
                 <TabsContent value="packages" className="space-y-4">
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                         {userPackages.map((pkg) => (
-                            <Card key={pkg.id}
-                                  className={`${pkg.status === 'active' ? 'ring-2 ring-green-500/30' : ''}`}>
+                            <Card key={pkg.id} className={`${pkg.status === 'active' ? 'ring-2 ring-green-500/30' : ''}`}>
                                 <CardHeader>
                                     <div className="flex items-center justify-between">
                                         <CardTitle className="text-lg">{pkg.name}</CardTitle>
-                                        <Badge
-                                            className={pkg.status === 'active' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}>
+                                        <Badge className={pkg.status === 'active' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}>
                                             {pkg.status.toUpperCase()}
                                         </Badge>
                                     </div>
@@ -393,9 +389,8 @@ export function UserMyTips() {
                             <CardContent>
                                 <Package className="mx-auto mb-4 h-12 w-12 text-gray-400" />
                                 <h3 className="mb-2 text-lg font-semibold">No packages purchased</h3>
-                                <p className="mb-4 text-muted-foreground">Purchase a package to start accessing premium
-                                    tips</p>
-                                <Button>Browse Packages</Button>
+                                <p className="mb-4 text-muted-foreground">Purchase a package to start accessing premium tips</p>
+                                <Button onClick={() => onGoToPackages('packages')}>Browse Packages</Button>
                             </CardContent>
                         </Card>
                     )}
