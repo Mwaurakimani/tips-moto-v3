@@ -1,8 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Onit\OnitAuthorisation;
+use App\Models\SubscriptionPlan;
+use App\Models\Transaction;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -33,7 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     'user' => trim($t->first_name . ' ' . $t->last_name),
                     'email' => $t->email,
                     'package' => $t->package ?? 'N/A',
-                    'amount' => (float) $t->amount,
+                    'amount' => (float)$t->amount,
                     'currency' => $t->currency,
                     'status' => $t->status,
                     'reference' => $t->reference,
@@ -49,4 +55,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('adminDashboard.transactions');
 
+    Route::post('package/purchase', function (Request $request) {
+        $phohe = $request->input('phohe');
+//        $package = $request->input('package');
+
+        $package = 8;
+        $package = SubscriptionPlan::find($package);
+        $request_id = 'ONIT-' . Str::uuid()->toString();
+        $transaction = new Transaction();
+
+        $transaction->user_id = auth()->user()->id;
+        $transaction->currency = 'KSH';
+        $transaction->amount = $package->price;
+        $transaction->provider = 'M-Pesa';
+        $transaction->provider_ref = $request_id;
+        $transaction->type = 'subscription';
+        $transaction->status = 'pending';
+        $transaction->save();
+
+
+        $onit = new OnitAuthorisation();
+        $onit->authenticate();
+        $response = $onit->deposit([
+            "originatorRequestId" => "AD-" . $request_id,
+            "destinationAccount" => "0001650000001",
+            "sourceAccount" => $phohe,
+            "amount" => $package->price,
+            "channel" => "MPESA",
+            "product" => "CA05",
+            "event" => "",
+            "narration" => "",
+            "callbackUrl" => route('onit_callback')
+        ]);
+
+        dd($response);
+    })->name('package.purchase');
 });

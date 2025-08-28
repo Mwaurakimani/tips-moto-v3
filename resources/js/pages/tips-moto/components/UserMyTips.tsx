@@ -150,7 +150,7 @@ export function UserMyTips() {
 
     return (
         <div className="space-y-6 pb-20 xl:pb-6">
-            {/* Stats Overview */}
+            {/* Stats Overview*/}
             {/*<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">*/}
             {/*    <Card>*/}
             {/*        <CardContent className="p-4">*/}
@@ -204,7 +204,7 @@ export function UserMyTips() {
             <Tabs defaultValue="tips" className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="tips">My Tips</TabsTrigger>
-                    {/*<TabsTrigger value="packages">My Packages</TabsTrigger>*/}
+                    <TabsTrigger value="packages">My Packages</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="tips" className="space-y-4">
@@ -252,11 +252,11 @@ export function UserMyTips() {
                                         <div className="flex-1">
                                             <div className="mb-2 flex items-center space-x-2">
                                                 <h3 className="font-semibold">{tip.match.home_team} vs {tip.match.away_team}</h3>
-                                                {/*{tip.isFree && (*/}
-                                                {/*    <Badge variant="outline" className="border-green-600 text-green-600">*/}
-                                                {/*        FREE*/}
-                                                {/*    </Badge>*/}
-                                                {/*)}*/}
+                                                {tip.isFree && (
+                                                    <Badge variant="outline" className="border-green-600 text-green-600">
+                                                        FREE
+                                                    </Badge>
+                                                )}
                                             </div>
 
                                             <div
@@ -297,10 +297,10 @@ export function UserMyTips() {
                                                 </div>
                                             </div>
 
-                                            {/*<Button variant="outline" size="sm">*/}
-                                            {/*    <Eye className="mr-2 h-4 w-4" />*/}
-                                            {/*    View Details*/}
-                                            {/*</Button>*/}
+                                            <Button variant="outline" size="sm">
+                                                <Eye className="mr-2 h-4 w-4" />
+                                                View Details
+                                            </Button>
                                         </div>
                                     </div>
                                 </CardContent>

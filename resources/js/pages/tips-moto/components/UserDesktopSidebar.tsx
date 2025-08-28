@@ -19,7 +19,7 @@ interface UserDesktopSidebarProps {
 export function UserDesktopSidebar({ currentPage, onPageChange, currentUser, isOpen }: UserDesktopSidebarProps) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
-    // { id: 'packages', label: 'Packages', icon: Package },
+    { id: 'packages', label: 'Packages', icon: Package },
     { id: 'my-tips', label: 'My Tips', icon: Target },
     { id: 'account', label: 'Account', icon: User },
   ];
