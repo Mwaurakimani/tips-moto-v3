@@ -295,10 +295,10 @@ export function UserMyTips({ onGoToPackages }: UserMyTipsProps) {
                                                 </div>
                                             </div>
 
-                                            <Button variant="outline" size="sm">
-                                                <Eye className="mr-2 h-4 w-4" />
-                                                View Details
-                                            </Button>
+                                            {/*<Button variant="outline" size="sm">*/}
+                                            {/*    <Eye className="mr-2 h-4 w-4" />*/}
+                                            {/*    View Details*/}
+                                            {/*</Button>*/}
                                         </div>
                                     </div>
                                 </CardContent>
