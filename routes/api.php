@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Models\League;
 use App\Models\MatchModel;
+use App\Models\SubscriptionPlan;
 use App\Models\Team;
 use App\Models\Tip;
 use Illuminate\Http\Request;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaction;
+use App\Http\Controllers\Api\UserPackagesController;
+
 
 // Public
 Route::get('/leagues', [LeagueController::class, 'index']);
@@ -121,6 +124,8 @@ Route::get('/tips/{tip}', [TipController::class, 'show']);
 Route::get('/plans', [SubscriptionController::class, 'plans']);
 
 
+Route::get('/user-packages', [UserPackagesController::class, 'index']);
+
 
 // Authenticated
 Route::middleware('auth:sanctum')->group(function () {
@@ -165,7 +170,7 @@ Route::post('onit/callback', function (Request $request) {
     }
 
     // Strip any "clientId|" prefix (e.g. "1003|") and any leading "AD-"
-    $normalizedRef = $originator ? Str::afterLast($originator, '|') : '';
+    $normalizedRef = $originator ? \Illuminate\Support\Str::afterLast($originator, '|') : '';
     $normalizedRef = preg_replace('/^AD-/', '', $normalizedRef ?? '');
 
     if ($normalizedRef === '') {
@@ -173,79 +178,92 @@ Route::post('onit/callback', function (Request $request) {
         return response()->json(['message' => 'Missing originator reference'], 422);
     }
 
-    // --- Find the local transaction by our stored provider_ref ---
-    // We store provider_ref = "ONIT-xxxx", so look that up.
-    $transaction = Transaction::where('provider_ref', $normalizedRef)->first();
+    // --- Determine success vs failure across payload styles ---
+    $statusField      = strtoupper((string) $request->input('status', '')); // sometimes "SUCCESS"
+    $hasSuccessKeys   = $request->has('originatorRequestId') && $request->has('transactionReference');
+    $looksSuccessful  = ($statusField === 'SUCCESS') || $hasSuccessKeys;
 
-    if (!$transaction) {
-        Log::warning('Transaction not found for callback', ['provider_ref' => $normalizedRef]);
-        return response()->json(['message' => 'Transaction not found'], 404);
-    }
-
-    // Idempotency: if already terminal, do nothing
-    if (in_array($transaction->status, ['successful', 'failed'], true)) {
-        return response()->json(['message' => 'Already processed']);
-    }
-
-    // --- Determine success vs failure across both payload styles ---
-    $statusField  = strtoupper((string)$request->input('status', '')); // might be "SUCCESS" on some providers
-    $hasSuccessKeys = $request->has('originatorRequestId') && $request->has('transactionReference');
-    $looksSuccessful = ($statusField === 'SUCCESS') || $hasSuccessKeys;
-
-    // For success payload: amount is present; for failure it usually isn't
     $amountFromCallback = (float) $request->input('amount', 0);
-    $creditAmount = $amountFromCallback > 0 ? $amountFromCallback : (float) $transaction->amount;
+    $creditAmount       = $amountFromCallback > 0 ? $amountFromCallback : 0.0; // (used in logs)
 
-    // Failure details (sample has "message" and "description")
     $failureReason = (string) ($request->input('message')
         ?: $request->input('description')
             ?: 'Onit reported failure');
 
-    // --- Apply updates atomically ---
-    DB::transaction(function () use (
-        $transaction,
+    // --- Atomic handling with row lock & re-check ---
+    \Illuminate\Support\Facades\DB::transaction(function () use (
+        $normalizedRef,
         $looksSuccessful,
         $creditAmount,
         $failureReason,
         $request
     ) {
+        /** @var \App\Models\Transaction $tx */
+        $tx = \App\Models\Transaction::where('provider_ref', $normalizedRef)
+            ->lockForUpdate()
+            ->first();
+
+        if (! $tx) {
+            Log::warning('Transaction not found for callback (inside tx)', ['provider_ref' => $normalizedRef]);
+            // Nothing else to do; return 200 outside
+            return;
+        }
+
+        // If already terminal, do nothing (idempotent)
+        if (in_array($tx->status, ['completed','failed','refunded','canceled'], true)) {
+            return;
+        }
+
         if ($looksSuccessful) {
-            // Mark transaction successful
-            $transaction->update([
-                'status' => 'successful',
-                // Optionally capture provider tx ref if you have a column for it:
-                // 'provider_tx_ref' => $request->input('transactionReference'),
-                // Optionally you could also store channel: $request->input('channel')
+            $tx->update(['status' => 'completed']);
+
+            // Create the subscription from metadata
+            $packageId = data_get($tx->metadata, 'package_id');
+            /** @var \App\Models\SubscriptionPlan $plan */
+            $plan = \App\Models\SubscriptionPlan::findOrFail($packageId);
+            $user = $tx->user;
+
+            $start = now();
+            $end   = match ($plan->interval) {
+                'day'   => $start->copy()->addDays((int) $plan->interval_count),
+                'week'  => $start->copy()->addWeeks((int) $plan->interval_count),
+                'month' => $start->copy()->addMonths((int) $plan->interval_count),
+                'year'  => $start->copy()->addYears((int) $plan->interval_count),
+                default => $start->copy()->addDays((int) data_get($plan->features, 'period_days', 1)),
+            };
+
+            $user->subscriptions()->create([
+                'plan_id'                 => $plan->id,
+                'status'                  => 'active',
+                'start_at'                => $start,
+                'end_at'                  => $end,
+                'gateway_subscription_id' => $tx->id, // matches your admin join
             ]);
 
-//            // Credit user balance
-//            $user = $transaction->user()->lockForUpdate()->first();
-//            $user->increment('balance', max(0, $creditAmount));
-
             Log::info('Transaction success processed', [
-                'transaction_id' => $transaction->id,
-                'user_id'        => $transaction->user_id,
+                'transaction_id' => $tx->id,
+                'user_id'        => $tx->user_id,
                 'credited'       => $creditAmount,
-                'provider_ref'   => $transaction->provider_ref,
+                'provider_ref'   => $tx->provider_ref,
                 'provider_txref' => $request->input('transactionReference'),
             ]);
         } else {
-            // Mark transaction failed and include reason in description
-            $newDesc = trim(($transaction->description ? $transaction->description . ' | ' : '') . $failureReason);
-
-            $transaction->update([
+            $newDesc = trim(($tx->description ? $tx->description . ' | ' : '') . $failureReason);
+            $tx->update([
                 'status'      => 'failed',
                 'description' => $newDesc,
             ]);
 
             Log::info('Transaction failure processed', [
-                'transaction_id' => $transaction->id,
+                'transaction_id' => $tx->id,
                 'reason'         => $failureReason,
             ]);
         }
     });
 
+    // Always 200 to the provider, unless you specifically need to signal failure
     return response()->json(['message' => 'Callback processed']);
 })->name('onit_callback');
+
 
 

@@ -25,6 +25,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { DeleteConfirmationDialog } from './DeleteConfirmationDialog';
 import { Textarea } from './ui/textarea';
 import { toast } from 'sonner';
+import DebugJson from '@/components/ui/JsonDebug.js';
 
 export function PackageDetailView({
                                       subscription,
@@ -622,6 +623,7 @@ export function PackageDetailView({
                                                                 <Label className="text-xs">Match Time</Label>
                                                                 <Input
                                                                     value={tip.time || ''}
+                                                                    type="time"
                                                                     onChange={(e) => handleTipChange(index, 'time', e.target.value)}
                                                                     className="h-8 text-sm"
                                                                 />
@@ -663,14 +665,14 @@ export function PackageDetailView({
                                                                     </SelectContent>
                                                                 </Select>
                                                             </div>
-                                                            <div className="space-y-1">
-                                                                <Label className="text-xs">Odds</Label>
-                                                                <Input
-                                                                    value={tip.odds || ''}
-                                                                    onChange={(e) => handleTipChange(index, 'odds', e.target.value)}
-                                                                    className="h-8 text-sm"
-                                                                />
-                                                            </div>
+                                                            {/*<div className="space-y-1">*/}
+                                                            {/*    <Label className="text-xs">Odds</Label>*/}
+                                                            {/*    <Input*/}
+                                                            {/*        value={tip.odds || ''}*/}
+                                                            {/*        onChange={(e) => handleTipChange(index, 'odds', e.target.value)}*/}
+                                                            {/*        className="h-8 text-sm"*/}
+                                                            {/*    />*/}
+                                                            {/*</div>*/}
                                                         </div>
 
                                                         <div className="grid grid-cols-3 gap-3">
@@ -707,28 +709,28 @@ export function PackageDetailView({
                                                                     </SelectContent>
                                                                 </Select>
                                                             </div>
-                                                            <div className="space-y-1">
-                                                                <Label className="text-xs">Confidence %</Label>
-                                                                <Input
-                                                                    type="number"
-                                                                    min="0"
-                                                                    max="100"
-                                                                    value={tip.confidence || ''}
-                                                                    onChange={(e) => handleTipChange(index, 'confidence', parseInt(e.target.value) || 0)}
-                                                                    className="h-8 text-sm"
-                                                                />
-                                                            </div>
+                                                            {/*<div className="space-y-1">*/}
+                                                            {/*    <Label className="text-xs">Confidence %</Label>*/}
+                                                            {/*    <Input*/}
+                                                            {/*        type="number"*/}
+                                                            {/*        min="0"*/}
+                                                            {/*        max="100"*/}
+                                                            {/*        value={tip.confidence || ''}*/}
+                                                            {/*        onChange={(e) => handleTipChange(index, 'confidence', parseInt(e.target.value) || 0)}*/}
+                                                            {/*        className="h-8 text-sm"*/}
+                                                            {/*    />*/}
+                                                            {/*</div>*/}
                                                         </div>
 
-                                                        <div className="space-y-1">
-                                                            <Label className="text-xs">Analysis Reason</Label>
-                                                            <Textarea
-                                                                value={tip.analysisReason || ''}
-                                                                onChange={(e) => handleTipChange(index, 'analysisReason', e.target.value)}
-                                                                className="text-sm min-h-[60px]"
-                                                                placeholder="Enter analysis reasoning..."
-                                                            />
-                                                        </div>
+                                                        {/*<div className="space-y-1">*/}
+                                                        {/*    <Label className="text-xs">Analysis Reason</Label>*/}
+                                                        {/*    <Textarea*/}
+                                                        {/*        value={tip.analysisReason || ''}*/}
+                                                        {/*        onChange={(e) => handleTipChange(index, 'analysisReason', e.target.value)}*/}
+                                                        {/*        className="text-sm min-h-[60px]"*/}
+                                                        {/*        placeholder="Enter analysis reasoning..."*/}
+                                                        {/*    />*/}
+                                                        {/*</div>*/}
                                                     </div>
                                                 ) : (
                                                     <>
@@ -738,16 +740,16 @@ export function PackageDetailView({
                                                                 <p className="text-sm text-gray-600 dark:text-gray-400">{tip.league}</p>
                                                             </div>
                                                             <div className="flex items-center space-x-2">
-                                                                <Badge
-                                                                    className={
-                                                                        tip.winningStatus === 'won' ? 'bg-green-600 text-white' :
-                                                                            tip.winningStatus === 'lost' ? 'bg-red-600 text-white' :
-                                                                                tip.winningStatus === 'void' ? 'bg-gray-600 text-white' :
-                                                                                    'bg-yellow-600 text-white'
-                                                                    }
-                                                                >
-                                                                    {tip.winningStatus.charAt(0).toUpperCase() + tip.winningStatus.slice(1)}
-                                                                </Badge>
+                                                                {/*<Badge*/}
+                                                                {/*    className={*/}
+                                                                {/*        tip.winningStatus === 'won' ? 'bg-green-600 text-white' :*/}
+                                                                {/*            tip.winningStatus === 'lost' ? 'bg-red-600 text-white' :*/}
+                                                                {/*                tip.winningStatus === 'void' ? 'bg-gray-600 text-white' :*/}
+                                                                {/*                    'bg-yellow-600 text-white'*/}
+                                                                {/*    }*/}
+                                                                {/*>*/}
+                                                                {/*    {tip.winningStatus.charAt(0).toUpperCase() + tip.winningStatus.slice(1)}*/}
+                                                                {/*</Badge>*/}
                                                             </div>
                                                         </div>
 
@@ -757,8 +759,8 @@ export function PackageDetailView({
                                                                 <p className="font-medium text-orange-600">{tip.prediction}</p>
                                                             </div>
                                                             <div>
-                                                                <p className="text-xs text-gray-500 dark:text-gray-400">Odds</p>
-                                                                <p className="font-bold text-green-600">{tip.odds}</p>
+                                                                {/*<p className="text-xs text-gray-500 dark:text-gray-400">Odds</p>*/}
+                                                                {/*<p className="font-bold text-green-600">{tip.odds}</p>*/}
                                                             </div>
                                                         </div>
 
@@ -777,26 +779,25 @@ export function PackageDetailView({
                                                                     {tip.riskLevel.charAt(0).toUpperCase() + tip.riskLevel.slice(1)}
                                                                 </Badge>
                                                             </div>
-                                                            <div>
-                                                                <p className="text-xs text-gray-500 dark:text-gray-400">Confidence</p>
-                                                                <p className="font-medium text-blue-600">{tip.confidence}%</p>
-                                                            </div>
+                                                            {/*<div>*/}
+                                                                {/*<p className="text-xs text-gray-500 dark:text-gray-400">Confidence</p>*/}
+                                                                {/*<p className="font-medium text-blue-600">{tip.confidence}%</p>*/}
+                                                            {/*</div>*/}
                                                         </div>
 
-                                                        {tip.analysisReason && (
-                                                            <div
-                                                                className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                                                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Analysis</p>
-                                                                <p className="text-sm text-gray-700 dark:text-gray-300">{tip.analysisReason}</p>
-                                                            </div>
-                                                        )}
+                                                        {/*{tip.analysisReason && (*/}
+                                                        {/*    <div*/}
+                                                        {/*        className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">*/}
+                                                        {/*        <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Analysis</p>*/}
+                                                        {/*        <p className="text-sm text-gray-700 dark:text-gray-300">{tip.analysisReason}</p>*/}
+                                                        {/*    </div>*/}
+                                                        {/*)}*/}
 
                                                         <div
                                                             className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                                                             <div
                                                                 className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                                                                 <span>Match Time: {tip.time}</span>
-                                                                <span>Expected Return: {tip.expectedReturn}</span>
                                                             </div>
                                                         </div>
                                                     </>
@@ -805,18 +806,18 @@ export function PackageDetailView({
                                         ))}
                                     </div>
 
-                                    {!isEditingTips && subscription.tipsData && subscription.tipsData.length > 10 && (
+                                    {!isEditingTips && subscription.tipsData && subscription.tipsData.length > 18 && (
                                         <div className="text-center pt-4 border-t border-gray-200 dark:border-gray-700">
                                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                                 Showing 10 of {subscription.tipsData.length} tips
                                             </p>
-                                            <Badge variant="outline" className="mt-2">
-                                                {subscription.tipsData.filter(tip => tip.winningStatus === 'won').length} Won
-                                                • {' '}
-                                                {subscription.tipsData.filter(tip => tip.winningStatus === 'lost').length} Lost
-                                                • {' '}
-                                                {subscription.tipsData.filter(tip => tip.winningStatus === 'pending').length} Pending
-                                            </Badge>
+                                            {/*<Badge variant="outline" className="mt-2">*/}
+                                            {/*    {subscription.tipsData.filter(tip => tip.winningStatus === 'won').length} Won*/}
+                                            {/*    • {' '}*/}
+                                            {/*    {subscription.tipsData.filter(tip => tip.winningStatus === 'lost').length} Lost*/}
+                                            {/*    • {' '}*/}
+                                            {/*    {subscription.tipsData.filter(tip => tip.winningStatus === 'pending').length} Pending*/}
+                                            {/*</Badge>*/}
                                         </div>
                                     )}
                                 </div>

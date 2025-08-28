@@ -106,109 +106,6 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
             popular: false,
             color: 'from-pink-500 to-pink-600',
         },
-
-        // {
-        //   id: 1437,
-        //   name: 'Over & Under Markets Daily',
-        //   description: 'Goal-based market predictions',
-        //   price: 29,
-        //   originalPrice: 49,
-        //   duration: 'Daily',
-        //   tips: '5 Tips',
-        //   accuracy: '86%+',
-        //   category: 'goal-markets',
-        //   features: [
-        //     'Over/Under 1.5 goals',
-        //     'Over/Under 2.5 goals',
-        //     'Over/Under 3.5 goals',
-        //     'Goal market analysis',
-        //     'Low risk selections'
-        //   ],
-        //   popular: false,
-        //   color: 'from-green-500 to-green-600'
-        // },
-        // {
-        //   id: 1438,
-        //   name: 'Over & Under Markets Weekly',
-        //   description: 'Weekly goal market coverage',
-        //   price: 199,
-        //   originalPrice: 299,
-        //   duration: 'Weekly',
-        //   tips: '7 Tips/Day',
-        //   accuracy: '88%+',
-        //   category: 'goal-markets',
-        //   features: [
-        //     'Daily goal predictions',
-        //     'Multiple over/under markets',
-        //     'Statistical analysis',
-        //     'Form-based selections',
-        //     'WhatsApp support',
-        //     'Weekly performance reports'
-        //   ],
-        //   popular: false,
-        //   color: 'from-teal-500 to-teal-600'
-        // },
-        // {
-        //   id: 1439,
-        //   name: 'Mega Jackpot Prediction',
-        //   description: 'Multi-fixture jackpot tips',
-        //   price: 49,
-        //   originalPrice: 79,
-        //   duration: 'Weekly',
-        //   tips: '15 Fixtures',
-        //   accuracy: '85%+',
-        //   category: 'jackpots',
-        //   features: [
-        //     '15-fixture jackpot tips',
-        //     'Multiple outcome analysis',
-        //     'Risk-balanced selections',
-        //     'Jackpot-specific strategy',
-        //     'Historical performance data'
-        //   ],
-        //   popular: false,
-        //   color: 'from-purple-500 to-purple-600'
-        // },
-        // {
-        //   id: 1440,
-        //   name: 'Daily Jackpot Premium',
-        //   description: 'Daily multi-bet jackpot tips',
-        //   price: 39,
-        //   originalPrice: 59,
-        //   duration: 'Daily',
-        //   tips: '13 Fixtures',
-        //   accuracy: '87%+',
-        //   category: 'jackpots',
-        //   features: [
-        //     '13-fixture daily jackpot',
-        //     'Professional analysis',
-        //     'Multi-bet strategy',
-        //     'Fixture-specific tips',
-        //     'Daily performance tracking'
-        //   ],
-        //   popular: false,
-        //   color: 'from-indigo-500 to-indigo-600'
-        // },
-        // {
-        //   id: 1447,
-        //   name: 'Weekend Accumulator',
-        //   description: 'High-value weekend acca tips',
-        //   price: 199,
-        //   originalPrice: 299,
-        //   duration: 'Weekly',
-        //   tips: '15 Tips',
-        //   accuracy: '84%+',
-        //   category: 'accumulators',
-        //   features: [
-        //     'Weekend accumulator bets',
-        //     'High-value selections',
-        //     'Multi-league coverage',
-        //     'Accumulator strategy',
-        //     'Risk management advice',
-        //     'Premium analysis reports'
-        //   ],
-        //   popular: true,
-        //   color: 'from-yellow-500 to-orange-500'
-        // }
     ];
 
     // Filter packages based on search and filters
@@ -228,7 +125,8 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
                 phoneNumber
             }
         }).then((response) => {
-            console.log(response);
+            alert("Accept the transaction to complete the purchase")
+            window.location.href = response.data.url
         })
     };
 

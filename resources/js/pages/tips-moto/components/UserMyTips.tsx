@@ -1,45 +1,119 @@
-import axios from 'axios';
 import { AlertTriangle, Calendar, CheckCircle, Clock, Download, Eye, Package, Target, Trophy, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import axios, { AxiosRequestConfig } from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
+
 
 interface UserMyTipsProps {
     onGoToPackages: (page: string) => void;
+    currentUserEmail:string
 }
 
-export function UserMyTips({ onGoToPackages }: UserMyTipsProps) {
+type TipItem = {
+    id: number;
+    match: string;
+    homeTeam?: string | null;
+    awayTeam?: string | null;
+    league?: string | null;
+    prediction: string;
+    tipType?: string | null;
+    riskLevel?: string | null;
+    winningStatus?: string | null;
+    time?: string | null;
+    odds?: number | null;
+    isFree?: boolean;
+};
+
+type Pkg = {
+    id: number;
+    name: string;
+    slug: string;
+    status: string;
+    purchaseDate?: string | null;   // from API
+    expiryDate?: string | null;     // from API
+    price?: number | null;
+    tipsAccessed?: number | null;
+    totalTips?: number | null;
+    winRate?: number | null;
+    tipsData?: TipItem[];           // << add this
+};
+
+async function fetchUserPackages(
+    email: string,
+    config: AxiosRequestConfig = {}
+): Promise<Pkg[]> {
+    const { data } = await axios.get("/api/user-packages", {
+        params: { email },
+        ...config,
+    });
+    return data?.data ?? [];
+}
+
+// 2) Helpers
+const fmtDate = (iso?: string | null) => {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    return isNaN(d.getTime()) ? "—" : d.toLocaleDateString();
+};
+
+const fmtOdds = (o?: number | null) => (typeof o === 'number' ? o.toFixed(2) : '—');
+
+const pct = (num?: number | null, den?: number | null) => {
+    const n = Number(num ?? 0);
+    const d = Number(den ?? 0);
+    if (d <= 0) return 0;
+    const p = (n / d) * 100;
+    return Math.max(0, Math.min(100, p));
+};
+
+export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps) {
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState<string | null>(null);
+    const [userPackages,setUserPackages] = useState<Pkg[]>([])
+    const [showTipsModal, setShowTipsModal] = useState(false);
+    const [selectedPackage, setSelectedPackage] = useState<Pkg | null>(null);
+
+
+
+
+    useEffect(() => {
+        if (!currentUserEmail) return;
+
+        let ignore = false;
+        const controller = new AbortController();
+
+        (async () => {
+            try {
+                setLoading(true);
+                const res = await fetchUserPackages(currentUserEmail, {
+                    signal: controller.signal,
+                });
+
+                if (!ignore) setUserPackages(res);
+            } catch (e: any) {
+                if (!ignore && e?.name !== "AbortError")
+                    setErr(e?.message ?? "Failed to load packages");
+            } finally {
+                if (!ignore) setLoading(false);
+            }
+        })();
+
+        return () => {
+            ignore = true;
+            controller.abort();
+        };
+    }, [currentUserEmail]);
+
+
 
     // Mock user's purchased packages
-    const userPackages = [
-        // {
-        //     id: 1436,
-        //     name: 'Full-Time Scores Weekly',
-        //     purchaseDate: '2025-01-01',
-        //     expiryDate: '2025-01-31',
-        //     status: 'active',
-        //     price: 599,
-        //     tipsAccessed: 45,
-        //     totalTips: 120,
-        //     winRate: 89.2
-        // },
-        // {
-        //     id: 1447,
-        //     name: 'Weekend Accumulator',
-        //     purchaseDate: '2024-12-15',
-        //     expiryDate: '2025-01-15',
-        //     status: 'expired',
-        //     price: 199,
-        //     tipsAccessed: 24,
-        //     totalTips: 24,
-        //     winRate: 75.0
-        // }
-    ];
 
     const [mytips, setMyTips] = useState([]);
 
@@ -323,11 +397,11 @@ export function UserMyTips({ onGoToPackages }: UserMyTipsProps) {
                 <TabsContent value="packages" className="space-y-4">
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                         {userPackages.map((pkg) => (
-                            <Card key={pkg.id} className={`${pkg.status === 'active' ? 'ring-2 ring-green-500/30' : ''}`}>
+                            <Card key={pkg.id} className={pkg.status === "active" ? "ring-2 ring-green-500/30" : ""}>
                                 <CardHeader>
                                     <div className="flex items-center justify-between">
                                         <CardTitle className="text-lg">{pkg.name}</CardTitle>
-                                        <Badge className={pkg.status === 'active' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}>
+                                        <Badge className={pkg.status === "active" ? "bg-green-500 text-white" : "bg-gray-500 text-white"}>
                                             {pkg.status.toUpperCase()}
                                         </Badge>
                                     </div>
@@ -337,43 +411,57 @@ export function UserMyTips({ onGoToPackages }: UserMyTipsProps) {
                                     <div className="grid grid-cols-2 gap-4 text-sm">
                                         <div>
                                             <p className="text-muted-foreground">Purchased</p>
-                                            <p className="font-medium">{new Date(pkg.purchaseDate).toLocaleDateString()}</p>
+                                            <p className="font-medium">{fmtDate(pkg.purchaseDate)}</p>
                                         </div>
                                         <div>
                                             <p className="text-muted-foreground">Expires</p>
-                                            <p className="font-medium">{new Date(pkg.expiryDate).toLocaleDateString()}</p>
+                                            <p className="font-medium">{fmtDate(pkg.expiryDate)}</p>
                                         </div>
-                                        <div>
-                                            <p className="text-muted-foreground">Win Rate</p>
-                                            <p className="font-medium text-green-600">{pkg.winRate}%</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-muted-foreground">Price Paid</p>
-                                            <p className="font-medium">KES {pkg.price}</p>
-                                        </div>
+
+                                        {/*/!* Optional if your API really returns these; otherwise hide or compute *!/*/}
+                                        {/*{typeof pkg.winRate === "number" && (*/}
+                                        {/*    <div>*/}
+                                        {/*        <p className="text-muted-foreground">Win Rate</p>*/}
+                                        {/*        <p className="font-medium text-green-600">{pkg.winRate}%</p>*/}
+                                        {/*    </div>*/}
+                                        {/*)}*/}
+                                        {typeof parseInt(pkg.price) === "number" && (
+                                            <div>
+                                                <p className="text-muted-foreground">Price Paid</p>
+                                                <p className="font-medium">KES {pkg.price}</p>
+                                            </div>
+                                        )}
                                     </div>
 
-                                    <div>
-                                        <div className="mb-1 flex justify-between text-sm">
-                                            <span>Tips Accessed</span>
-                                            <span>
-                                                {pkg.tipsAccessed}/{pkg.totalTips}
-                                            </span>
-                                        </div>
-                                        <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-                                            <div
-                                                className="h-2 rounded-full bg-orange-500 transition-all duration-300"
-                                                style={{ width: `${(pkg.tipsAccessed / pkg.totalTips) * 100}%` }}
-                                            />
-                                        </div>
-                                    </div>
+                                    {/*{(pkg.tipsAccessed != null && pkg.totalTips != null) && (*/}
+                                    {/*    <div>*/}
+                                    {/*        <div className="mb-1 flex justify-between text-sm">*/}
+                                    {/*            <span>Tips Accessed</span>*/}
+                                    {/*            <span>{pkg.tipsAccessed}/{pkg.totalTips}</span>*/}
+                                    {/*        </div>*/}
+                                    {/*        <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">*/}
+                                    {/*            <div*/}
+                                    {/*                className="h-2 rounded-full bg-orange-500 transition-all duration-300"*/}
+                                    {/*                style={{ width: `${pct(pkg.tipsAccessed, pkg.totalTips)}%` }}*/}
+                                    {/*            />*/}
+                                    {/*        </div>*/}
+                                    {/*    </div>*/}
+                                    {/*)}*/}
 
                                     <div className="flex space-x-2">
-                                        <Button variant="outline" size="sm" className="flex-1">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex-1"
+                                            onClick={() => {
+                                                setSelectedPackage(pkg);     // give modal all fields, including tipsData
+                                                setShowTipsModal(true);
+                                            }}
+                                        >
                                             <Eye className="mr-2 h-4 w-4" />
                                             View Tips
                                         </Button>
-                                        {pkg.status === 'expired' && (
+                                        {pkg.status === "expired" && (
                                             <Button size="sm" className="flex-1 bg-orange-500 hover:bg-orange-600">
                                                 Renew Package
                                             </Button>
@@ -396,6 +484,83 @@ export function UserMyTips({ onGoToPackages }: UserMyTipsProps) {
                     )}
                 </TabsContent>
             </Tabs>
+            <Dialog open={showTipsModal} onOpenChange={setShowTipsModal}>
+                <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+                    <DialogHeader>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <DialogTitle>{selectedPackage?.name ?? "Package Tips"}</DialogTitle>
+                                <DialogDescription>
+                                    {selectedPackage?.status?.toUpperCase()} •
+                                    {" "}Purchased: {fmtDate(selectedPackage?.purchaseDate)} •
+                                    {" "}Expires: {fmtDate(selectedPackage?.expiryDate)}
+                                </DialogDescription>
+                            </div>
+                            <Button variant="ghost" size="sm" onClick={() => setShowTipsModal(false)}>Close</Button>
+                        </div>
+                    </DialogHeader>
+
+                    <div className="flex-1 overflow-auto space-y-4">
+                        {/* TODO: replace this list with your own modal design */}
+                        {(selectedPackage?.tipsData ?? []).length === 0 ? (
+                            <Card className="py-12 text-center">
+                                <CardContent>
+                                    <Target className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                                    <h3 className="text-lg font-semibold mb-2">No tips in this package</h3>
+                                    <p className="text-muted-foreground">This package has no tips listed yet.</p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            <div className="space-y-3">
+                                {(selectedPackage?.tipsData ?? []).map((tip) => (
+                                    <Card key={tip.id} className="hover:shadow-sm transition-shadow">
+                                        <CardContent className="p-4">
+                                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h3 className="font-semibold">{tip.match}</h3>
+                                                        {tip.isFree && (
+                                                            <Badge variant="outline" className="text-green-600 border-green-600">FREE</Badge>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-4 mb-2">
+                                                        {tip.time && (
+                                                            <span className="flex items-center">
+                          <Calendar className="h-3 w-3 mr-1" />
+                                                                {tip.time}
+                        </span>
+                                                        )}
+                                                        {tip.league && <span>{tip.league}</span>}
+                                                        {tip.riskLevel && (
+                                                            <Badge variant="outline" className={`${getRiskLevelColor(tip.riskLevel)} border-0`}>
+                                                                {tip.riskLevel.toUpperCase()} RISK
+                                                            </Badge>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex items-center gap-6">
+                                                        <div>
+                                                            <p className="text-xs text-muted-foreground">Prediction</p>
+                                                            <p className="font-medium">{tip.prediction}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-muted-foreground">Odds</p>
+                                                            <p className="font-medium">{fmtOdds(tip.odds)}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center">
+                                                    <Button variant="outline" size="sm">View Details</Button>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 }

@@ -31,7 +31,7 @@ export function Sidebar({ collapsed, onToggle, currentPage }: SidebarProps) {
         { id: 'accounts', icon: Users, label: 'Accounts', href: route('adminDashboard.accounts') },
         { id: 'matches', icon: Trophy, label: 'Matches', href: route('adminDashboard.matches') },
         { id: 'tips', icon: Lightbulb, label: 'Tips', href: route('adminDashboard.tips') },
-        { id: 'subscriptions', icon: CreditCard, label: 'Subscriptions', href: route('adminDashboard.subscriptions') },
+        { id: 'subscriptions', icon: CreditCard, label: 'Packages', href: route('adminDashboard.subscriptions') },
         { id: 'transactions', icon: ArrowRightLeft, label: 'Transactions', href: route('adminDashboard.transactions') },
         // { id: 'notifications', icon: Bell, label: 'Notifications', href: '/adminDashboard/notifications' },
         // { id: 'support', icon: Headphones, label: 'Customer Support', href: '/adminDashboard/support' },

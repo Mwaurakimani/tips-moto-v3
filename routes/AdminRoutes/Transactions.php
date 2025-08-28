@@ -69,12 +69,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $transaction = new Transaction();
 
         $transaction->user_id = auth()->user()->id;
-        $transaction->currency = 'KSH';
+        $transaction->currency = 'KES';
         $transaction->amount = $package->price;
         $transaction->provider = 'M-Pesa';
         $transaction->provider_ref = $request_id;
         $transaction->type = 'subscription';
         $transaction->status = 'pending';
+        $transaction->metadata    = [
+            'package_id'            => $package->id,
+            'package_slug'          => $package->slug,
+            'package_name'          => $package->name,
+            'package_snapshot'      => [
+                'price'     => (float) $package->price,
+                'currency'  => strtoupper($package->currency ?? 'KES'),
+                'interval'  => $package->interval,
+                'interval_count' => (int) $package->interval_count,
+                'features'  => $package->features,
+            ],
+            'phone'                 => $phoneNumber,
+            'callback'              => route('onit_callback'),
+        ];
         $transaction->save();
 
 
