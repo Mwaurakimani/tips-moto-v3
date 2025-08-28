@@ -16,7 +16,7 @@ class TipController extends Controller
     public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         // Accept ids as array: ?ids[]=12&ids[]=34&ids[]=56 OR comma string: ?ids=12,34,56
-        $idsInput = $request->input('ids', [2495,2489,2482]);
+        $idsInput = $request->input('ids', [734,726,718]);
         if (is_string($idsInput)) {
             $idsInput = explode(',', $idsInput);
         }
@@ -89,7 +89,8 @@ class TipController extends Controller
         $limit = max(1, min($limit, 50));
 
         // Accept ids as array (?ids[]=1&ids[]=2&ids[]=3) or comma string (?ids=1,2,3)
-        $idsInput = $request->input('ids', [2495,2489,2482]);
+
+        $idsInput = $request->input('ids', [734,726,718]);
         if (is_string($idsInput)) {
             $idsInput = explode(',', $idsInput);
         }
