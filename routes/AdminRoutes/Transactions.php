@@ -58,10 +58,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('package/purchase', function (Request $request) {
         $phoneNumber = $request->data['phoneNumber'];
-//        $package = $request->input('package');
+        $package_id = $request->data['packageData']['id'];
+        $package = SubscriptionPlan::find($package_id);
 
-        $package = 8;
-        $package = SubscriptionPlan::find($package);
         do {
             $short = strtoupper(substr(str_replace('-', '', (string) Str::uuid()), 0, 7));
             $request_id = 'ONIT-' . $short;

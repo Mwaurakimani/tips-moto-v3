@@ -24,7 +24,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
     // Package data from admin (matching SportPackagesPage)
     const availablePackages = [
         {
-            id: 1435,
+            id: 1,
             name: 'Full-Time Scores Daily',
             description: 'Professional match outcome predictions',
             price: 99,
@@ -44,7 +44,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
             color: 'from-blue-500 to-blue-600',
         },
         {
-            id: 1436,
+            id: 2,
             name: 'Full-Time Scores Weekly',
             description: 'Complete weekly match predictions',
             price: 599,
@@ -66,7 +66,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
             color: 'from-orange-500 to-red-500',
         },
         {
-            id: 1443,
+            id: 12,
             name: 'Both Teams Score Daily',
             description: 'BTTS specialized predictions',
             price: 39,
@@ -86,7 +86,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
             color: 'from-red-500 to-red-600',
         },
         {
-            id: 1444,
+            id: 13,
             name: 'Goal Goal/No Goal Weekly',
             description: 'Weekly BTTS comprehensive package',
             price: 149,
@@ -106,6 +106,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
             popular: false,
             color: 'from-pink-500 to-pink-600',
         },
+
         // {
         //   id: 1437,
         //   name: 'Over & Under Markets Daily',
