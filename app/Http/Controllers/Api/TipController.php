@@ -90,7 +90,7 @@ class TipController extends Controller
 
         // Accept ids as array (?ids[]=1&ids[]=2&ids[]=3) or comma string (?ids=1,2,3)
 
-        $idsInput = $request->input('ids', [734,726,718]);
+        $idsInput = $request->input('ids', [788,784,780]);
         if (is_string($idsInput)) {
             $idsInput = explode(',', $idsInput);
         }
