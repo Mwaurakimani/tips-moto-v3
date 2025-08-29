@@ -126,7 +126,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }: UserPackagesBro
             }
         }).then((response) => {
             alert("Accept the transaction to complete the purchase")
-            window.location.href = response.data.url
+            window.location.reload();
         })
     };
 

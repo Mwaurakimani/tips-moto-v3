@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PostMatchesController;
 use App\Models\League;
 use App\Models\MatchModel;
 use App\Models\SubscriptionPlan;
@@ -123,9 +124,7 @@ Route::get('/tips/free-today', [TipController::class, 'freeToday']);
 Route::get('/tips/{tip}', [TipController::class, 'show']);
 Route::get('/plans', [SubscriptionController::class, 'plans']);
 
-
 Route::get('/user-packages', [UserPackagesController::class, 'index']);
-
 
 // Authenticated
 Route::middleware('auth:sanctum')->group(function () {
@@ -265,5 +264,6 @@ Route::post('onit/callback', function (Request $request) {
     return response()->json(['message' => 'Callback processed']);
 })->name('onit_callback');
 
+Route::post('/post/matches', PostMatchesController::class);
 
 

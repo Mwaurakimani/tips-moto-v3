@@ -111,3 +111,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return json_encode($response);
     })->name('package.purchase');
 });
+
+
