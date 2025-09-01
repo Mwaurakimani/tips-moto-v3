@@ -120,7 +120,9 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
     useEffect(() => {
         const fetchTips = async () => {
             try {
-                const response = await axios.get(route('fetchTipsApi'));
+                const response = await axios.get(route('fetchTipsApi',{
+                    limit:50
+                }));
                 setMyTips(response.data.data);
             } catch (error) {
                 console.error('Error fetching tips:', error);
