@@ -119,7 +119,7 @@ Route::get('/json_matches', function () {
     return response()->json($unique_leagues);
 });
 Route::get('/matches/{match}', [MatchController::class, 'show']);
-Route::get('/tips', [TipController::class, 'index'])->name('fetchTipsApi');
+Route::get('/tips', [TipController::class, 'freeToday'])->name('fetchTipsApi');
 Route::get('/tips/free-today', [TipController::class, 'freeToday']);
 Route::get('/tips/{tip}', [TipController::class, 'show']);
 Route::get('/plans', [SubscriptionController::class, 'plans']);
