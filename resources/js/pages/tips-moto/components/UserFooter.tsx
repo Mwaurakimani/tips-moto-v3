@@ -1,12 +1,8 @@
 import { ArrowRight, Facebook, Instagram, Mail, MapPin, MessageCircle, Phone, Send, TrendingUp, Twitter } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { Link } from '@inertiajs/react';
 
-interface UserFooterProps {
-    onNavigateHome?: () => void;
-    onNavigateTips?: () => void;
-}
-
-export function UserFooter({ onNavigateHome, onNavigateTips }: UserFooterProps) {
+export function UserFooter() {
     return (
         <footer className="bg-black text-white">
             <div className="pt-12 pb-12">
@@ -60,36 +56,16 @@ export function UserFooter({ onNavigateHome, onNavigateTips }: UserFooterProps) 
                             <h3 className="border-b border-orange-500/30 pb-2 font-semibold text-white">Platform</h3>
                             <ul className="space-y-3">
                                 <li>
-                                    {onNavigateHome ? (
-                                        <button
-                                            onClick={onNavigateHome}
-                                            className="group flex items-center text-sm text-gray-400 transition-colors hover:text-orange-400"
-                                        >
-                                            <ArrowRight className="mr-2 h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                                            Home
-                                        </button>
-                                    ) : (
-                                        <a href="#" className="group flex items-center text-sm text-gray-400 transition-colors hover:text-orange-400">
-                                            <ArrowRight className="mr-2 h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                                            Home
-                                        </a>
-                                    )}
+                                    <Link href={route('home')} className="group flex items-center text-sm text-gray-400 transition-colors hover:text-orange-400">
+                                        <ArrowRight className="mr-2 h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                                        Home
+                                    </Link>
                                 </li>
                                 <li>
-                                    {onNavigateTips ? (
-                                        <button
-                                            onClick={onNavigateTips}
-                                            className="group flex items-center text-sm text-gray-400 transition-colors hover:text-orange-400"
-                                        >
-                                            <ArrowRight className="mr-2 h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                                            Today's Tips
-                                        </button>
-                                    ) : (
-                                        <a href="#" className="group flex items-center text-sm text-gray-400 transition-colors hover:text-orange-400">
-                                            <ArrowRight className="mr-2 h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                                            Today's Tips
-                                        </a>
-                                    )}
+                                    <Link href={route('tips')} className="group flex items-center text-sm text-gray-400 transition-colors hover:text-orange-400">
+                                        <ArrowRight className="mr-2 h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                                        Today's Tips
+                                    </Link>
                                 </li>
                                 <li>
                                     <a href="#" className="group flex items-center text-sm text-gray-400 transition-colors hover:text-orange-400">

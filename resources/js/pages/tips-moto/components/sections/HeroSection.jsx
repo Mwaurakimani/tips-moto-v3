@@ -5,15 +5,7 @@ import { Card, CardContent } from '../ui/card';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { heroStats, heroFeatures } from '../constants/homepage-data';
 
-interface HeroSectionProps {
-  featuredTips: any[];
-  todaysFreeTips: any[];
-  onSignIn: () => void;
-  onGetStarted: () => void;
-  onViewTips: () => void;
-}
-
-export function HeroSection({ featuredTips, todaysFreeTips, onSignIn, onGetStarted, onViewTips }: HeroSectionProps) {
+export function HeroSection({ todaysFreeTips}) {
   return (
     <section id="home" className="relative bg-gradient-to-br from-gray-900 via-black to-gray-900 py-12 lg:py-20 overflow-hidden">
       {/* Background decorative elements */}
@@ -63,7 +55,7 @@ export function HeroSection({ featuredTips, todaysFreeTips, onSignIn, onGetStart
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
                 size="lg"
-                onClick={onGetStarted}
+                // onClick={onGetStarted}
                 className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 Start Free Trial
@@ -72,7 +64,7 @@ export function HeroSection({ featuredTips, todaysFreeTips, onSignIn, onGetStart
               <Button
                 size="lg"
                 variant="outline"
-                onClick={onViewTips}
+                // onClick={onViewTips}
                 className="border-2 border-gray-600 bg-gray-700 text-white hover:bg-gray-800 hover:text-white hover:border-gray-500 transition-all duration-300 px-8 py-4 text-lg rounded-2xl"
               >
                 View Today's Tips
@@ -116,7 +108,7 @@ export function HeroSection({ featuredTips, todaysFreeTips, onSignIn, onGetStart
                   </div>
 
                   <div className="space-y-4">
-                    {featuredTips.slice(0, 3).map((tip, index) => (
+                    {todaysFreeTips.slice(0, 3).map((tip, index) => (
 
                       <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                         <div className="flex justify-between items-start mb-2">
@@ -165,7 +157,7 @@ export function HeroSection({ featuredTips, todaysFreeTips, onSignIn, onGetStart
                   )}
 
                   <Button
-                    onClick={onViewTips}
+                    // onClick={onViewTips}
                     className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-2xl py-3"
                   >
                     {todaysFreeTips.length > 0 ? 'View Premium Tips' : 'View Premium Tips'}

@@ -843,3 +843,4 @@ export default function Accounts({ children }) {
 
 
 Accounts.layout = (page) => <AdminLayout>{page}</AdminLayout>;
+

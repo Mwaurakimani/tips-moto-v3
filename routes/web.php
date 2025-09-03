@@ -6,8 +6,19 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('welcome',[
+        'todaysFreeTips' => []
+    ]);
 })->name('home');
+
+Route::get('/tips', function () {
+    return Inertia::render('Home/Pages/Tips');
+})->name('tips');
+
+Route::get('/about-us', function () {
+    return Inertia::render('Home/Pages/AboutUs');
+})->name('about-us');
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

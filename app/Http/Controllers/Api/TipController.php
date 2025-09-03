@@ -91,49 +91,7 @@ class TipController extends Controller
         // Accept ids as array (?ids[]=1&ids[]=2&ids[]=3) or comma string (?ids=1,2,3)
 
 
-        $idsInput = $request->input('ids',
-            [
-            878,
-            877,
-            876,
-            875,
-            874,
-            873,
-            872,
-            871,
-            870,
-            869,
-            868,
-            867,
-            866,
-            865,
-            864,
-            863,
-            862,
-            861,
-            860,
-            859,
-            858,
-            857,
-            856,
-            855,
-            854,
-            853,
-            852,
-            851,
-            850,
-            849,
-            848,
-            847,
-            846,
-            845,
-            844,
-            843,
-            842,
-            841,
-            840
-        ]
-        );
+        $idsInput = $request->input('ids',);
         if (is_string($idsInput)) {
             $idsInput = explode(',', $idsInput);
         }

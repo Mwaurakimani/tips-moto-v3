@@ -13,23 +13,11 @@ createInertiaApp({
     resolve: (name) => resolvePageComponent(`./pages/${name}.jsx`, import.meta.glob('./pages/**/*.jsx')),
     setup({ el, App, props }) {
         const root = createRoot(el);
-
-        const isAdmin = window.location.pathname.startsWith('/adminDashboard');
-
-        root.render(
-            isAdmin ? (
-                    <App {...props} />
-            ) : (
-                <AppContainer {...props}>
-                    <App {...props} />
-                </AppContainer>
-            )
-        );
+        root.render(<App {...props} />);
     },
     progress: {
         color: '#4B5563',
     },
-})
+}).then(r => console.log())
 
-// This will set light / dark mode on load...
 initializeTheme();

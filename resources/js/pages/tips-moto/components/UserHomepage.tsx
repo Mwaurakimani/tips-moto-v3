@@ -3,7 +3,7 @@ import { UserTipsPage } from './UserTipsPage';
 import { UserAboutPage } from './UserAboutPage';
 import { UserHeader } from './UserHeader';
 import { UserFooter } from './UserFooter';
-import { HeroSection } from './sections/HeroSection';
+import { HeroSection } from './sections/HeroSection.jsx';
 import { FeaturesVisualContent } from './sections/FeaturesVisualContent';
 import { stats, features, testimonials } from './constants/homepage-data';
 import { fetchAndProcessTodaysFreeTips, getYesterdaysWinningTips } from './utils/homepage-utils';
@@ -53,7 +53,7 @@ interface UserHomepageProps {
   onUserGetStarted?: () => void;
 }
 
-export function UserHomepage({ onBackToAdmin, allMatches = [], onUserSignIn, onUserGetStarted }: UserHomepageProps) {
+export function UserHomepage({ onBackToAdmin, allMatches = [] }: UserHomepageProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
   const [activeFeature, setActiveFeature] = useState(0);
@@ -193,28 +193,28 @@ export function UserHomepage({ onBackToAdmin, allMatches = [], onUserSignIn, onU
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Header */}
-      <UserHeader
-        currentPage="home"
-        onNavigateHome={() => {
-          setCurrentPage('home');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onNavigateTips={() => setCurrentPage('blank')}
-        onNavigateAbout={() => setCurrentPage('about')}
-        onBackToAdmin={onBackToAdmin}
-        onSignIn={handleSignIn}
-        onGetStarted={handleGetStarted}
-      />
+       {/*Header */}
+      {/*<UserHeader*/}
+      {/*  currentPage="home"*/}
+      {/*  onNavigateHome={() => {*/}
+      {/*    setCurrentPage('home');*/}
+      {/*    window.scrollTo({ top: 0, behavior: 'smooth' });*/}
+      {/*  }}*/}
+      {/*  onNavigateTips={() => setCurrentPage('blank')}*/}
+      {/*  onNavigateAbout={() => setCurrentPage('about')}*/}
+      {/*  onBackToAdmin={onBackToAdmin}*/}
+      {/*  onSignIn={handleSignIn}*/}
+      {/*  onGetStarted={handleGetStarted}*/}
+      {/*/>*/}
 
-       {/*Hero Section*/}
-      <HeroSection
-        featuredTips={freeTips}
-        todaysFreeTips={freeTips}
-        onSignIn={handleSignIn}
-        onGetStarted={handleGetStarted}
-        onViewTips={handleViewTips}
-      />
+      {/* /!*Hero Section*!/*/}
+      {/*<HeroSection*/}
+      {/*  featuredTips={freeTips}*/}
+      {/*  todaysFreeTips={freeTips}*/}
+      {/*  onSignIn={handleSignIn}*/}
+      {/*  onGetStarted={handleGetStarted}*/}
+      {/*  onViewTips={handleViewTips}*/}
+      {/*/>*/}
 
       {/* Stats Section */}
       <section className="py-16 bg-gray-900 text-white">

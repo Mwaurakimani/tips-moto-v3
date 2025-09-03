@@ -1,9 +1,9 @@
-import { 
-  Users, 
-  Target, 
-  Award, 
-  Shield, 
-  TrendingUp, 
+import {
+  Users,
+  Target,
+  Award,
+  Shield,
+  TrendingUp,
   Clock,
   Phone,
   Mail,
@@ -66,16 +66,6 @@ export function UserAboutPage({ onBackToHome, onNavigateToTips, onBackToAdmin, o
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Header */}
-      <UserHeader 
-        currentPage="about"
-        onNavigateHome={onBackToHome}
-        onNavigateTips={onNavigateToTips || (() => {})}
-        onNavigateAbout={() => {}}
-        onBackToAdmin={onBackToAdmin}
-        onSignIn={onSignIn}
-        onGetStarted={onGetStarted}
-      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -88,7 +78,7 @@ export function UserAboutPage({ onBackToHome, onNavigateToTips, onBackToAdmin, o
             About <span className="text-orange-500">Tips Moto</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Kenya's premier sports betting tips platform, dedicated to helping you make 
+            Kenya's premier sports betting tips platform, dedicated to helping you make
             informed betting decisions with data-driven insights and expert analysis.
           </p>
         </section>
@@ -101,14 +91,14 @@ export function UserAboutPage({ onBackToHome, onNavigateToTips, onBackToAdmin, o
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                Founded in 2024, Tips Moto was born from a passion for sports and a commitment to 
-                helping Kenyan bettors succeed. Our team of experienced analysts and sports experts 
-                combines traditional football knowledge with cutting-edge data analytics to deliver 
+                Founded in 2024, Tips Moto was born from a passion for sports and a commitment to
+                helping Kenyan bettors succeed. Our team of experienced analysts and sports experts
+                combines traditional football knowledge with cutting-edge data analytics to deliver
                 the most accurate predictions in the market.
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
-                We understand the unique challenges of sports betting in Kenya, from local league 
-                insights to international tournament analysis. That's why we've built a platform 
+                We understand the unique challenges of sports betting in Kenya, from local league
+                insights to international tournament analysis. That's why we've built a platform
                 that's not just accurate, but also accessible and affordable for every Kenyan bettor.
               </p>
             </CardContent>
@@ -253,8 +243,8 @@ export function UserAboutPage({ onBackToHome, onNavigateToTips, onBackToAdmin, o
               <p className="text-gray-300 mb-6">
                 Join thousands of successful bettors who trust Tips Moto for their winning predictions.
               </p>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 onClick={onBackToHome}
                 className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg rounded-2xl"
               >
@@ -266,10 +256,7 @@ export function UserAboutPage({ onBackToHome, onNavigateToTips, onBackToAdmin, o
       </div>
 
       {/* Footer */}
-      <UserFooter 
-        onNavigateHome={onBackToHome}
-        onNavigateTips={onNavigateToTips}
-      />
+      <UserFooter />
     </div>
   );
 }
