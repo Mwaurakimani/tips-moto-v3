@@ -16,13 +16,17 @@ class TipController extends Controller
     public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         // Accept ids as array: ?ids[]=12&ids[]=34&ids[]=56 OR comma string: ?ids=12,34,56
-        $idsInput = $request->input('ids', [734,726,718]);
+        $idsInput = $request->input('ids', [
+            1011,
+            1013,
+            1025
+        ]);
         if (is_string($idsInput)) {
             $idsInput = explode(',', $idsInput);
         }
 
         $ids = collect($idsInput)
-            ->map(fn ($v) => (int) $v)
+            ->map(fn($v) => (int)$v)
             ->filter()
             ->unique()
             ->values()
@@ -43,7 +47,7 @@ class TipController extends Controller
         }
 
         // Fallback (no ids passed): return 3 tips for today (keep your original behavior)
-        $q->whereHas('match', fn ($m) => $m->whereDate('kickoff_at', now()->toDateString()));
+        $q->whereHas('match', fn($m) => $m->whereDate('kickoff_at', now()->toDateString()));
 
         if ($request->boolean('free_today')) {
             $q->where('tips.is_free', 1)
@@ -60,23 +64,27 @@ class TipController extends Controller
     }
 
 
-    public function show(Tip $tip) {
+    public function show(Tip $tip)
+    {
         return new TipResource($tip->load('match.league'));
     }
 
-    public function store(TipStoreRequest $request) {
+    public function store(TipStoreRequest $request)
+    {
         $data = $request->validated();
         $data['author_id'] = $request->user()->id ?? null;
         $tip = Tip::create($data);
         return (new TipResource($tip->load('match.league')))->response()->setStatusCode(201);
     }
 
-    public function update(TipUpdateRequest $request, Tip $tip) {
+    public function update(TipUpdateRequest $request, Tip $tip)
+    {
         $tip->update($request->validated());
         return new TipResource($tip->fresh()->load('match.league'));
     }
 
-    public function destroy(Tip $tip) {
+    public function destroy(Tip $tip)
+    {
         $tip->delete();
         return response()->noContent();
     }
@@ -85,18 +93,58 @@ class TipController extends Controller
     public function freeToday(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         // limit 1–50 (default 3)
-        $limit = (int) $request->query('limit', 3);
+        $limit = (int)$request->query('limit', 3);
         $limit = max(1, min($limit, 50));
 
         // Accept ids as array (?ids[]=1&ids[]=2&ids[]=3) or comma string (?ids=1,2,3)
 
 
-        $idsInput = $request->input('ids',);
+        $idsInput = $request->input('ids', [
+            1003,
+            1004,
+            1005,
+            1006,
+            1007,
+            1008,
+            1009,
+            1010,
+            1011,
+            1012,
+            1013,
+            1014,
+            1015,
+            1016,
+            1017,
+            1018,
+            1019,
+            1020,
+            1021,
+            1022,
+            1023,
+            1024,
+            1025,
+            1026,
+            1027,
+            1028,
+            1029,
+            1030,
+            1031,
+            1032,
+            1033,
+            1034,
+            1035,
+            1036,
+            1037,
+            1038,
+            1039,
+            1040,
+            1041
+        ]);
         if (is_string($idsInput)) {
             $idsInput = explode(',', $idsInput);
         }
         $ids = collect($idsInput)
-            ->map(fn ($v) => (int) $v)
+            ->map(fn($v) => (int)$v)
             ->filter()
             ->unique()
             ->values();
