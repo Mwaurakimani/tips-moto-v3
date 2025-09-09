@@ -153,7 +153,7 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
         switch (tip.prediction_type) {
             case '1_X_2':
                 switch (tip.prediction_value) {
-                    case -1:
+                    case 1:
                         return 'Home Win';
                     case 0:
                         return 'Draw';
@@ -163,7 +163,7 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
 
             case '1X_X2_12':
                 switch (tip.prediction_value) {
-                    case -1:
+                    case 1:
                         return 'Home Win/Draw ';
                     case 0:
                         return 'Away Win/Draw';
