@@ -4,49 +4,11 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 
-
-interface UserMyTipsProps {
-    onGoToPackages: (page: string) => void;
-    currentUserEmail:string
-}
-
-type TipItem = {
-    id: number;
-    match: string;
-    homeTeam?: string | null;
-    awayTeam?: string | null;
-    league?: string | null;
-    prediction: string;
-    tipType?: string | null;
-    riskLevel?: string | null;
-    winningStatus?: string | null;
-    time?: string | null;
-    odds?: number | null;
-    isFree?: boolean;
-};
-
-type Pkg = {
-    id: number;
-    name: string;
-    slug: string;
-    status: string;
-    purchaseDate?: string | null;   // from API
-    expiryDate?: string | null;     // from API
-    price?: number | null;
-    tipsAccessed?: number | null;
-    totalTips?: number | null;
-    winRate?: number | null;
-    tipsData?: TipItem[];           // << add this
-};
-
-async function fetchUserPackages(
-    email: string,
-    config: AxiosRequestConfig = {}
-): Promise<Pkg[]> {
+async function fetchUserPackages(email, config = {}) {
     const { data } = await axios.get("/api/user-packages", {
         params: { email },
         ...config,
@@ -54,16 +16,16 @@ async function fetchUserPackages(
     return data?.data ?? [];
 }
 
-// 2) Helpers
-const fmtDate = (iso?: string | null) => {
+// Helper functions
+const fmtDate = (iso) => {
     if (!iso) return "—";
     const d = new Date(iso);
     return isNaN(d.getTime()) ? "—" : d.toLocaleDateString();
 };
 
-const fmtOdds = (o?: number | null) => (typeof o === 'number' ? o.toFixed(2) : '—');
+const fmtOdds = (o) => (typeof o === 'number' ? o.toFixed(2) : '—');
 
-const pct = (num?: number | null, den?: number | null) => {
+const pct = (num, den) => {
     const n = Number(num ?? 0);
     const d = Number(den ?? 0);
     if (d <= 0) return 0;
@@ -71,17 +33,15 @@ const pct = (num?: number | null, den?: number | null) => {
     return Math.max(0, Math.min(100, p));
 };
 
-export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps) {
+export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [loading, setLoading] = useState(false);
-    const [err, setErr] = useState<string | null>(null);
-    const [userPackages,setUserPackages] = useState<Pkg[]>([])
+    const [err, setErr] = useState(null);
+    const [userPackages, setUserPackages] = useState([]);
     const [showTipsModal, setShowTipsModal] = useState(false);
-    const [selectedPackage, setSelectedPackage] = useState<Pkg | null>(null);
-
-
-
+    const [selectedPackage, setSelectedPackage] = useState(null);
+    const [mytips, setMyTips] = useState([]);
 
     useEffect(() => {
         if (!currentUserEmail) return;
@@ -97,7 +57,7 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                 });
 
                 if (!ignore) setUserPackages(res);
-            } catch (e: any) {
+            } catch (e) {
                 if (!ignore && e?.name !== "AbortError")
                     setErr(e?.message ?? "Failed to load packages");
             } finally {
@@ -111,17 +71,11 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
         };
     }, [currentUserEmail]);
 
-
-
-    // Mock user's purchased packages
-
-    const [mytips, setMyTips] = useState([]);
-
     useEffect(() => {
         const fetchTips = async () => {
             try {
-                const response = await axios.get(route('fetchTipsApi',{
-                    limit:50
+                const response = await axios.get(route('fetchTipsApi', {
+                    limit: 50
                 }));
                 setMyTips(response.data.data);
             } catch (error) {
@@ -132,18 +86,31 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
         fetchTips();
     }, []);
 
-    const userTips = mytips;
+    // Use the props or fallback to state
+    const displayTips = userTips && userTips.length > 0 ? userTips : mytips;
+
     // Filter tips based on selected filters
-    const filteredTips = userTips;
+    const filteredTips = displayTips.filter(tip => {
+        if (selectedFilter !== 'all') {
+            if (selectedFilter === 'free' && !tip.is_free) return false;
+            if (selectedFilter === 'premium' && tip.is_free) return false;
+        }
+
+        if (selectedStatus !== 'all') {
+            if (selectedStatus !== tip.result) return false;
+        }
+
+        return true;
+    });
 
     // Calculate statistics
-    const totalTips = userTips.length;
-    const wonTips = userTips.filter((tip) => tip.winningStatus === 'won').length;
-    const lostTips = userTips.filter((tip) => tip.winningStatus === 'lost').length;
-    const pendingTips = userTips.filter((tip) => tip.winningStatus === 'pending').length;
+    const totalTips = displayTips.length;
+    const wonTips = displayTips.filter((tip) => tip.result === 'won').length;
+    const lostTips = displayTips.filter((tip) => tip.result === 'lost').length;
+    const pendingTips = displayTips.filter((tip) => tip.result === 'pending').length;
     const winRate = totalTips > 0 ? (wonTips / (wonTips + lostTips)) * 100 : 0;
 
-    const getStatusIcon = (status: string) => {
+    const getStatusIcon = (status) => {
         switch (status) {
             case 'won':
                 return <CheckCircle className="h-4 w-4 text-green-500" />;
@@ -156,7 +123,7 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
         }
     };
 
-    const getStatusBadge = (status: string) => {
+    const getStatusBadge = (status) => {
         const variants = {
             won: 'bg-green-500 text-white',
             lost: 'bg-red-500 text-white',
@@ -164,10 +131,10 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
             void: 'bg-gray-500 text-white',
         };
 
-        return <Badge className={variants[status as keyof typeof variants] || variants.void}>{status.toUpperCase()}</Badge>;
+        return <Badge className={variants[status] || variants.void}>{status?.toUpperCase()}</Badge>;
     };
 
-    const getRiskLevelColor = (riskLevel: string) => {
+    const getRiskLevelColor = (riskLevel) => {
         switch (riskLevel) {
             case 'low':
                 return 'text-green-600 bg-green-50 dark:bg-green-900/20';
@@ -180,14 +147,12 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
         }
     };
 
-    function getPredictionText(tip: any) {
+    function getPredictionText(tip) {
         if (!tip || !tip.prediction_type) return '';
 
         switch (tip.prediction_type) {
             case '1_X_2':
-                switch (
-                    tip.prediction_value // assuming you have a field like prediction_result
-                ) {
+                switch (tip.prediction_value) {
                     case -1:
                         return 'Home Win';
                     case 0:
@@ -197,9 +162,7 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                 }
 
             case '1X_X2_12':
-                switch (
-                    tip.prediction_value // assuming you have a field like prediction_result
-                ) {
+                switch (tip.prediction_value) {
                     case -1:
                         return 'Home Win/Draw ';
                     case 0:
@@ -208,15 +171,12 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                         return 'Home Win/Away Win';
                 }
             case 'GG-NG':
-                switch (
-                    tip.prediction_value // assuming you have a field like prediction_result
-                ) {
+                switch (tip.prediction_value) {
                     case -1:
                         return 'GG';
                     default:
                         return 'NG';
                 }
-            // add more cases if needed
             default:
                 return 'Unknown';
         }
@@ -224,57 +184,6 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
 
     return (
         <div className="space-y-6 pb-20 xl:pb-6">
-            {/* Stats Overview*/}
-            {/*<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">*/}
-            {/*    <Card>*/}
-            {/*        <CardContent className="p-4">*/}
-            {/*            <div className="flex items-center space-x-2">*/}
-            {/*                <Target className="h-5 w-5 text-blue-500" />*/}
-            {/*                <div>*/}
-            {/*                    <p className="text-sm text-muted-foreground">Total Tips</p>*/}
-            {/*                    <p className="text-2xl font-bold">{totalTips}</p>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        </CardContent>*/}
-            {/*    </Card>*/}
-
-            {/*    <Card>*/}
-            {/*        <CardContent className="p-4">*/}
-            {/*            <div className="flex items-center space-x-2">*/}
-            {/*                <Trophy className="h-5 w-5 text-green-500" />*/}
-            {/*                <div>*/}
-            {/*                    <p className="text-sm text-muted-foreground">Win Rate</p>*/}
-            {/*                    <p className="text-2xl font-bold text-green-600">{winRate.toFixed(1)}%</p>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        </CardContent>*/}
-            {/*    </Card>*/}
-
-            {/*    <Card>*/}
-            {/*        <CardContent className="p-4">*/}
-            {/*            <div className="flex items-center space-x-2">*/}
-            {/*                <CheckCircle className="h-5 w-5 text-green-500" />*/}
-            {/*                <div>*/}
-            {/*                    <p className="text-sm text-muted-foreground">Won Tips</p>*/}
-            {/*                    <p className="text-2xl font-bold text-green-600">{wonTips}</p>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        </CardContent>*/}
-            {/*    </Card>*/}
-
-            {/*    <Card>*/}
-            {/*        <CardContent className="p-4">*/}
-            {/*            <div className="flex items-center space-x-2">*/}
-            {/*                <Clock className="h-5 w-5 text-yellow-500" />*/}
-            {/*                <div>*/}
-            {/*                    <p className="text-sm text-muted-foreground">Pending</p>*/}
-            {/*                    <p className="text-2xl font-bold text-yellow-600">{pendingTips}</p>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        </CardContent>*/}
-            {/*    </Card>*/}
-            {/*</div>*/}
-
             <Tabs defaultValue="tips" className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="tips">My Tips</TabsTrigger>
@@ -326,30 +235,32 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                                         <div className="flex-1">
                                             <div className="mb-2 flex items-center space-x-2">
                                                 <h3 className="font-semibold">
-                                                    {tip.match.home_team} vs {tip.match.away_team}
+                                                    {tip.match?.home_team || 'Home Team'} vs {tip.match?.away_team || 'Away Team'}
                                                 </h3>
-                                                {tip.isFree && (
-                                                    <Badge variant="outline" className="border-green-600 text-green-600">
-                                                        FREE
-                                                    </Badge>
-                                                )}
+                                                {/*{tip.is_free && (*/}
+                                                {/*    <Badge variant="outline" className="border-green-600 text-green-600">*/}
+                                                {/*        FREE*/}
+                                                {/*    </Badge>*/}
+                                                {/*)}*/}
                                             </div>
 
                                             <div className="mb-2 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                                                 <span className="flex items-center">
                                                     <Calendar className="mr-1 h-3 w-3" />
-                                                    {tip.match.kickoff_at}
+                                                    {tip.match?.kickoff_at || 'TBD'}
                                                 </span>
-                                                <span>{tip.match.league}</span>
-                                                <Badge variant="outline" className={`${getRiskLevelColor(tip.risk_level)} border-0`}>
-                                                    {tip.risk_level.toUpperCase()} RISK
-                                                </Badge>
+                                                <span>{tip.match?.league?.name || 'League'}</span>
+                                                {tip.risk_level && (
+                                                    <Badge variant="outline" className={`${getRiskLevelColor(tip.risk_level)} border-0`}>
+                                                        {tip.risk_level.toUpperCase()} RISK
+                                                    </Badge>
+                                                )}
                                             </div>
 
                                             <div className="flex items-center space-x-4">
                                                 <div>
-                                                    <p className="text-sm text-muted-foreground">prediction type</p>
-                                                    <p className="font-medium">{tip.prediction_type}</p>
+                                                    <p className="text-sm text-muted-foreground">Prediction Type</p>
+                                                    <p className="font-medium">{tip.prediction_type || 'N/A'}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-sm text-muted-foreground">Prediction</p>
@@ -357,24 +268,16 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                                                 </div>
                                                 <div>
                                                     <p className="text-sm text-muted-foreground">Odds</p>
-                                                    <p className="font-medium">{tip.odds}</p>
+                                                    <p className="font-medium">{tip.odds || 'N/A'}</p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center space-x-4">
-                                            <div className="text-center">
-                                                {/*<p className="text-sm text-muted-foreground">Status</p>*/}
-                                                <div className="flex items-center space-x-1">
-                                                    {/*{getStatusIcon(tip.winningStatus)}*/}
-                                                    {/*{getStatusBadge(tip.winningStatus)}*/}
-                                                </div>
-                                            </div>
-
-                                            {/*<Button variant="outline" size="sm">*/}
-                                            {/*    <Eye className="mr-2 h-4 w-4" />*/}
-                                            {/*    View Details*/}
-                                            {/*</Button>*/}
+                                            <Button variant="outline" size="sm">
+                                                <Eye className="mr-2 h-4 w-4" />
+                                                View Details
+                                            </Button>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -390,7 +293,6 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                                 <p className="mb-4 text-muted-foreground">
                                     {totalTips === 0 ? "You haven't accessed any tips yet" : 'No tips match your current filters'}
                                 </p>
-                                <Button onClick={() => onGoToPackages('packages')}>Browse Packages</Button>
                             </CardContent>
                         </Card>
                     )}
@@ -420,13 +322,6 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                                             <p className="font-medium">{fmtDate(pkg.expiryDate)}</p>
                                         </div>
 
-                                        {/*/!* Optional if your API really returns these; otherwise hide or compute *!/*/}
-                                        {/*{typeof pkg.winRate === "number" && (*/}
-                                        {/*    <div>*/}
-                                        {/*        <p className="text-muted-foreground">Win Rate</p>*/}
-                                        {/*        <p className="font-medium text-green-600">{pkg.winRate}%</p>*/}
-                                        {/*    </div>*/}
-                                        {/*)}*/}
                                         {typeof parseInt(pkg.price) === "number" && (
                                             <div>
                                                 <p className="text-muted-foreground">Price Paid</p>
@@ -435,28 +330,13 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                                         )}
                                     </div>
 
-                                    {/*{(pkg.tipsAccessed != null && pkg.totalTips != null) && (*/}
-                                    {/*    <div>*/}
-                                    {/*        <div className="mb-1 flex justify-between text-sm">*/}
-                                    {/*            <span>Tips Accessed</span>*/}
-                                    {/*            <span>{pkg.tipsAccessed}/{pkg.totalTips}</span>*/}
-                                    {/*        </div>*/}
-                                    {/*        <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">*/}
-                                    {/*            <div*/}
-                                    {/*                className="h-2 rounded-full bg-orange-500 transition-all duration-300"*/}
-                                    {/*                style={{ width: `${pct(pkg.tipsAccessed, pkg.totalTips)}%` }}*/}
-                                    {/*            />*/}
-                                    {/*        </div>*/}
-                                    {/*    </div>*/}
-                                    {/*)}*/}
-
                                     <div className="flex space-x-2">
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             className="flex-1"
                                             onClick={() => {
-                                                setSelectedPackage(pkg);     // give modal all fields, including tipsData
+                                                setSelectedPackage(pkg);
                                                 setShowTipsModal(true);
                                             }}
                                         >
@@ -480,12 +360,12 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                                 <Package className="mx-auto mb-4 h-12 w-12 text-gray-400" />
                                 <h3 className="mb-2 text-lg font-semibold">No packages purchased</h3>
                                 <p className="mb-4 text-muted-foreground">Purchase a package to start accessing premium tips</p>
-                                <Button onClick={() => onGoToPackages('packages')}>Browse Packages</Button>
                             </CardContent>
                         </Card>
                     )}
                 </TabsContent>
             </Tabs>
+
             <Dialog open={showTipsModal} onOpenChange={setShowTipsModal}>
                 <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
                     <DialogHeader>
@@ -503,7 +383,6 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                     </DialogHeader>
 
                     <div className="flex-1 overflow-auto space-y-4">
-                        {/* TODO: replace this list with your own modal design */}
                         {(selectedPackage?.tipsData ?? []).length === 0 ? (
                             <Card className="py-12 text-center">
                                 <CardContent>
@@ -528,9 +407,9 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                                                     <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-4 mb-2">
                                                         {tip.time && (
                                                             <span className="flex items-center">
-                          <Calendar className="h-3 w-3 mr-1" />
+                                                                <Calendar className="h-3 w-3 mr-1" />
                                                                 {tip.time}
-                        </span>
+                                                            </span>
                                                         )}
                                                         {tip.league && <span>{tip.league}</span>}
                                                         {tip.riskLevel && (
@@ -562,7 +441,6 @@ export function UserMyTips({ onGoToPackages,currentUserEmail }: UserMyTipsProps)
                     </div>
                 </DialogContent>
             </Dialog>
-
         </div>
     );
 }

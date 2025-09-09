@@ -1,70 +1,84 @@
-import { router, usePage } from '@inertiajs/react';
-import {Link} from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Menu, TrendingUp, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from './ui/button';
 
-export function UserHeader({ currentPage}) {
-    const {user} = usePage().props.auth
+export function UserHeader({ currentPage }) {
+    const { user } = usePage().props.auth;
 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const CtaButtons = () => {
-            if (user == null) {
-                return (
-                    <div className="hidden items-center space-x-4 md:flex">
-                        <Button variant="outline" size="sm"
-                            className="border-orange-500 bg-transparent text-orange-500 transition-all duration-300 hover:bg-orange-500 hover:text-white"
-                            // onClick={onSignIn}
-                        >
+        if (user == null) {
+            return (
+                <div className="hidden items-center space-x-4 md:flex">
+                    <Button
+                        href={route('home')}
+                        variant="outline"
+                        size="sm"
+                        className="border-orange-500 bg-transparent text-orange-500 transition-all duration-300 hover:bg-orange-500 hover:text-white"
+                        // onClick={onSignIn}
+                    >
+                        <Link href={route('login')} className="">
                             Sign In
-                        </Button>
-                        <Button size="sm"
-                            className="bg-orange-500 text-white hover:bg-orange-600"
-                            // onClick={onGetStarted}
-                        >
+                        </Link>
+                    </Button>
+                    <Button
+                        size="sm"
+                        className="bg-orange-500 text-white hover:bg-orange-600"
+                        // onClick={onGetStarted}
+                    >
+                        <Link href={route('register')} className="">
                             Get Started
-                        </Button>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="hidden items-center space-x-4 md:flex">
-                        <Button variant="outline" size="sm"
-                            className="border-orange-500 bg-transparent text-orange-500 transition-all duration-300 hover:bg-orange-500 hover:text-white"
-                            // onClick={navigateToDashboard}
-                        >
+                        </Link>
+                    </Button>
+                </div>
+            );
+        } else {
+            return (
+                <div className="hidden items-center space-x-4 md:flex">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-orange-500 bg-transparent text-orange-500 transition-all duration-300 hover:bg-orange-500 hover:text-white"
+                        // onClick={navigateToDashboard}
+                    >
+                        <Link href={route('login')} className="">
                             Dashboard
-                        </Button>
-                    </div>
-                );
-            }
+                        </Link>
+                    </Button>
+                </div>
+            );
+        }
     };
 
     const MobileCtaButtons = () => {
         if (user == null) {
             return (
                 <div className="space-y-2 border-t border-gray-800 pt-3">
-                    <Button variant="outline" size="sm"
+                    <Button
+                        variant="outline"
+                        size="sm"
                         className="w-full border-orange-500 bg-transparent text-orange-500 transition-all duration-300 hover:bg-orange-500 hover:text-white"
                     >
-                        Sign In
+                        <Link href={route('login')} className="">
+                            Sign In
+                        </Link>
                     </Button>
-                    <Button size="sm"
-                        className="w-full bg-orange-500 text-white hover:bg-orange-600"
-                    >
-                        Get Started
+                    <Button size="sm" className="w-full bg-orange-500 text-white hover:bg-orange-600">
+                        <Link href={route('register')} className="">
+                            Get Started
+                        </Link>
                     </Button>
                 </div>
             );
         } else {
             return (
                 <div className="space-y-2 border-t border-gray-800 pt-3">
-                    <Button
-                        size="sm"
-                        className="w-full bg-orange-500 text-white hover:bg-orange-600"
-                    >
-                        Dashboard
+                    <Button size="sm" className="w-full bg-orange-500 text-white hover:bg-orange-600">
+                        <Link href={route('login')} className="">
+                            Dashboard
+                        </Link>
                     </Button>
                 </div>
             );
@@ -74,26 +88,29 @@ export function UserHeader({ currentPage}) {
     const DesktopNavigation = () => {
         return (
             <div className="hidden items-center space-x-8 md:flex">
-                <Link href={route('home')}
-                      className={`transition-colors ${currentPage === 'home' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'}`}
+                <Link
+                    href={route('home')}
+                    className={`transition-colors ${currentPage === 'home' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'}`}
                 >
                     Home
                 </Link>
-                <Link href={route('tips')}
+                <Link
+                    href={route('tips')}
                     // onClick={onNavigateTips}
-                      className={`transition-colors ${currentPage === 'tips' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'}`}
+                    className={`transition-colors ${currentPage === 'tips' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'}`}
                 >
                     Tips
                 </Link>
-                <Link href={route('about-us')}
+                <Link
+                    href={route('about-us')}
                     // onClick={onNavigateAbout}
-                      className={`transition-colors ${currentPage === 'about-us' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'}`}
+                    className={`transition-colors ${currentPage === 'about-us' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'}`}
                 >
                     About Us
                 </Link>
             </div>
-        )
-    }
+        );
+    };
 
     const DesktopLogoDisplay = () => {
         return (
@@ -107,8 +124,8 @@ export function UserHeader({ currentPage}) {
                     </Link>
                 </div>
             </div>
-        )
-    }
+        );
+    };
 
     const MobileMenuButton = () => {
         return (
@@ -117,28 +134,31 @@ export function UserHeader({ currentPage}) {
                     {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                 </Button>
             </div>
-        )
-    }
+        );
+    };
 
     const MobileNavigation = () => {
         return (
             <div className="border-t border-gray-800 bg-black/95 backdrop-blur-md md:hidden">
                 <div className="space-y-3 px-4 py-4">
-                    <Link href={route('home')}
+                    <Link
+                        href={route('home')}
                         className={`block text-left transition-colors ${
                             currentPage === 'home' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'
                         }`}
                     >
                         Home
                     </Link>
-                    <Link href={route('tips')}
+                    <Link
+                        href={route('tips')}
                         className={`block text-left transition-colors ${
                             currentPage === 'tips' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'
                         }`}
                     >
                         Tips
                     </Link>
-                    <Link href={route('about-us')}
+                    <Link
+                        href={route('about-us')}
                         className={`block text-left transition-colors ${
                             currentPage === 'about' ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'
                         }`}
@@ -148,8 +168,8 @@ export function UserHeader({ currentPage}) {
                     <MobileCtaButtons></MobileCtaButtons>
                 </div>
             </div>
-        )
-    }
+        );
+    };
 
     return (
         <nav className="sticky top-0 z-50 border-b border-gray-800 bg-black/90 backdrop-blur-md">
@@ -170,7 +190,7 @@ export function UserHeader({ currentPage}) {
             </div>
 
             {/* Mobile Navigation */}
-            {mobileMenuOpen && (<MobileNavigation></MobileNavigation>)}
+            {mobileMenuOpen && <MobileNavigation></MobileNavigation>}
         </nav>
     );
 }

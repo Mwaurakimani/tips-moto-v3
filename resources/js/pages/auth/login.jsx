@@ -1,46 +1,41 @@
 import { useState } from 'react';
 import { Eye, EyeOff, TrendingUp, ArrowRight, Star, Target, Trophy } from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Alert, AlertDescription } from './ui/alert';
-import { useForm } from '@inertiajs/react';
+import { Button } from '@/pages/tips-moto/components/ui/button.js';
+import { Input } from '@/pages/tips-moto/components/ui/input';
+import { Label } from '@/pages/tips-moto/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/pages/tips-moto/components/ui/card';
+import { Alert, AlertDescription } from '@/pages/tips-moto/components/ui/alert';
+import { useForm, Link } from '@inertiajs/react';
 
-interface UserLoginPageProps {
-    onUserLogin: (userData: any) => void;
-    onGoToSignUp: () => void;
-    onGoToAdminLogin: () => void;
-    onBackToHomepage: () => void;
-}
-
-export function UserLoginPage({
-                                  onUserLogin,
-                                  onGoToSignUp,
-                                  onGoToAdminLogin,
-                                  onBackToHomepage
-                              }: UserLoginPageProps) {
+export default function UserLoginPage({ onGoToSignUp, onBackToHomepage }) {
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
 
     // Inertia form handling
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         email: '',
         password: '',
         remember: false
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        setError('');
 
+        // Clear any existing errors
+        clearErrors();
+
+        // Post to Laravel's login route
         post(route('login'), {
-            onSuccess: (page) => {
+            onSuccess: () => {
+                // Laravel will redirect automatically after successful login
+                // Usually to /dashboard or intended URL
+                console.log('Login successful - redirecting...');
             },
-            onError: () => {
-                setError('Invalid email or password.');
+            onError: (errors) => {
+                // Inertia will automatically populate the errors object
+                console.log('Login failed:', errors);
             },
             onFinish: () => {
+                // Clear password field regardless of success/failure
                 reset('password');
             }
         });
@@ -59,12 +54,6 @@ export function UserLoginPage({
                     </div>
                     <span className="text-xl font-bold">Tips Moto</span>
                 </button>
-                {/*<button*/}
-                {/*    onClick={onGoToAdminLogin}*/}
-                {/*    className="text-gray-400 hover:text-gray-300 text-sm"*/}
-                {/*>*/}
-                {/*    Admin Access*/}
-                {/*</button>*/}
             </div>
 
             {/* Login Section */}
@@ -94,15 +83,25 @@ export function UserLoginPage({
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <form onSubmit={handleSubmit} className="space-y-4">
-                                <FormInput
-                                    label="Email Address"
-                                    type="email"
-                                    name="email"
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                    placeholder="Enter your email"
-                                />
+                                {/* Email Field */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="email" className="text-white">Email Address</Label>
+                                    <Input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        value={data.email}
+                                        onChange={(e) => setData('email', e.target.value)}
+                                        placeholder="Enter your email"
+                                        required
+                                        className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500 focus:ring-orange-500"
+                                    />
+                                    {errors.email && (
+                                        <p className="text-red-400 text-sm">{errors.email}</p>
+                                    )}
+                                </div>
 
+                                {/* Password Field */}
                                 <div className="space-y-2">
                                     <Label htmlFor="password" className="text-white">Password</Label>
                                     <div className="relative">
@@ -124,24 +123,33 @@ export function UserLoginPage({
                                             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                         </button>
                                     </div>
+                                    {errors.password && (
+                                        <p className="text-red-400 text-sm">{errors.password}</p>
+                                    )}
                                 </div>
 
-                                {error && (
+                                {/* Remember Me Checkbox */}
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        id="remember"
+                                        checked={data.remember}
+                                        onChange={(e) => setData('remember', e.target.checked)}
+                                        className="w-4 h-4 text-orange-500 bg-gray-800 border-gray-600 rounded focus:ring-orange-500 focus:ring-2"
+                                    />
+                                    <Label htmlFor="remember" className="text-gray-300 text-sm">
+                                        Remember me
+                                    </Label>
+                                </div>
+
+                                {/* General Auth Errors */}
+                                {errors.general && (
                                     <Alert className="border-red-500 bg-red-500/10">
-                                        <AlertDescription className="text-red-400">{error}</AlertDescription>
-                                    </Alert>
-                                )}
-                                {errors.email && (
-                                    <Alert className="border-red-500 bg-red-500/10">
-                                        <AlertDescription className="text-red-400">{errors.email}</AlertDescription>
-                                    </Alert>
-                                )}
-                                {errors.password && (
-                                    <Alert className="border-red-500 bg-red-500/10">
-                                        <AlertDescription className="text-red-400">{errors.password}</AlertDescription>
+                                        <AlertDescription className="text-red-400">{errors.general}</AlertDescription>
                                     </Alert>
                                 )}
 
+                                {/* Submit Button */}
                                 <Button
                                     type="submit"
                                     disabled={processing}
@@ -156,7 +164,17 @@ export function UserLoginPage({
                                 </Button>
                             </form>
 
-                            <div className="text-center pt-4">
+                            {/* Footer Links */}
+                            <div className="space-y-4 text-center">
+                                {/* Forgot Password */}
+                                <Link
+                                    href={route('password.request')}
+                                    className="text-orange-500 hover:text-orange-400 text-sm"
+                                >
+                                    Forgot your password?
+                                </Link>
+
+                                {/* Sign Up Link */}
                                 <p className="text-gray-400 text-sm">
                                     Don't have an account?{' '}
                                     <button
@@ -175,26 +193,13 @@ export function UserLoginPage({
     );
 }
 
-function Feature({ icon, text }: { icon: JSX.Element, text: string }) {
+function Feature({ icon, text }) {
     return (
         <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center">
                 {icon}
             </div>
             <span className="text-gray-300">{text}</span>
-        </div>
-    );
-}
-
-function FormInput({ label, ...props }: any) {
-    return (
-        <div className="space-y-2">
-            <Label htmlFor={props.name} className="text-white">{label}</Label>
-            <Input
-                {...props}
-                required
-                className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500 focus:ring-orange-500"
-            />
         </div>
     );
 }

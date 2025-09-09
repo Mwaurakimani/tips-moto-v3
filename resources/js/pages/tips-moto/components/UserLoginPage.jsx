@@ -7,19 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Alert, AlertDescription } from './ui/alert';
 import { useForm } from '@inertiajs/react';
 
-interface UserLoginPageProps {
-    onUserLogin: (userData: any) => void;
-    onGoToSignUp: () => void;
-    onGoToAdminLogin: () => void;
-    onBackToHomepage: () => void;
-}
-
 export function UserLoginPage({
                                   onUserLogin,
                                   onGoToSignUp,
                                   onGoToAdminLogin,
                                   onBackToHomepage
-                              }: UserLoginPageProps) {
+                              }) {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
 
@@ -30,16 +23,13 @@ export function UserLoginPage({
         remember: false
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setError('');
 
         post(route('login'), {
             onSuccess: (page) => {
-                // ✅ Handle success like first code base
-                if (page.props?.auth?.user) {
-                    onUserLogin(page.props.auth.user); // Send user to parent
-                }
+                // Handle success - redirect happens automatically
             },
             onError: () => {
                 setError('Invalid email or password.');
@@ -179,7 +169,7 @@ export function UserLoginPage({
     );
 }
 
-function Feature({ icon, text }: { icon: JSX.Element, text: string }) {
+function Feature({ icon, text }) {
     return (
         <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center">
@@ -190,7 +180,7 @@ function Feature({ icon, text }: { icon: JSX.Element, text: string }) {
     );
 }
 
-function FormInput({ label, ...props }: any) {
+function FormInput({ label, ...props }) {
     return (
         <div className="space-y-2">
             <Label htmlFor={props.name} className="text-white">{label}</Label>

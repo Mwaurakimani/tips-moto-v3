@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,9 +22,19 @@ Route::get('/about-us', function () {
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    // Main dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    // Dashboard sub-pages
+    Route::get('/dashboard/packages', [DashboardController::class, 'packages'])
+        ->name('dashboard.packages');
+
+    Route::get('/dashboard/my-tips', [DashboardController::class, 'myTips'])
+        ->name('dashboard.my-tips');
+
+    Route::get('/dashboard/account', [DashboardController::class, 'account'])
+        ->name('dashboard.account');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
