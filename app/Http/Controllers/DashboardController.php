@@ -62,7 +62,7 @@ class DashboardController extends AbstractTipController
     /** Reused logic injected into myTipsCopy */
     public function myTips(Request $request): \Inertia\Response
     {
-        $limit = $this->readAndClampLimit($request, 20);   // default 20 for dashboard page size
+        $limit = $this->readAndClampLimit($request, 100);   // default 20 for dashboard page size
         $ids = $this->parseIds($request, $this->tips ?? []);
         $base = $this->buildBaseQuery();
 
