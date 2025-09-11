@@ -50,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ];
             });
 
-        return Inertia::render('AdminDashboardSystem/Transactions', [
+        return Inertia::render('AdminDashboardSystem/Transactions/index', [
             'currentPageTitle' => 'Transactions',
             'transactionData' => $transactions,
         ]);

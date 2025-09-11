@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
-import { MatchDetailView } from '@/pages/tips-moto/components/MatchDetailView.js';
+import { MatchDetailView } from './MatchDetailView.jsx';
 import { AddMatchDialog } from '@/pages/tips-moto/components/AddMatchDialog.js';
 import { Input } from '@/pages/tips-moto/components/ui/input.js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/pages/tips-moto/components/ui/card.js';
 import { Button } from '@/pages/tips-moto/components/ui/button.js';
-import { Badge } from '../tips-moto/components/ui/badge.js';
+import { Badge } from '../../tips-moto/components/ui/badge.js';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/pages/tips-moto/components/ui/table.js';
 import AdminLayout from '@/layouts/AdminLayout/adminLayout.jsx';
 import { usePage } from '@inertiajs/react';

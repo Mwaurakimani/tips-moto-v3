@@ -1,39 +1,15 @@
-import { useState, useEffect } from 'react';
-import {
-    ArrowLeft,
-    Edit,
-    Save,
-    X,
-    Calendar,
-    DollarSign,
-    Target,
-    Clock,
-    Users,
-    Info,
-    Trash2,
-    Plus,
-    ChevronUp,
-    ChevronDown,
-    Copy
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Badge } from './ui/badge';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { DeleteConfirmationDialog } from './DeleteConfirmationDialog';
-import { Textarea } from './ui/textarea';
+import { DeleteConfirmationDialog } from '@/pages/tips-moto/components/DeleteConfirmationDialog';
+import { Badge } from '@/pages/tips-moto/components/ui/badge';
+import { Button } from '@/pages/tips-moto/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/pages/tips-moto/components/ui/card';
+import { Input } from '@/pages/tips-moto/components/ui/input';
+import { Label } from '@/pages/tips-moto/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/pages/tips-moto/components/ui/select';
+import { ArrowLeft, Calendar, ChevronDown, ChevronUp, Clock, Copy, DollarSign, Edit, Info, Plus, Save, Target, Trash2, Users, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import DebugJson from '@/components/ui/JsonDebug.js';
 
-export function PackageDetailView({
-                                      subscription,
-                                      onBack,
-                                      onUpdateSubscription,
-                                      onDeleteSubscription,
-                                      availableTips = []
-                                  }) {
+export function PackageDetailView({ subscription, onBack, onUpdateSubscription, onDeleteSubscription, availableTips = [] }) {
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingTips, setIsEditingTips] = useState(false);
     const [editedSubscription, setEditedSubscription] = useState({ ...subscription });
@@ -47,9 +23,7 @@ export function PackageDetailView({
     }, [subscription.tipsData]);
 
     const getStatusBadge = (status) => {
-        return status === true
-            ? <Badge className="bg-green-600 text-white">Active</Badge>
-            : <Badge variant="secondary">Inactive</Badge>;
+        return status === true ? <Badge className="bg-green-600 text-white">Active</Badge> : <Badge variant="secondary">Inactive</Badge>;
     };
 
     const getDescriptionBadge = (description) => {
@@ -72,7 +46,7 @@ export function PackageDetailView({
     const handleSave = () => {
         const updatedSubscription = {
             ...subscription,
-            ...editedSubscription
+            ...editedSubscription,
         };
 
         onUpdateSubscription(updatedSubscription);
@@ -83,7 +57,7 @@ export function PackageDetailView({
         const updatedSubscription = {
             ...subscription,
             tips: editedTips.length,
-            tipsData: editedTips
+            tipsData: editedTips,
         };
 
         onUpdateSubscription(updatedSubscription);
@@ -91,7 +65,7 @@ export function PackageDetailView({
 
         toast.success('Tips Updated Successfully!', {
             description: `Package now contains ${editedTips.length} tips. Changes have been saved.`,
-            duration: 4000
+            duration: 4000,
         });
     };
 
@@ -102,15 +76,15 @@ export function PackageDetailView({
 
     const handleCancel = () => {
         setEditedSubscription({
-            ...subscription
+            ...subscription,
         });
         setIsEditing(false);
     };
 
     const handleInputChange = (field, value) => {
-        setEditedSubscription(prev => ({
+        setEditedSubscription((prev) => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
     };
 
@@ -125,27 +99,29 @@ export function PackageDetailView({
     };
 
     const handleTipChange = (tipIndex, field, value) => {
-        setEditedTips(prev => prev.map((tip, index) => {
-            if (index === tipIndex) {
-                const updatedTip = { ...tip, [field]: value };
+        setEditedTips((prev) =>
+            prev.map((tip, index) => {
+                if (index === tipIndex) {
+                    const updatedTip = { ...tip, [field]: value };
 
-                if (field === 'homeTeam' || field === 'awayTeam') {
-                    const homeTeam = field === 'homeTeam' ? value : tip.homeTeam;
-                    const awayTeam = field === 'awayTeam' ? value : tip.awayTeam;
-                    updatedTip.match = `${homeTeam} vs ${awayTeam}`;
+                    if (field === 'homeTeam' || field === 'awayTeam') {
+                        const homeTeam = field === 'homeTeam' ? value : tip.homeTeam;
+                        const awayTeam = field === 'awayTeam' ? value : tip.awayTeam;
+                        updatedTip.match = `${homeTeam} vs ${awayTeam}`;
+                    }
+
+                    return updatedTip;
                 }
-
-                return updatedTip;
-            }
-            return tip;
-        }));
+                return tip;
+            }),
+        );
     };
 
     const handleAddTip = () => {
         if (availableTips.length === 0) {
             toast.error('No Tips Available', {
                 description: 'Please add some tips in the Tips page first before adding them to packages.',
-                duration: 5000
+                duration: 5000,
             });
             return;
         }
@@ -153,31 +129,27 @@ export function PackageDetailView({
     };
 
     const handleTipSelectionToggle = (tipId) => {
-        setSelectedTipsToAdd(prev =>
-            prev.includes(tipId)
-                ? prev.filter(id => id !== tipId)
-                : [...prev, tipId]
-        );
+        setSelectedTipsToAdd((prev) => (prev.includes(tipId) ? prev.filter((id) => id !== tipId) : [...prev, tipId]));
     };
 
     const handleAddSelectedTips = () => {
-        const tipsToAdd = availableTips.filter(tip => selectedTipsToAdd.includes(tip.id));
+        const tipsToAdd = availableTips.filter((tip) => selectedTipsToAdd.includes(tip.id));
 
         // Create copies with new IDs to avoid conflicts
-        const newTips = tipsToAdd.map(tip => ({
+        const newTips = tipsToAdd.map((tip) => ({
             ...tip,
             id: Date.now() + Math.random() * 1000 + tip.id, // Ensure unique ID
             packageId: subscription.id, // Track which package this tip belongs to
-            addedToPackageAt: new Date().toISOString() // Track when added
+            addedToPackageAt: new Date().toISOString(), // Track when added
         }));
 
-        setEditedTips(prev => [...prev, ...newTips]);
+        setEditedTips((prev) => [...prev, ...newTips]);
         setShowTipSelector(false);
         setSelectedTipsToAdd([]);
 
         toast.success('Tips Added Successfully!', {
             description: `${newTips.length} tip${newTips.length > 1 ? 's' : ''} added to the package.`,
-            duration: 4000
+            duration: 4000,
         });
     };
 
@@ -187,11 +159,11 @@ export function PackageDetailView({
     };
 
     const handleRemoveTip = (tipIndex) => {
-        setEditedTips(prev => prev.filter((_, index) => index !== tipIndex));
+        setEditedTips((prev) => prev.filter((_, index) => index !== tipIndex));
     };
 
     const handleMoveTip = (tipIndex, direction) => {
-        setEditedTips(prev => {
+        setEditedTips((prev) => {
             const newTips = [...prev];
             const targetIndex = direction === 'up' ? tipIndex - 1 : tipIndex + 1;
 
@@ -208,19 +180,21 @@ export function PackageDetailView({
         const duplicatedTip = {
             ...tipToDuplicate,
             id: Date.now() + Math.random() * 1000,
-            match: tipToDuplicate.match + ' (Copy)'
+            match: tipToDuplicate.match + ' (Copy)',
         };
 
-        setEditedTips(prev => {
+        setEditedTips((prev) => {
             const newTips = [...prev];
             newTips.splice(tipIndex + 1, 0, duplicatedTip);
             return newTips;
         });
     };
 
-    const displaySubscription = isEditing ? editedSubscription : {
-        ...subscription
-    };
+    const displaySubscription = isEditing
+        ? editedSubscription
+        : {
+              ...subscription,
+          };
 
     const analytics = {
         totalSubscribers: Math.floor(Math.random() * 500) + 50,
@@ -228,7 +202,7 @@ export function PackageDetailView({
         weeklyRevenue: subscription.price * (Math.floor(Math.random() * 20) + 5),
         successRate: Math.floor(Math.random() * 30) + 60,
         averageRating: (Math.random() * 2 + 3).toFixed(1),
-        totalRevenue: subscription.price * (Math.floor(Math.random() * 100) + 20)
+        totalRevenue: subscription.price * (Math.floor(Math.random() * 100) + 20),
     };
 
     return (
@@ -236,29 +210,22 @@ export function PackageDetailView({
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={onBack}
-                        className="flex items-center space-x-2"
-                    >
+                    <Button variant="outline" size="sm" onClick={onBack} className="flex items-center space-x-2">
                         <ArrowLeft className="h-4 w-4" />
                         <span>Back to Packages</span>
                     </Button>
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                            {displaySubscription.name}
-                        </h1>
-                        <p className="text-gray-600 dark:text-gray-400 mt-1">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{displaySubscription.name}</h1>
+                        <p className="mt-1 text-gray-600 dark:text-gray-400">
                             Package #{subscription.id} • {getDescriptionBadge(displaySubscription.description)}
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 {/* Package Information */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="space-y-6 lg:col-span-2">
                     {/* Basic Info */}
                     <Card>
                         <CardHeader>
@@ -270,20 +237,10 @@ export function PackageDetailView({
                                 <div className="flex items-center space-x-2">
                                     {isEditing ? (
                                         <>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={handleSave}
-                                                className="text-green-600 hover:text-green-700"
-                                            >
+                                            <Button variant="ghost" size="sm" onClick={handleSave} className="text-green-600 hover:text-green-700">
                                                 <Save className="h-4 w-4" />
                                             </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={handleCancel}
-                                                className="text-red-600 hover:text-red-700"
-                                            >
+                                            <Button variant="ghost" size="sm" onClick={handleCancel} className="text-red-600 hover:text-red-700">
                                                 <X className="h-4 w-4" />
                                             </Button>
                                         </>
@@ -304,8 +261,9 @@ export function PackageDetailView({
                             {/* Package Name */}
                             {isEditing ? (
                                 <div className="space-y-2">
-                                    <Label htmlFor="name" className="text-sm text-gray-600 dark:text-gray-400">Package
-                                        Name</Label>
+                                    <Label htmlFor="name" className="text-sm text-gray-600 dark:text-gray-400">
+                                        Package Name
+                                    </Label>
                                     <Input
                                         id="name"
                                         value={editedSubscription.name}
@@ -315,8 +273,7 @@ export function PackageDetailView({
                                 </div>
                             ) : (
                                 <div className="space-y-2">
-                                    <div
-                                        className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                                         <Info className="h-4 w-4" />
                                         <span>Package Name</span>
                                     </div>
@@ -324,10 +281,9 @@ export function PackageDetailView({
                                 </div>
                             )}
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <div
-                                        className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                                         <Calendar className="h-4 w-4" />
                                         <span>Created Date</span>
                                     </div>
@@ -335,8 +291,7 @@ export function PackageDetailView({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <div
-                                        className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                                         <Target className="h-4 w-4" />
                                         <span>Package Type</span>
                                     </div>
@@ -360,16 +315,12 @@ export function PackageDetailView({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <div
-                                        className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                                         <Clock className="h-4 w-4" />
                                         <span>Frequency</span>
                                     </div>
                                     {isEditing ? (
-                                        <Select
-                                            value={editedSubscription.interval}
-                                            onValueChange={(value) => handleInputChange('interval', value)}
-                                        >
+                                        <Select value={editedSubscription.interval} onValueChange={(value) => handleInputChange('interval', value)}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue />
                                             </SelectTrigger>
@@ -385,8 +336,7 @@ export function PackageDetailView({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <div
-                                        className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                                         <DollarSign className="h-4 w-4" />
                                         <span>Price</span>
                                     </div>
@@ -400,15 +350,12 @@ export function PackageDetailView({
                                             step="0.01"
                                         />
                                     ) : (
-                                        <p className="font-medium text-green-600 text-lg">
-                                            KES {displaySubscription.price.toLocaleString()}
-                                        </p>
+                                        <p className="text-lg font-medium text-green-600">KES {displaySubscription.price.toLocaleString()}</p>
                                     )}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <div
-                                        className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                                         <Target className="h-4 w-4" />
                                         <span>Tips Count</span>
                                     </div>
@@ -426,8 +373,7 @@ export function PackageDetailView({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <div
-                                        className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                                         <span>Status</span>
                                     </div>
                                     {isEditing ? (
@@ -458,17 +404,15 @@ export function PackageDetailView({
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                                    This {displaySubscription.features.category} package
-                                    provides {displaySubscription.features.tips} carefully selected tips.
-                                    Our expert analysts use advanced statistical models and insider knowledge to deliver
-                                    high-quality predictions
-                                    that maximize your winning potential.
+                                <p className="leading-relaxed text-gray-600 dark:text-gray-400">
+                                    This {displaySubscription.features.category} package provides {displaySubscription.features.tips} carefully
+                                    selected tips. Our expert analysts use advanced statistical models and insider knowledge to deliver high-quality
+                                    predictions that maximize your winning potential.
                                 </p>
 
-                                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                                    <h4 className="font-medium text-black dark:text-white mb-2">Key Features:</h4>
-                                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                                <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
+                                    <h4 className="mb-2 font-medium text-black dark:text-white">Key Features:</h4>
+                                    <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
                                         {/*<li>• {displaySubscription.tips} expert predictions per {displaySubscription.duration.toLowerCase()}</li>*/}
                                         <li>• Detailed analysis and reasoning for each tip</li>
                                         <li>• Real-time notifications when new tips are available</li>
@@ -487,7 +431,7 @@ export function PackageDetailView({
                                 <div className="flex items-center justify-between">
                                     <CardTitle className="flex items-center space-x-2">
                                         <Target className="h-5 w-5" />
-                                        <span>Package Tips ({isEditingTips ? editedTips.length : (subscription.tipsData?.length || 0)})</span>
+                                        <span>Package Tips ({isEditingTips ? editedTips.length : subscription.tipsData?.length || 0})</span>
                                     </CardTitle>
                                     <div className="flex items-center space-x-2">
                                         {isEditingTips ? (
@@ -525,34 +469,27 @@ export function PackageDetailView({
                             <CardContent>
                                 <div className="space-y-4">
                                     {isEditingTips && (
-                                        <div
-                                            className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                        <div className="flex items-center justify-between rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
                                             <div className="flex items-center space-x-2">
                                                 <Info className="h-4 w-4 text-blue-600" />
                                                 <span className="text-sm text-blue-800 dark:text-blue-200">
-                          You are now editing tips. Click Save to confirm changes or Cancel to discard.
-                        </span>
+                                                    You are now editing tips. Click Save to confirm changes or Cancel to discard.
+                                                </span>
                                             </div>
-                                            <Button
-                                                onClick={handleAddTip}
-                                                size="sm"
-                                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                                            >
-                                                <Plus className="h-4 w-4 mr-2" />
+                                            <Button onClick={handleAddTip} size="sm" className="bg-blue-600 text-white hover:bg-blue-700">
+                                                <Plus className="mr-2 h-4 w-4" />
                                                 Add Tips From Library
                                             </Button>
                                         </div>
                                     )}
 
-                                    <div className="grid grid-cols-1 gap-4 max-h-96 overflow-y-auto">
-                                        {(isEditingTips ? editedTips : (subscription.tipsData?.slice(0, 10) || [])).map((tip, index) => (
-                                            <div key={tip.id || index}
-                                                 className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border">
+                                    <div className="grid max-h-96 grid-cols-1 gap-4 overflow-y-auto">
+                                        {(isEditingTips ? editedTips : subscription.tipsData?.slice(0, 10) || []).map((tip, index) => (
+                                            <div key={tip.id || index} className="rounded-lg border bg-gray-50 p-4 dark:bg-gray-800">
                                                 {isEditingTips ? (
                                                     <div className="space-y-4">
                                                         <div className="flex items-center justify-between">
-                                                            <h5 className="font-medium text-black dark:text-white">Tip
-                                                                #{index + 1}</h5>
+                                                            <h5 className="font-medium text-black dark:text-white">Tip #{index + 1}</h5>
                                                             <div className="flex items-center space-x-1">
                                                                 <Button
                                                                     variant="ghost"
@@ -641,27 +578,17 @@ export function PackageDetailView({
                                                                         <SelectValue />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
-                                                                        <SelectItem value="Home Win">Home
-                                                                            Win</SelectItem>
+                                                                        <SelectItem value="Home Win">Home Win</SelectItem>
                                                                         <SelectItem value="Draw">Draw</SelectItem>
-                                                                        <SelectItem value="Away Win">Away
-                                                                            Win</SelectItem>
-                                                                        <SelectItem value="Home Win or Draw">Home Win or
-                                                                            Draw</SelectItem>
-                                                                        <SelectItem value="Home Win or Away Win">Home
-                                                                            Win or Away Win</SelectItem>
-                                                                        <SelectItem value="Draw or Away Win">Draw or
-                                                                            Away Win</SelectItem>
-                                                                        <SelectItem value="Over 1.5 Goals">Over 1.5
-                                                                            Goals</SelectItem>
-                                                                        <SelectItem value="Over 2.5 Goals">Over 2.5
-                                                                            Goals</SelectItem>
-                                                                        <SelectItem value="Under 2.5 Goals">Under 2.5
-                                                                            Goals</SelectItem>
-                                                                        <SelectItem value="Both Teams Score">Both Teams
-                                                                            Score</SelectItem>
-                                                                        <SelectItem value="Clean Sheet">Clean
-                                                                            Sheet</SelectItem>
+                                                                        <SelectItem value="Away Win">Away Win</SelectItem>
+                                                                        <SelectItem value="Home Win or Draw">Home Win or Draw</SelectItem>
+                                                                        <SelectItem value="Home Win or Away Win">Home Win or Away Win</SelectItem>
+                                                                        <SelectItem value="Draw or Away Win">Draw or Away Win</SelectItem>
+                                                                        <SelectItem value="Over 1.5 Goals">Over 1.5 Goals</SelectItem>
+                                                                        <SelectItem value="Over 2.5 Goals">Over 2.5 Goals</SelectItem>
+                                                                        <SelectItem value="Under 2.5 Goals">Under 2.5 Goals</SelectItem>
+                                                                        <SelectItem value="Both Teams Score">Both Teams Score</SelectItem>
+                                                                        <SelectItem value="Clean Sheet">Clean Sheet</SelectItem>
                                                                     </SelectContent>
                                                                 </Select>
                                                             </div>
@@ -734,7 +661,7 @@ export function PackageDetailView({
                                                     </div>
                                                 ) : (
                                                     <>
-                                                        <div className="flex items-start justify-between mb-3">
+                                                        <div className="mb-3 flex items-start justify-between">
                                                             <div className="flex-1">
                                                                 <h5 className="font-medium text-black dark:text-white">{tip.match}</h5>
                                                                 <p className="text-sm text-gray-600 dark:text-gray-400">{tip.league}</p>
@@ -753,7 +680,7 @@ export function PackageDetailView({
                                                             </div>
                                                         </div>
 
-                                                        <div className="grid grid-cols-2 gap-4 mb-3">
+                                                        <div className="mb-3 grid grid-cols-2 gap-4">
                                                             <div>
                                                                 <p className="text-xs text-gray-500 dark:text-gray-400">Prediction</p>
                                                                 <p className="font-medium text-orange-600">{tip.prediction}</p>
@@ -764,24 +691,25 @@ export function PackageDetailView({
                                                             </div>
                                                         </div>
 
-                                                        <div className="grid grid-cols-2 gap-4 mb-3">
+                                                        <div className="mb-3 grid grid-cols-2 gap-4">
                                                             <div>
-                                                                <p className="text-xs text-gray-500 dark:text-gray-400">Risk
-                                                                    Level</p>
+                                                                <p className="text-xs text-gray-500 dark:text-gray-400">Risk Level</p>
                                                                 <Badge
                                                                     variant="outline"
                                                                     className={
-                                                                        tip.riskLevel === 'low' ? 'border-green-500 text-green-600' :
-                                                                            tip.riskLevel === 'mid' ? 'border-yellow-500 text-yellow-600' :
-                                                                                'border-red-500 text-red-600'
+                                                                        tip.riskLevel === 'low'
+                                                                            ? 'border-green-500 text-green-600'
+                                                                            : tip.riskLevel === 'mid'
+                                                                              ? 'border-yellow-500 text-yellow-600'
+                                                                              : 'border-red-500 text-red-600'
                                                                     }
                                                                 >
                                                                     {tip.riskLevel.charAt(0).toUpperCase() + tip.riskLevel.slice(1)}
                                                                 </Badge>
                                                             </div>
                                                             {/*<div>*/}
-                                                                {/*<p className="text-xs text-gray-500 dark:text-gray-400">Confidence</p>*/}
-                                                                {/*<p className="font-medium text-blue-600">{tip.confidence}%</p>*/}
+                                                            {/*<p className="text-xs text-gray-500 dark:text-gray-400">Confidence</p>*/}
+                                                            {/*<p className="font-medium text-blue-600">{tip.confidence}%</p>*/}
                                                             {/*</div>*/}
                                                         </div>
 
@@ -793,10 +721,8 @@ export function PackageDetailView({
                                                         {/*    </div>*/}
                                                         {/*)}*/}
 
-                                                        <div
-                                                            className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                                                            <div
-                                                                className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                                                        <div className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-700">
+                                                            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                                                                 <span>Match Time: {tip.time}</span>
                                                             </div>
                                                         </div>
@@ -807,7 +733,7 @@ export function PackageDetailView({
                                     </div>
 
                                     {!isEditingTips && subscription.tipsData && subscription.tipsData.length > 18 && (
-                                        <div className="text-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                                        <div className="border-t border-gray-200 pt-4 text-center dark:border-gray-700">
                                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                                 Showing 10 of {subscription.tipsData.length} tips
                                             </p>
@@ -837,23 +763,22 @@ export function PackageDetailView({
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-3">
-                                <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600 dark:text-gray-400">Total Subscribers</span>
-                                    <span
-                                        className="font-semibold text-black dark:text-white">{analytics.totalSubscribers}</span>
+                                    <span className="font-semibold text-black dark:text-white">{analytics.totalSubscribers}</span>
                                 </div>
 
-                                <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600 dark:text-gray-400">Active Subscribers</span>
                                     <span className="font-semibold text-green-600">{analytics.activeSubscribers}</span>
                                 </div>
 
-                                <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600 dark:text-gray-400">Success Rate</span>
                                     <span className="font-semibold text-blue-600">{analytics.successRate}%</span>
                                 </div>
 
-                                <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600 dark:text-gray-400">Average Rating</span>
                                     <span className="font-semibold text-yellow-600">{analytics.averageRating}/5.0</span>
                                 </div>
@@ -870,25 +795,21 @@ export function PackageDetailView({
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-3">
-                                <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600 dark:text-gray-400">Weekly Revenue</span>
-                                    <span className="font-semibold text-green-600">
-                    KES {analytics.weeklyRevenue.toLocaleString()}
-                  </span>
+                                    <span className="font-semibold text-green-600">KES {analytics.weeklyRevenue.toLocaleString()}</span>
                                 </div>
 
-                                <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600 dark:text-gray-400">Total Revenue</span>
-                                    <span className="font-semibold text-green-600">
-                    KES {analytics.totalRevenue.toLocaleString()}
-                  </span>
+                                    <span className="font-semibold text-green-600">KES {analytics.totalRevenue.toLocaleString()}</span>
                                 </div>
 
-                                <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600 dark:text-gray-400">Revenue per User</span>
                                     <span className="font-semibold text-green-600">
-                    KES {Math.round(analytics.totalRevenue / analytics.totalSubscribers).toLocaleString()}
-                  </span>
+                                        KES {Math.round(analytics.totalRevenue / analytics.totalSubscribers).toLocaleString()}
+                                    </span>
                                 </div>
                             </div>
                         </CardContent>
@@ -899,11 +820,7 @@ export function PackageDetailView({
                             <CardTitle>Quick Actions</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            <Button
-                                onClick={handleDeleteClick}
-                                className="w-full flex items-center justify-center space-x-2"
-                                variant="destructive"
-                            >
+                            <Button onClick={handleDeleteClick} className="flex w-full items-center justify-center space-x-2" variant="destructive">
                                 <Trash2 className="h-4 w-4" />
                                 <span>Delete Package</span>
                             </Button>
@@ -925,32 +842,23 @@ export function PackageDetailView({
 
             {/* Tip Selection Dialog */}
             {showTipSelector && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div
-                        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl max-h-[80vh] overflow-hidden">
-                        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+                    <div className="max-h-[80vh] max-w-4xl overflow-hidden rounded-lg bg-white shadow-xl dark:bg-gray-800">
+                        <div className="border-b border-gray-200 p-6 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                        Select Tips to Add
-                                    </h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                        Choose from {availableTips.length} available tips
-                                    </p>
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Select Tips to Add</h3>
+                                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Choose from {availableTips.length} available tips</p>
                                 </div>
-                                <Button
-                                    variant="ghost"
-                                    onClick={handleCancelTipSelection}
-                                    className="text-gray-400 hover:text-gray-600"
-                                >
+                                <Button variant="ghost" onClick={handleCancelTipSelection} className="text-gray-400 hover:text-gray-600">
                                     <X className="h-5 w-5" />
                                 </Button>
                             </div>
                         </div>
 
-                        <div className="p-6 max-h-96 overflow-y-auto">
+                        <div className="max-h-96 overflow-y-auto p-6">
                             {availableTips.length === 0 ? (
-                                <div className="text-center py-8">
+                                <div className="py-8 text-center">
                                     <p className="text-gray-500 dark:text-gray-400">
                                         No tips available. Please add some tips in the Tips page first.
                                     </p>
@@ -959,60 +867,59 @@ export function PackageDetailView({
                                 <div className="grid grid-cols-1 gap-3">
                                     {availableTips.map((tip) => {
                                         const isSelected = selectedTipsToAdd.includes(tip.id);
-                                        const isAlreadyInPackage = editedTips.some(existingTip =>
-                                            existingTip.id === tip.id ||
-                                            (existingTip.matchId === tip.matchId && existingTip.tipType === tip.tipType)
+                                        const isAlreadyInPackage = editedTips.some(
+                                            (existingTip) =>
+                                                existingTip.id === tip.id ||
+                                                (existingTip.matchId === tip.matchId && existingTip.tipType === tip.tipType),
                                         );
 
                                         return (
                                             <div
                                                 key={tip.id}
-                                                className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                                                className={`cursor-pointer rounded-lg border p-4 transition-all ${
                                                     isAlreadyInPackage
-                                                        ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 opacity-50 cursor-not-allowed'
+                                                        ? 'cursor-not-allowed border-gray-300 bg-gray-100 opacity-50 dark:border-gray-600 dark:bg-gray-700'
                                                         : isSelected
-                                                            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
-                                                            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                                          ? 'border-blue-300 bg-blue-50 dark:border-blue-700 dark:bg-blue-900/20'
+                                                          : 'border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'
                                                 }`}
                                                 onClick={() => !isAlreadyInPackage && handleTipSelectionToggle(tip.id)}
                                             >
                                                 <div className="flex items-start space-x-3">
-                                                    <div className="flex-shrink-0 mt-1">
+                                                    <div className="mt-1 flex-shrink-0">
                                                         {isAlreadyInPackage ? (
-                                                            <div className="w-4 h-4 bg-gray-400 rounded border"></div>
+                                                            <div className="h-4 w-4 rounded border bg-gray-400"></div>
                                                         ) : (
-                                                            <div className={`w-4 h-4 rounded border ${
-                                                                isSelected
-                                                                    ? 'bg-blue-600 border-blue-600'
-                                                                    : 'border-gray-300 dark:border-gray-600'
-                                                            }`}>
+                                                            <div
+                                                                className={`h-4 w-4 rounded border ${
+                                                                    isSelected
+                                                                        ? 'border-blue-600 bg-blue-600'
+                                                                        : 'border-gray-300 dark:border-gray-600'
+                                                                }`}
+                                                            >
                                                                 {isSelected && (
-                                                                    <svg className="w-4 h-4 text-white"
-                                                                         fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fillRule="evenodd"
-                                                                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                                              clipRule="evenodd" />
+                                                                    <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path
+                                                                            fillRule="evenodd"
+                                                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                                            clipRule="evenodd"
+                                                                        />
                                                                     </svg>
                                                                 )}
                                                             </div>
                                                         )}
                                                     </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="flex items-center space-x-2 mb-2">
-                              <span className="text-sm font-medium text-gray-900 dark:text-white">
-                                {tip.homeTeam} vs {tip.awayTeam}
-                              </span>
+                                                    <div className="min-w-0 flex-1">
+                                                        <div className="mb-2 flex items-center space-x-2">
+                                                            <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                                                {tip.homeTeam} vs {tip.awayTeam}
+                                                            </span>
                                                             <Badge variant="outline" className="text-xs">
                                                                 {tip.tipType}
                                                             </Badge>
-                                                            {isAlreadyInPackage && (
-                                                                <Badge className="text-xs bg-gray-500">
-                                                                    Already Added
-                                                                </Badge>
-                                                            )}
+                                                            {isAlreadyInPackage && <Badge className="bg-gray-500 text-xs">Already Added</Badge>}
                                                         </div>
-                                                        <div
-                                                            className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                                                        <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
                                                             <div className="flex items-center space-x-4">
                                                                 <span>League: {tip.league}</span>
                                                                 <span>Prediction: {tip.prediction}</span>
@@ -1020,11 +927,15 @@ export function PackageDetailView({
                                                             <div className="flex items-center space-x-4">
                                                                 <span>Date: {tip.matchDate || tip.date}</span>
                                                                 <span>Time: {tip.matchTime || tip.time}</span>
-                                                                <Badge className={`text-xs ${
-                                                                    tip.riskLevel === 'low' ? 'bg-green-100 text-green-800' :
-                                                                        tip.riskLevel === 'mid' ? 'bg-yellow-100 text-yellow-800' :
-                                                                            'bg-red-100 text-red-800'
-                                                                }`}>
+                                                                <Badge
+                                                                    className={`text-xs ${
+                                                                        tip.riskLevel === 'low'
+                                                                            ? 'bg-green-100 text-green-800'
+                                                                            : tip.riskLevel === 'mid'
+                                                                              ? 'bg-yellow-100 text-yellow-800'
+                                                                              : 'bg-red-100 text-red-800'
+                                                                    }`}
+                                                                >
                                                                     {tip.riskLevel?.toUpperCase() || 'MID'} Risk
                                                                 </Badge>
                                                             </div>
@@ -1038,22 +949,19 @@ export function PackageDetailView({
                             )}
                         </div>
 
-                        <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                        <div className="border-t border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900">
                             <div className="flex items-center justify-between">
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                     {selectedTipsToAdd.length} tip{selectedTipsToAdd.length !== 1 ? 's' : ''} selected
                                 </p>
                                 <div className="flex items-center space-x-3">
-                                    <Button
-                                        variant="outline"
-                                        onClick={handleCancelTipSelection}
-                                    >
+                                    <Button variant="outline" onClick={handleCancelTipSelection}>
                                         Cancel
                                     </Button>
                                     <Button
                                         onClick={handleAddSelectedTips}
                                         disabled={selectedTipsToAdd.length === 0}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        className="bg-blue-600 text-white hover:bg-blue-700"
                                     >
                                         Add {selectedTipsToAdd.length} Tip{selectedTipsToAdd.length !== 1 ? 's' : ''}
                                     </Button>

@@ -3,13 +3,13 @@ import { usePage } from '@inertiajs/react';
 
 import { Search, Download, ChevronLeft, ChevronRight, Calendar, ToggleLeft, ToggleRight, ExternalLink, CheckCircle } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Badge } from '../tips-moto/components/ui/badge';
+import { Badge } from '../../tips-moto/components/ui/badge';
 import { toast } from 'sonner';
-import { Button } from '../tips-moto/components/ui/button.js';
-import { Card, CardContent, CardHeader, CardTitle } from '../tips-moto/components/ui/card.js';
-import { Input } from '../tips-moto/components/ui/input.js';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../tips-moto/components/ui/select.js';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../tips-moto/components/ui/table.js';
+import { Button } from '../../tips-moto/components/ui/button.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../../tips-moto/components/ui/card.js';
+import { Input } from '../../tips-moto/components/ui/input.js';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../tips-moto/components/ui/select.js';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../tips-moto/components/ui/table.js';
 import DebugJson from '@/components/ui/JsonDebug.js';
 
 export default function TipsPage() {

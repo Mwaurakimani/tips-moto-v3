@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ];
             });
 
-        return Inertia::render('AdminDashboardSystem/Accounts', [
+        return Inertia::render('AdminDashboardSystem/Accounts/index', [
             'currentPageTitle' => 'Accounts',
             'accounts' => $users,
         ]);

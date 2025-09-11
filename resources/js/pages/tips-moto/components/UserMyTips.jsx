@@ -148,7 +148,7 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
     };
 
     function getPredictionText(tip) {
-        if (!tip || !tip.prediction_type) return '';
+        if (!tip || !tip.prediction_type || tip.prediction_value === null || tip.prediction_value === undefined) return '';
 
         switch (tip.prediction_type) {
             case '1_X_2':
@@ -157,26 +157,34 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
                         return 'Home Win';
                     case 0:
                         return 'Draw';
-                    default:
+                    case -1:
                         return 'Away Win';
+                    default:
+                        return 'Unknown';
                 }
 
             case '1X_X2_12':
                 switch (tip.prediction_value) {
                     case 1:
-                        return 'Home Win/Draw ';
+                        return 'Home Win/Draw';
                     case 0:
                         return 'Away Win/Draw';
-                    default:
+                    case -1:
                         return 'Home Win/Away Win';
+                    default:
+                        return 'Unknown';
                 }
-            case 'GG-NG':
+
+            case 'GG-NG': // Note: Database shows GG-NG, not GG_NG
                 switch (tip.prediction_value) {
                     case -1:
-                        return 'GG';
+                        return 'Both Teams to Score';
+                    case 1:
+                        return 'Not Both Teams to Score';
                     default:
-                        return 'NG';
+                        return 'Unknown';
                 }
+
             default:
                 return 'Unknown';
         }

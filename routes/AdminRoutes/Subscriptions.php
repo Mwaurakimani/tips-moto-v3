@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PackageController;
 use App\Models\SubscriptionPlan;
 use App\Models\Tip;
 use Illuminate\Support\Facades\Route;
@@ -56,9 +57,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ];
         });
 
-        return Inertia::render('AdminDashboardSystem/Subscriptions', [
+        return Inertia::render('AdminDashboardSystem/Packages/index', [
             'currentPageTitle' => 'Packages',
             'subscriptions' => $plans
         ]);
     })->name('adminDashboard.subscriptions');
+});
+
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('packages', PackageController::class);
 });

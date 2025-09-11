@@ -35,7 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ];
             });
 
-        return Inertia::render('AdminDashboardSystem/Matches', [
+        return Inertia::render('AdminDashboardSystem/Matches/index', [
             'currentPageTitle' => 'Matches',
             'matches' => $matches,
         ]);

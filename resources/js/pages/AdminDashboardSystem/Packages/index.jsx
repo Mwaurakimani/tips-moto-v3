@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Download, Eye, Filter, Plus, Search } from 'lucide-react';
-import { Button } from '../tips-moto/components/ui/button';
-import { Input } from '../tips-moto/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '../tips-moto/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../tips-moto/components/ui/table';
-import { Badge } from '../tips-moto/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../tips-moto/components/ui/select';
-import { PackageDetailView } from '../tips-moto/components/PackageDetailView';
-import { AddPackageDialog } from '../tips-moto/components/AddPackageDialog';
+import { Button } from '../../tips-moto/components/ui/button';
+import { Input } from '../../tips-moto/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../tips-moto/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../tips-moto/components/ui/table';
+import { Badge } from '../../tips-moto/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../tips-moto/components/ui/select';
+import { PackageDetailView } from '@/pages/AdminDashboardSystem/Packages/PackageDetailView';
+import { AddPackageDialog } from '../../tips-moto/components/AddPackageDialog';
 import AdminLayout from '@/layouts/AdminLayout/adminLayout.jsx';
 import { usePage } from '@inertiajs/react';
 import DebugJson from '@/components/ui/JsonDebug.js';
 
 
-export default function Subscriptions({ availableTips = [] }) {
+export default function Index({ availableTips = [] }) {
     const {subscriptions} = usePage().props
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -145,16 +145,7 @@ export default function Subscriptions({ availableTips = [] }) {
     };
 
     const handleAddPackage = (packageData) => {
-        // Generate a new ID (find the highest existing ID and add 1)
-        const maxId = Math.max(...subscriptions.map((s) => s.id), 1434);
-        const newId = maxId + 1;
-
-        const newPackage = {
-            id: newId,
-            ...packageData,
-        };
-
-        setSubscriptions((prev) => [newPackage, ...prev]);
+        console.log(packageData);
         setShowAddPackageDialog(false);
     };
 
@@ -184,7 +175,7 @@ export default function Subscriptions({ availableTips = [] }) {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">All Selections</h1>
+                    <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">All Packages</h1>
                     <p className="mt-1 text-gray-600 dark:text-gray-400">Manage your subscription packages and pricing</p>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -366,7 +357,7 @@ export default function Subscriptions({ availableTips = [] }) {
                                 >
                                     <ChevronRight className="h-4 w-4" />
                                 </Button>
-                            </div>
+                            </div>s
                         </div>
                     )}
                 </CardContent>
@@ -378,4 +369,4 @@ export default function Subscriptions({ availableTips = [] }) {
     );
 }
 
-Subscriptions.layout = (page) => <AdminLayout>{page}</AdminLayout>;
+Index.layout = (page) => <AdminLayout>{page}</AdminLayout>;

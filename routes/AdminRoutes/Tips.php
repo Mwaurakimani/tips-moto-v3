@@ -46,7 +46,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
                 ];
             });
 
-        return Inertia::render('AdminDashboardSystem/Tips', [
+        return Inertia::render('AdminDashboardSystem/Tips/index', [
             'currentPageTitle' => 'Tips',
             'matches' => $matches,
         ]);
