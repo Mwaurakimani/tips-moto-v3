@@ -8,14 +8,6 @@ import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 
-async function fetchUserPackages(email, config = {}) {
-    const { data } = await axios.get("/api/user-packages", {
-        params: { email },
-        ...config,
-    });
-    return data?.data ?? [];
-}
-
 // Helper functions
 const fmtDate = (iso) => {
     if (!iso) return "—";
@@ -33,12 +25,11 @@ const pct = (num, den) => {
     return Math.max(0, Math.min(100, p));
 };
 
-export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
+export function UserMyTips({ currentUserEmail, userTips, allMatches ,userPackages }) {
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(null);
-    const [userPackages, setUserPackages] = useState([]);
     const [showTipsModal, setShowTipsModal] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState(null);
     const [mytips, setMyTips] = useState([]);
@@ -48,22 +39,6 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
 
         let ignore = false;
         const controller = new AbortController();
-
-        (async () => {
-            try {
-                setLoading(true);
-                const res = await fetchUserPackages(currentUserEmail, {
-                    signal: controller.signal,
-                });
-
-                if (!ignore) setUserPackages(res);
-            } catch (e) {
-                if (!ignore && e?.name !== "AbortError")
-                    setErr(e?.message ?? "Failed to load packages");
-            } finally {
-                if (!ignore) setLoading(false);
-            }
-        })();
 
         return () => {
             ignore = true;
@@ -201,37 +176,37 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
                 <TabsContent value="tips" className="space-y-4">
                     {/* Filters */}
                     <Card>
-                        <CardContent className="p-4">
-                            <div className="flex flex-col gap-4 sm:flex-row">
-                                <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-                                    <SelectTrigger className="w-full sm:w-[200px]">
-                                        <SelectValue placeholder="Filter by type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">All Tips</SelectItem>
-                                        <SelectItem value="free">Free Tips</SelectItem>
-                                        <SelectItem value="premium">Premium Tips</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                        {/*<CardContent className="p-4">*/}
+                        {/*    <div className="flex flex-col gap-4 sm:flex-row">*/}
+                        {/*        <Select value={selectedFilter} onValueChange={setSelectedFilter}>*/}
+                        {/*            <SelectTrigger className="w-full sm:w-[200px]">*/}
+                        {/*                <SelectValue placeholder="Filter by type" />*/}
+                        {/*            </SelectTrigger>*/}
+                        {/*            <SelectContent>*/}
+                        {/*                <SelectItem value="all">All Tips</SelectItem>*/}
+                        {/*                <SelectItem value="free">Free Tips</SelectItem>*/}
+                        {/*                <SelectItem value="premium">Premium Tips</SelectItem>*/}
+                        {/*            </SelectContent>*/}
+                        {/*        </Select>*/}
 
-                                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                                    <SelectTrigger className="w-full sm:w-[200px]">
-                                        <SelectValue placeholder="Filter by status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">All Status</SelectItem>
-                                        <SelectItem value="won">Won</SelectItem>
-                                        <SelectItem value="lost">Lost</SelectItem>
-                                        <SelectItem value="pending">Pending</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                        {/*        <Select value={selectedStatus} onValueChange={setSelectedStatus}>*/}
+                        {/*            <SelectTrigger className="w-full sm:w-[200px]">*/}
+                        {/*                <SelectValue placeholder="Filter by status" />*/}
+                        {/*            </SelectTrigger>*/}
+                        {/*            <SelectContent>*/}
+                        {/*                <SelectItem value="all">All Status</SelectItem>*/}
+                        {/*                <SelectItem value="won">Won</SelectItem>*/}
+                        {/*                <SelectItem value="lost">Lost</SelectItem>*/}
+                        {/*                <SelectItem value="pending">Pending</SelectItem>*/}
+                        {/*            </SelectContent>*/}
+                        {/*        </Select>*/}
 
-                                <Button variant="outline" className="w-full sm:w-auto">
-                                    <Download className="mr-2 h-4 w-4" />
-                                    Export Tips
-                                </Button>
-                            </div>
-                        </CardContent>
+                        {/*        <Button variant="outline" className="w-full sm:w-auto">*/}
+                        {/*            <Download className="mr-2 h-4 w-4" />*/}
+                        {/*            Export Tips*/}
+                        {/*        </Button>*/}
+                        {/*    </div>*/}
+                        {/*</CardContent>*/}
                     </Card>
 
                     {/* Tips List */}
@@ -279,13 +254,6 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
                                                     <p className="font-medium">{tip.odds || 'N/A'}</p>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div className="flex items-center space-x-4">
-                                            <Button variant="outline" size="sm">
-                                                <Eye className="mr-2 h-4 w-4" />
-                                                View Details
-                                            </Button>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -386,7 +354,6 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
                                     {" "}Expires: {fmtDate(selectedPackage?.expiryDate)}
                                 </DialogDescription>
                             </div>
-                            <Button variant="ghost" size="sm" onClick={() => setShowTipsModal(false)}>Close</Button>
                         </div>
                     </DialogHeader>
 
@@ -436,9 +403,6 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches }) {
                                                             <p className="font-medium">{fmtOdds(tip.odds)}</p>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="flex items-center">
-                                                    <Button variant="outline" size="sm">View Details</Button>
                                                 </div>
                                             </div>
                                         </CardContent>

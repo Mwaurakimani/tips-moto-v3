@@ -9,6 +9,7 @@ use App\Models\Team;
 use App\Models\Tip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LeagueController;
@@ -26,6 +27,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaction;
 use App\Http\Controllers\Api\UserPackagesController;
+use Illuminate\Validation\Rule;
 
 
 // Public
@@ -123,8 +125,6 @@ Route::get('/tips', [TipController::class, 'freeToday'])->name('fetchTipsApi');
 Route::get('/tips/free-today', [TipController::class, 'freeToday']);
 Route::get('/tips/{tip}', [TipController::class, 'show']);
 Route::get('/plans', [SubscriptionController::class, 'plans']);
-
-Route::get('/user-packages', [UserPackagesController::class, 'index']);
 
 // Authenticated
 Route::middleware('auth:sanctum')->group(function () {
@@ -266,4 +266,68 @@ Route::post('onit/callback', function (Request $request) {
 
 Route::post('/post/matches', PostMatchesController::class);
 
+//updates
+Route::put('/user/profile', function (Request $request) {
+    $user = auth()->user();
+
+    $validatedData = $request->validate([
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'email' => [
+            'required',
+            'email',
+            'max:255',
+            Rule::unique('users')->ignore($user->id)
+        ],
+        'phone' => 'nullable|string|max:20',
+        'current_password' => 'nullable|required_with:new_password',
+        'new_password' => [
+            'nullable',
+            'min:8',
+            'max:255',
+            'different:current_password',
+            'confirmed'
+        ]
+    ]);
+
+    // Update basic profile information
+    $user->update([
+        'first_name' => $validatedData['first_name'],
+        'last_name' => $validatedData['last_name'],
+        'email' => $validatedData['email'],
+        'phone' => $validatedData['phone'] ?? null
+    ]);
+
+    // Handle password change if new password is provided
+    if (!empty($validatedData['new_password'])) {
+        // Verify current password
+        if (!Hash::check($validatedData['current_password'], $user->password)) {
+            return response()->json([
+                'message' => 'The provided password does not match your current password.',
+                'errors' => [
+                    'current_password' => ['Invalid current password']
+                ]
+            ], 422);
+        }
+
+        // Update password
+        $user->password = Hash::make($validatedData['new_password']);
+        $user->save();
+    }
+
+    // Refresh user to get updated data
+    $user->refresh();
+
+    // Return updated user data
+    return response()->json([
+        'message' => 'Profile updated successfully',
+        'user' => [
+            'id' => $user->id,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+        ]
+    ]);
+})->middleware(['auth:sanctum']);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\UserPackagesController;
 use App\Http\Resources\TipResource;
 use App\Models\SubscriptionPlan;
 use Carbon\Carbon;
@@ -25,6 +26,13 @@ class DashboardController extends AbstractTipController
     {
         $user = $request->user();
 
+        $tips = TipResource::collection(Tip::with('match.league')
+            ->where('is_free', true)
+            ->where('free_for_date', Carbon::today())
+            ->take(3)
+            ->orderBy('created_at', 'desc')
+            ->get())->toArray($request);
+
         // Get user's matches and stats
         $matches = MatchModel::with(['tips', 'homeTeam', 'awayTeam', 'league'])
             ->where('kickoff_at', '>=', now())
@@ -35,7 +43,7 @@ class DashboardController extends AbstractTipController
         ];
 
         return Inertia::render('dashboard', [
-            'matches' => $matches,
+            'matches' => $tips,
             'stats' => $stats,
         ]);
     }
@@ -81,12 +89,12 @@ class DashboardController extends AbstractTipController
         return Inertia::render('UserDashboard/DashboardMyTips', [
             'userTips' => TipResource::collection($tips),
             'matches' => $matches,
+            'activePackages' => (new UserpackagesController())->getActivePackages()
         ]);
     }
 
     public function account(Request $request): \Inertia\Response
     {
-//        $user = $request->user()->load(['userProfile', 'subscriptions']);
         $user = $request->user();
 
         return Inertia::render('UserDashboard/DashboardAccount');

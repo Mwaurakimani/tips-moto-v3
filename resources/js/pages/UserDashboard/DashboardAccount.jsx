@@ -6,6 +6,7 @@ import { UserAccountPage } from '@/pages/tips-moto/components/UserAccountPage';
 export default function DashboardAccount() {
     const { props } = usePage();
     const currentUser = props.auth?.user;
+    currentUser.subscriptionStatus = 'active'
 
     return (
         <>

@@ -3,21 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Tip;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class UserPackagesController extends Controller
 {
-    public function index(Request $request)
+    public function getActivePackages()
     {
-        $data = $request->validate(['email' => ['required', 'email']]);
-
-        $user = User::where('email', $data['email'])->first();
-        if (!$user) {
-            return response()->json(['data' => []]);
-        }
+        $user = Auth()->user();
 
         // Get subscriptions + plan (assumes SubscriptionPlan::$casts['features'] = 'array')
         $subs = $user->subscriptions()->with('plan')->get();
@@ -115,6 +108,6 @@ class UserPackagesController extends Controller
             ->values()
             ->map(fn($p) => Arr::except($p, ['_isActive', '_expiryTs']));
 
-        return response()->json(['data' => $subs]);
+        return $subs;
     }
 }

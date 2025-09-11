@@ -9,11 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { PackageDetailView } from '@/pages/AdminDashboardSystem/Packages/PackageDetailView';
 import { AddPackageDialog } from '../../tips-moto/components/AddPackageDialog';
 import AdminLayout from '@/layouts/AdminLayout/adminLayout.jsx';
-import { usePage } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import DebugJson from '@/components/ui/JsonDebug.js';
+import { toast } from 'sonner';
 
 
-export default function Index({ availableTips = [] }) {
+export default function Index() {
     const {subscriptions} = usePage().props
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -23,6 +24,8 @@ export default function Index({ availableTips = [] }) {
     const [selectedSubscription, setSelectedSubscription] = useState(null);
     const [showAddPackageDialog, setShowAddPackageDialog] = useState(false);
     const itemsPerPage = 10;
+    const form = useForm({})
+
 
 
 // Filter subscriptions based on search and filters
@@ -129,7 +132,15 @@ export default function Index({ availableTips = [] }) {
     };
 
     const handleUpdateSubscription = (updatedSubscription) => {
-        setSubscriptions((prev) => prev.map((sub) => (sub.id === updatedSubscription.id ? updatedSubscription : sub)));
+        router.post(
+            route('adminDashboard.updateTipsData', updatedSubscription.id),
+            updatedSubscription,
+            {
+                preserveScroll: true,
+                onSuccess: () => window.location.reload(),
+                onError: (errors) => console.log(errors),
+            }
+        );
     };
 
     const handleDeleteSubscription = (subscriptionId) => {
@@ -165,7 +176,7 @@ export default function Index({ availableTips = [] }) {
                 onBack={handleBackToPackages}
                 onUpdateSubscription={handleUpdateSubscription}
                 onDeleteSubscription={handleDeleteSubscription}
-                availableTips={availableTips}
+                availableTips={selectedSubscription.availableTips}
             />
         );
     }

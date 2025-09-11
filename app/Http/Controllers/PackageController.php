@@ -71,6 +71,7 @@ class PackageController extends Controller
 
     public function update(Request $request, $id)
     {
+        dump(request()->all());
         $package = SubscriptionPlan::findOrFail($id);
 
         $validated = $request->validate([
@@ -123,6 +124,8 @@ class PackageController extends Controller
         }
     }
 
+
+
     public function destroy($id)
     {
         try {
@@ -134,9 +137,17 @@ class PackageController extends Controller
                     ->withErrors(['message' => 'Cannot delete package with active subscriptions.']);
             }
 
+            $packageController = new PackageProcessController();
+
+            if (array_key_exists($package->name, $packageController->planToGroups)){
+                return redirect()->back()
+                    ->withErrors(['message' => 'Cannot delete A core package.']);
+            }
+
+
             $package->delete();
 
-            return redirect()->back()->with('success', 'Package deleted successfully!');
+            return redirect()->back();
 
         } catch (\Exception $e) {
             \Log::error('Package deletion failed: ' . $e->getMessage());

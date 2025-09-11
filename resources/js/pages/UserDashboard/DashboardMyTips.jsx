@@ -8,6 +8,7 @@ export default function DashboardMyTips() {
     const userTips = props.userTips.data
     const matches = props.matches ?? []
     const currentUser = props.auth?.user;
+    const activePackages = props.activePackages
 
     return (
         <>
@@ -16,6 +17,7 @@ export default function DashboardMyTips() {
                 currentUserEmail={currentUser?.email}
                 userTips={userTips}
                 allMatches={matches}
+                userPackages = {activePackages}
                 onGoToPackages={() => {
                     // This will be handled by the layout's navigation
                 }}

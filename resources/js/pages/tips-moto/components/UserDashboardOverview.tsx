@@ -23,6 +23,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { useState, useEffect } from 'react';
+import { Link } from '@inertiajs/react';
 
 interface UserDashboardOverviewProps {
     currentUser: any;
@@ -80,30 +81,20 @@ export function UserDashboardOverview({ currentUser, allMatches }: UserDashboard
             year: 'numeric'
         });
 
-
-        if(allMatches && allMatches.length > 0 ) {
-            const todayMatches = allMatches.filter(match => match.date === todayDateString);
-
-            const freeTips: any[] = [];
-
-            todayMatches.forEach(match => {
-                match.tipsData?.forEach((tip: any) => {
-                    if (tip.free) {
-                        freeTips.push({
-                            match: `${match.homeTeam} vs ${match.awayTeam}`,
-                            league: match.league,
-                            time: match.time,
-                            tip: tip.prediction,
-                            odds: '',
-                            confidence: tip.riskLevel === 'low' ? 'High' : tip.riskLevel === 'mid' ? 'Medium' : 'Low'
-                        });
-                    }
-                });
-            });
-
-            return freeTips.slice(0, 3);
-        }else{
-            return []
+        if (allMatches && allMatches.length > 0) {
+            return allMatches.map(tip => ({
+                match: `${tip.match.home_team} vs ${tip.match.away_team}`,
+                league: tip.match.league,
+                time: tip.match.kickoff_at,
+                tip: tip.prediction_value,
+                odds: tip.odds || '',
+                confidence: tip.confidence || (
+                    tip.risk_level === 'low' ? 'High' :
+                        tip.risk_level === 'mid' ? 'Medium' : 'Low'
+                )
+            })).slice(0, 3);
+        } else {
+            return [];
         }
     };
 
@@ -294,7 +285,9 @@ export function UserDashboardOverview({ currentUser, allMatches }: UserDashboard
                                 <Button
                                     className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white py-3">
                                     <Target className="h-4 w-4 mr-2" />
-                                    View All Premium Tips
+                                    <Link href={route('dashboard.packages')}>
+                                        View All Premium Tips
+                                    </Link>
                                 </Button>
                             </div>
                         ) : (
