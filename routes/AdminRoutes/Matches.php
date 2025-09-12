@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\MatchController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\MatchModel;
+
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -40,5 +43,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'matches' => $matches,
         ]);
     })->name('adminDashboard.matches');
+
+    Route::post('adminDashboard/matches/create',[MatchController::class,'store'] )->name('adminDashboard.matches.create');
+
+    Route::put('adminDashboard/matches/update/{match}',[MatchController::class,'update'] )->name('adminDashboard.matches.update');
+
+    Route::post('/adminDashboard/matches/{match}/tips',[MatchController::class,'addTip'] )->name('adminDashboard.tip.add');
+
+    Route::delete('/adminDashboard/tips/{tip}', [MatchController::class, 'deleteTip'])->name('adminDashboard.tip.delete');
+
+    Route::put('/adminDashboard/tips/{tip}', [MatchController::class, 'updateTip'])->name('adminDashboard.tip.update');
+
+
 
 });

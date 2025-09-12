@@ -203,37 +203,37 @@ export function UserAboutPage({ onBackToHome, onNavigateToTips, onBackToAdmin, o
         </section>
 
         {/* Contact Information */}
-        <section>
-          <h2 className="text-3xl font-bold text-center mb-12 text-orange-500">Get In Touch</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-gray-900/50 border-gray-800 text-center hover:bg-gray-900/70 transition-colors">
-              <CardContent className="pt-6">
-                <Phone className="w-8 h-8 text-orange-500 mx-auto mb-4" />
-                <h3 className="font-bold mb-2 text-white">Phone</h3>
-                <p className="text-gray-400">+254 712 345 678</p>
-                <p className="text-gray-400">+254 789 012 345</p>
-              </CardContent>
-            </Card>
+        {/*<section>*/}
+        {/*  <h2 className="text-3xl font-bold text-center mb-12 text-orange-500">Get In Touch</h2>*/}
+        {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">*/}
+        {/*    <Card className="bg-gray-900/50 border-gray-800 text-center hover:bg-gray-900/70 transition-colors">*/}
+        {/*      <CardContent className="pt-6">*/}
+        {/*        <Phone className="w-8 h-8 text-orange-500 mx-auto mb-4" />*/}
+        {/*        <h3 className="font-bold mb-2 text-white">Phone</h3>*/}
+        {/*        <p className="text-gray-400">+254 712 345 678</p>*/}
+        {/*        <p className="text-gray-400">+254 789 012 345</p>*/}
+        {/*      </CardContent>*/}
+        {/*    </Card>*/}
 
-            <Card className="bg-gray-900/50 border-gray-800 text-center hover:bg-gray-900/70 transition-colors">
-              <CardContent className="pt-6">
-                <Mail className="w-8 h-8 text-orange-500 mx-auto mb-4" />
-                <h3 className="font-bold mb-2 text-white">Email</h3>
-                <p className="text-gray-400">info@tipsmoto.com</p>
-                <p className="text-gray-400">support@tipsmoto.com</p>
-              </CardContent>
-            </Card>
+        {/*    <Card className="bg-gray-900/50 border-gray-800 text-center hover:bg-gray-900/70 transition-colors">*/}
+        {/*      <CardContent className="pt-6">*/}
+        {/*        <Mail className="w-8 h-8 text-orange-500 mx-auto mb-4" />*/}
+        {/*        <h3 className="font-bold mb-2 text-white">Email</h3>*/}
+        {/*        <p className="text-gray-400">info@tipsmoto.com</p>*/}
+        {/*        <p className="text-gray-400">support@tipsmoto.com</p>*/}
+        {/*      </CardContent>*/}
+        {/*    </Card>*/}
 
-            <Card className="bg-gray-900/50 border-gray-800 text-center hover:bg-gray-900/70 transition-colors">
-              <CardContent className="pt-6">
-                <MapPin className="w-8 h-8 text-orange-500 mx-auto mb-4" />
-                <h3 className="font-bold mb-2 text-white">Location</h3>
-                <p className="text-gray-400">Nairobi, Kenya</p>
-                <p className="text-gray-400">East Africa</p>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
+        {/*    <Card className="bg-gray-900/50 border-gray-800 text-center hover:bg-gray-900/70 transition-colors">*/}
+        {/*      <CardContent className="pt-6">*/}
+        {/*        <MapPin className="w-8 h-8 text-orange-500 mx-auto mb-4" />*/}
+        {/*        <h3 className="font-bold mb-2 text-white">Location</h3>*/}
+        {/*        <p className="text-gray-400">Nairobi, Kenya</p>*/}
+        {/*        <p className="text-gray-400">East Africa</p>*/}
+        {/*      </CardContent>*/}
+        {/*    </Card>*/}
+        {/*  </div>*/}
+        {/*</section>*/}
 
         {/* Call to Action */}
         <section className="text-center mt-16">

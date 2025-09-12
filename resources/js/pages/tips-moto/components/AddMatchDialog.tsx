@@ -21,9 +21,9 @@ interface AddMatchDialogProps {
 export function AddMatchDialog({ onAddMatch }: AddMatchDialogProps) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    league: '',
-    homeTeam: '',
-    awayTeam: '',
+    league: 'Premier League',
+    homeTeam: 'Arsenal',
+    awayTeam: 'Manchester U',
     date: '',
     time: '',
     status: 'pending'
@@ -56,7 +56,7 @@ export function AddMatchDialog({ onAddMatch }: AddMatchDialogProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.league || !formData.homeTeam || !formData.awayTeam || !selectedDate || !formData.time) {
       alert('Please fill in all required fields');
@@ -64,20 +64,20 @@ export function AddMatchDialog({ onAddMatch }: AddMatchDialogProps) {
     }
 
     // Format the date to match existing format (e.g., "Jul 07 2025")
-    const formattedDate = selectedDate.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: '2-digit', 
-      year: 'numeric' 
+    const formattedDate = selectedDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric'
     });
 
     // Format the time to match existing format (e.g., "12:00 pm")
     const [hours, minutes] = formData.time.split(':');
     const timeObj = new Date();
     timeObj.setHours(parseInt(hours), parseInt(minutes));
-    const formattedTime = timeObj.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
+    const formattedTime = timeObj.toLocaleTimeString('en-US', {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: true 
+      hour12: true
     });
 
     // Add the match
@@ -197,10 +197,11 @@ export function AddMatchDialog({ onAddMatch }: AddMatchDialogProps) {
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="live">Live</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  <SelectItem value="scheduled">scheduled</SelectItem>
+                  <SelectItem value="live">live</SelectItem>
+                  <SelectItem value="finished">finished</SelectItem>
+                  <SelectItem value="postponed">postponed</SelectItem>
+                  <SelectItem value="canceled">canceled</SelectItem>
                 </SelectContent>
               </Select>
             </div>

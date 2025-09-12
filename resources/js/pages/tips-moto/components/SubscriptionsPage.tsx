@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { PackageDetailView } from './PackageDetailView';
 import { AddPackageDialog } from './AddPackageDialog';
+import { PackageDetailView } from '@/pages/AdminDashboardSystem/Packages/PackageDetailView';
 
 // Define subscription interface
 interface Subscription {
@@ -23,18 +23,18 @@ interface Subscription {
 }
 
 interface SubscriptionsPageProps {
-  availableTips?: any[];
+  availableTips?: never[];
 }
 
 // Helper function to generate package-specific tips
 const generatePackageTips = (packageType: string, packageName: string, tipCount: number) => {
   const winningStatuses = ['pending', 'won', 'lost', 'void'];
   const winningStatusWeights = [0.2, 0.6, 0.15, 0.05]; // 60% won, 20% pending, 15% lost, 5% void
-  
+
   const getWeightedRandomStatus = () => {
     const rand = Math.random();
     let cumulativeWeight = 0;
-    
+
     for (let i = 0; i < winningStatuses.length; i++) {
       cumulativeWeight += winningStatusWeights[i];
       if (rand <= cumulativeWeight) {
@@ -45,10 +45,10 @@ const generatePackageTips = (packageType: string, packageName: string, tipCount:
   };
 
   const tips = [];
-  
+
   // Define package-specific tip types
   let availableTips: any[] = [];
-  
+
   switch (packageType) {
     case 'fulltime':
       availableTips = [
@@ -60,7 +60,7 @@ const generatePackageTips = (packageType: string, packageName: string, tipCount:
         { type: 'X2', subType: 'Draw or Away', value: 'X2', riskLevel: 'low', prediction: 'Draw or Away Win' }
       ];
       break;
-      
+
     case 'overunder':
       availableTips = [
         { type: 'Over 0.5', subType: 'Goals', value: 'Over 0.5', riskLevel: 'low', prediction: 'Over 0.5 Goals' },
@@ -72,7 +72,7 @@ const generatePackageTips = (packageType: string, packageName: string, tipCount:
         { type: 'Under 3.5', subType: 'Goals', value: 'Under 3.5', riskLevel: 'low', prediction: 'Under 3.5 Goals' }
       ];
       break;
-      
+
     case 'jackpot':
       // Jackpots use a mix of all tip types since they cover multiple fixtures
       availableTips = [
@@ -84,7 +84,7 @@ const generatePackageTips = (packageType: string, packageName: string, tipCount:
         { type: 'X2', subType: 'Draw or Away', value: 'X2', riskLevel: 'low', prediction: 'Draw or Away Win' }
       ];
       break;
-      
+
     case 'specialized':
       availableTips = [
         { type: 'GG', subType: 'Both Teams Score', value: 'GG', riskLevel: 'mid', prediction: 'Both Teams Score' },
@@ -95,7 +95,7 @@ const generatePackageTips = (packageType: string, packageName: string, tipCount:
         { type: 'X2', subType: 'Draw or Away', value: 'X2', riskLevel: 'low', prediction: 'Draw or Away Win' }
       ];
       break;
-      
+
     case 'premium':
       availableTips = [
         { type: 'Correct Score', subType: '2-1', value: '2-1', riskLevel: 'high', prediction: 'Correct Score 2-1' },
@@ -106,7 +106,7 @@ const generatePackageTips = (packageType: string, packageName: string, tipCount:
         { type: 'HT/FT', subType: 'X/1', value: 'X/1', riskLevel: 'high', prediction: 'Half-Time/Full-Time X/1' }
       ];
       break;
-      
+
     default:
       availableTips = [
         { type: '1', subType: 'Home Win', value: '1', riskLevel: 'mid', prediction: 'Home Win' },
@@ -141,7 +141,7 @@ const generatePackageTips = (packageType: string, packageName: string, tipCount:
   for (let i = 0; i < tipCount; i++) {
     const match = sampleMatches[i % sampleMatches.length];
     const tipTemplate = availableTips[i % availableTips.length];
-    
+
     // Generate realistic odds based on risk level
     const getOddsForRisk = (riskLevel: string) => {
       switch (riskLevel) {
@@ -191,7 +191,7 @@ const generateAnalysisReason = (tipType: string, match: any) => {
     '12': ['Clear favorite vs underdog', 'Draw unlikely scenario', 'One team must win'],
     'X2': ['Away team in good form', 'Home team struggles', 'Visitor with point to prove']
   };
-  
+
   const tipReasons = reasons[tipType as keyof typeof reasons] || ['Professional analysis suggests this outcome'];
   return tipReasons[Math.floor(Math.random() * tipReasons.length)];
 };
@@ -226,7 +226,7 @@ const getRandomMatchDate = () => {
   const today = new Date();
   const futureDate = new Date(today);
   futureDate.setDate(today.getDate() + Math.floor(Math.random() * 7) + 1);
-  
+
   return futureDate.toLocaleDateString('en-US', {
     month: 'short',
     day: '2-digit',
@@ -237,7 +237,7 @@ const getRandomMatchDate = () => {
 // Generate subscription packages data - Real packages currently being sold
 const generateSubscriptions = (): Subscription[] => {
   const currentDate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
-  
+
   const packages = [
     // Full-Time Scores Packages
     {
@@ -262,7 +262,7 @@ const generateSubscriptions = (): Subscription[] => {
       duration: 'Weekly',
       tipsData: generatePackageTips('fulltime', 'Full-Time Scores Weekly', 17)
     },
-    
+
     // Over & Under Markets Packages
     {
       id: 1437,
@@ -286,7 +286,7 @@ const generateSubscriptions = (): Subscription[] => {
       duration: 'Weekly',
       tipsData: generatePackageTips('overunder', 'Over & Under Markets Weekly', 7)
     },
-    
+
     // Jackpot Tips Packages
     {
       id: 1439,
@@ -332,7 +332,7 @@ const generateSubscriptions = (): Subscription[] => {
       duration: 'Weekly',
       tipsData: generatePackageTips('jackpot', 'Weekly Jackpot Premium', 17)
     },
-    
+
     // Additional specialized packages (keeping some variety)
     {
       id: 1443,
@@ -432,7 +432,7 @@ export function SubscriptionsPage({ availableTips = [] }: SubscriptionsPageProps
                          subscription.id.toString().includes(searchTerm);
     const matchesStatus = statusFilter === 'all' || subscription.status.toLowerCase() === statusFilter;
     const matchesDescription = descriptionFilter === 'all' || subscription.description === descriptionFilter;
-    
+
     return matchesSearch && matchesStatus && matchesDescription;
   });
 
@@ -445,7 +445,7 @@ export function SubscriptionsPage({ availableTips = [] }: SubscriptionsPageProps
   const generatePageNumbers = () => {
     const pages = [];
     const maxVisible = 10;
-    
+
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -471,7 +471,7 @@ export function SubscriptionsPage({ availableTips = [] }: SubscriptionsPageProps
   };
 
   const getStatusBadge = (status: string) => {
-    return status === 'Active' 
+    return status === 'Active'
       ? <Badge className="bg-green-600 text-white">Active</Badge>
       : <Badge variant="secondary">Inactive</Badge>;
   };
@@ -492,7 +492,7 @@ export function SubscriptionsPage({ availableTips = [] }: SubscriptionsPageProps
   const handleExport = () => {
     // CSV Headers
     const headers = ['ID', 'Name', 'Date', 'Description', 'Tips Count', 'Price (KES)', 'Duration', 'Status'];
-    
+
     // Convert filtered subscriptions to CSV format
     const csvContent = [
       headers.join(','),
@@ -521,7 +521,7 @@ export function SubscriptionsPage({ availableTips = [] }: SubscriptionsPageProps
   };
 
   const handleUpdateSubscription = (updatedSubscription: Subscription) => {
-    setSubscriptions(prev => prev.map(sub => 
+    setSubscriptions(prev => prev.map(sub =>
       sub.id === updatedSubscription.id ? updatedSubscription : sub
     ));
   };
@@ -588,7 +588,7 @@ export function SubscriptionsPage({ availableTips = [] }: SubscriptionsPageProps
             <Download className="h-4 w-4" />
             <span>Export</span>
           </Button>
-          <Button 
+          <Button
             onClick={handleShowAddPackage}
             className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2"
           >
@@ -626,7 +626,7 @@ export function SubscriptionsPage({ availableTips = [] }: SubscriptionsPageProps
                 className="pl-10"
               />
             </div>
-            
+
             <Select value={statusFilter} onValueChange={(value) => {
               setStatusFilter(value);
               setCurrentPage(1);

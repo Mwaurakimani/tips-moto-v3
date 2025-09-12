@@ -8,8 +8,11 @@ import { Label } from '@/pages/tips-moto/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/pages/tips-moto/components/ui/select';
 import { Switch } from '@/pages/tips-moto/components/ui/switch';
 import {AddTipDialog} from '@/pages/tips-moto/components/AddTipDialog'
+import { router } from '@inertiajs/react';
 
-export function MatchDetailView({ match, onBack, onSave, onTipsUpdate }) {
+export function MatchDetailView({ match, onBack, onSave
+                                    // ,setSelectedTipMatch
+}) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedMatch, setEditedMatch] = useState({
         league: match.league,
@@ -54,36 +57,138 @@ export function MatchDetailView({ match, onBack, onSave, onTipsUpdate }) {
     };
 
     const handleAddTip = (tipData) => {
-        const newTip = {
-            id: Math.max(0, ...tips.map(t => t.id)) + 1,
-            ...tipData
-        };
+        router.post(route('adminDashboard.tip.add', match.id), tipData, {
+            onSuccess: (page) => {
+                console.log("Tip added successfully");
 
-        const newTips = [...tips, newTip];
-        setTips(newTips);
-        onTipsUpdate(match.id, newTips);
+                // Use the returned tip from the server instead of creating a temporary one
+                const newTip = page.props.flash?.newTip || {
+                    id: Date.now(),
+                    match_id: match.id,
+                    prediction_type: tipData.subType,
+                    pick_label: tipData.value,
+                    risk_level: tipData.riskLevel,
+                    is_free: tipData.free,
+                    result: tipData.winningStatus,
+                    ...tipData
+                };
+
+                // Update local state
+                const newTips = [...tips, newTip];
+                setTips(newTips);
+
+                // Call the tips update handler
+                handleTipsUpdate(match.id, newTips);
+            },
+            onError: (errors) => {
+                console.log("Failed to add tip:", errors);
+            },
+        });
+    };
+
+    // In MatchDetailView component
+    const handleTipsUpdate = (matchId, newTips) => {
+        if (match && match.id === matchId) {
+            setSelectedTipMatch(prev => ({
+                ...prev,
+                tips: newTips.length,
+                tipsData: newTips
+            }));
+        }
     };
 
     const handleDeleteTip = (tipId) => {
-        const newTips = tips.filter(tip => tip.id !== tipId);
-        setTips(newTips);
-        onTipsUpdate(match.id, newTips);
+        if (confirm('Are you sure you want to delete this tip?')) {
+            router.delete(route('adminDashboard.tip.delete', tipId), {
+                onSuccess: (page) => {
+                    console.log("Tip deleted successfully");
+                    const newTips = tips.filter(tip => tip.id !== tipId);
+                    setTips(newTips);
+                    handleTipsUpdate(match.id, newTips);
+                },
+                onError: (errors) => {
+                    console.log("Failed to delete tip:", errors);
+                },
+            });
+        }
     };
 
     const handleEditTip = (tip) => {
         setEditingTipId(tip.id);
-        setEditedTip({ ...tip });
+
+        // Map database fields to frontend edit form
+        setEditedTip({
+            ...tip,
+            tipType: tip.pick_label || tip.tipType,
+            subType: mapPredictionTypeToSubType(tip.prediction_type),
+            value: tip.pick_label || tip.value,
+            prediction: tip.prediction || mapPickLabelToPrediction(tip.pick_label),
+            riskLevel: tip.risk_level || tip.riskLevel,
+            winningStatus: tip.result || tip.winningStatus,
+            free: tip.is_free !== undefined ? tip.is_free : tip.free,
+        });
+    };
+
+// Helper functions to map database values back to frontend values
+    const mapPredictionTypeToSubType = (predictionType) => {
+        switch (predictionType) {
+            case '1_X_2': return '1 X 2';
+            case '1X_X2_12': return 'Double Chance';
+            case 'Over/Under': return 'Goals';
+            case 'GG_NG': return 'Both Teams Score';
+            default: return predictionType;
+        }
+    };
+
+    const mapPickLabelToPrediction = (pickLabel) => {
+        const predictionMap = {
+            '1': 'Home Win',
+            'X': 'Draw',
+            '2': 'Away Win',
+            '1X': 'Home Win or Draw',
+            '12': 'Home Win or Away Win',
+            'X2': 'Draw or Away Win',
+            'GG': 'Both Teams Score',
+            'NG': 'Clean Sheet',
+        };
+
+        if (pickLabel && pickLabel.includes('Over')) return 'Over Goals';
+        if (pickLabel && pickLabel.includes('Under')) return 'Under Goals';
+
+        return predictionMap[pickLabel] || pickLabel;
     };
 
     const handleSaveTip = () => {
         if (editedTip && editingTipId !== null) {
-            const newTips = tips.map(tip =>
-                tip.id === editingTipId ? editedTip : tip
-            );
-            setTips(newTips);
-            onTipsUpdate(match.id, newTips);
-            setEditingTipId(null);
-            setEditedTip(null);
+            // Send update request to server first
+            router.put(route('adminDashboard.tip.update', editingTipId), {
+                tipType: editedTip.tipType,
+                subType: editedTip.subType,
+                value: editedTip.value || editedTip.tipType, // Use tipType as value if no separate value
+                prediction: editedTip.prediction,
+                riskLevel: editedTip.riskLevel,
+                winningStatus: editedTip.winningStatus,
+                free: editedTip.free,
+            }, {
+                onSuccess: (page) => {
+                    console.log("Tip updated successfully");
+
+                    // Update local state after successful server update
+                    const newTips = tips.map(tip =>
+                        tip.id === editingTipId ? { ...tip, ...editedTip } : tip
+                    );
+                    setTips(newTips);
+                    handleTipsUpdate(match.id, newTips);
+
+                    // Reset editing state
+                    setEditingTipId(null);
+                    setEditedTip(null);
+                },
+                onError: (errors) => {
+                    console.log("Failed to update tip:", errors);
+                    // Handle errors - show toast notification
+                },
+            });
         }
     };
 
@@ -93,10 +198,26 @@ export function MatchDetailView({ match, onBack, onSave, onTipsUpdate }) {
     };
 
     const handleTipInputChange = (field, value) => {
-        setEditedTip(prev => ({
-            ...prev,
-            [field]: value
-        }));
+        setEditedTip(prev => {
+            const updated = { ...prev, [field]: value };
+
+            // Auto-update prediction when tipType changes
+            if (field === 'tipType') {
+                updated.prediction = mapPickLabelToPrediction(value);
+                // You might also want to update subType based on tipType
+                if (['1', 'X', '2'].includes(value)) {
+                    updated.subType = '1 X 2';
+                } else if (['1X', '12', 'X2'].includes(value)) {
+                    updated.subType = 'Double Chance';
+                } else if (['GG', 'NG'].includes(value)) {
+                    updated.subType = 'Both Teams Score';
+                } else if (value.includes('Over') || value.includes('Under')) {
+                    updated.subType = 'Goals';
+                }
+            }
+
+            return updated;
+        });
     };
 
     // Use editedMatch for display to show current values

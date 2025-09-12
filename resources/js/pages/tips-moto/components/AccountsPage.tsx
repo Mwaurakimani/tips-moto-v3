@@ -23,8 +23,8 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Badge } from "./ui/badge";
-import { UserDetailView } from "./UserDetailView";
+import { Badge } from './ui/badge';
+import { UserDetailView } from '@/pages/AdminDashboardSystem/Accounts/UserDetailView';
 
 // Generate 435 users with realistic data
 const generateUsers = () => {
@@ -264,7 +264,6 @@ const generateUsers = () => {
     "Jimenez",
   ];
 
-  const roles = ["Guest", "Premium", "Admin"];
   const roleWeights = [0.7, 0.25, 0.05]; // 70% Guest, 25% Premium, 5% Admin
 
   const users = [];
@@ -382,7 +381,7 @@ export function AccountsPage() {
   const handleExport = () => {
     // CSV Headers
     const headers = ['ID', 'User', 'Email', 'Phone', 'Role', 'Date Joined'];
-    
+
     // Convert filtered accounts to CSV format
     const csvContent = [
       headers.join(','),
@@ -468,6 +467,7 @@ export function AccountsPage() {
       <UserDetailView
         user={selectedUser}
         onBack={handleBackToAccounts}
+        onUserUpdate={() => {}}
       />
     );
   }

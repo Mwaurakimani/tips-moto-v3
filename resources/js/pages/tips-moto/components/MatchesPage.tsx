@@ -5,8 +5,8 @@ import { Input } from './ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Badge } from './ui/badge';
-import { MatchDetailView } from './MatchDetailView';
 import { AddMatchDialog } from './AddMatchDialog';
+import { MatchDetailView } from '@/pages/AdminDashboardSystem/Matches/MatchDetailView';
 
 const MATCHES_PER_PAGE = 10;
 
@@ -77,7 +77,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
   const handleExport = () => {
     // CSV Headers
     const headers = ['ID', 'League', 'Home Team', 'Away Team', 'Date', 'Time', 'Tips Count', 'Status'];
-    
+
     // Convert filtered matches to CSV format
     const csvContent = [
       headers.join(','),
@@ -128,7 +128,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
     time: string;
   }>) => {
     onMatchSave(matchId, updatedFields);
-    
+
     // Also update the selected match if it's currently being viewed
     if (selectedMatch && selectedMatch.id === matchId) {
       setSelectedMatch(prev => ({ ...prev, ...updatedFields }));
@@ -138,7 +138,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
   // Handle tips updates from the detail view - pass through to parent
   const handleTipsUpdate = (matchId: number, newTips: any[]) => {
     onTipsUpdate(matchId, newTips);
-    
+
     // Also update the selected match if it's currently being viewed
     if (selectedMatch && selectedMatch.id === matchId) {
       setSelectedMatch(prev => ({ ...prev, tips: newTips.length, tipsData: newTips }));
@@ -163,7 +163,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
   const generatePageNumbers = () => {
     const pages = [];
     const maxVisible = 10;
-    
+
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -191,11 +191,11 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
   // If a match is selected, show the match detail view
   if (selectedMatch) {
     return (
-      <MatchDetailView 
-        match={selectedMatch} 
+      <MatchDetailView
+        match={selectedMatch}
         onBack={handleBackToMatches}
         onSave={handleMatchSave}
-        onTipsUpdate={handleTipsUpdate}
+        // onTipsUpdate={handleTipsUpdate || }
       />
     );
   }
@@ -205,7 +205,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
       {/* Header with Add Match and Search */}
       <div className="flex items-center justify-between gap-4">
         <AddMatchDialog onAddMatch={handleAddMatch} />
-        
+
         <div className="flex-1 max-w-md">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -226,8 +226,8 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
             <CardTitle>All Matches</CardTitle>
             <div className="flex items-center space-x-2">
               <div className="relative">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => setFilterOpen(!filterOpen)}
                 >
@@ -252,7 +252,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
                   </div>
                 )}
               </div>
-              
+
               <Button variant="outline" size="sm" onClick={handleExport}>
                 <Download className="h-4 w-4 mr-2" />
                 Export
@@ -275,8 +275,8 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
             </TableHeader>
             <TableBody>
               {paginatedMatches.map((match) => (
-                <TableRow 
-                  key={match.id} 
+                <TableRow
+                  key={match.id}
                   className="hover:bg-gray-50 dark:hover:bg-gray-800/50 border-b last:border-b-0"
                 >
                   <TableCell className="px-4 py-3 text-center text-blue-400">
@@ -316,9 +316,9 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-center">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleViewMatch(match.id)}
                       className="h-8 px-3 text-xs"
                     >
@@ -330,7 +330,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
               ))}
             </TableBody>
           </Table>
-          
+
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-6 py-4 border-t">
@@ -353,7 +353,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                
+
                 {generatePageNumbers().map((page, index) => (
                   page === '...' ? (
                     <span key={index} className="px-2 text-gray-400">...</span>
@@ -369,7 +369,7 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
                     </Button>
                   )
                 ))}
-                
+
                 <Button
                   variant="outline"
                   size="sm"
@@ -394,8 +394,8 @@ export function MatchesPage({ matches, onAddMatch, onMatchSave, onTipsUpdate }: 
 
       {/* Click outside to close dropdowns */}
       {filterOpen && (
-        <div 
-          className="fixed inset-0 z-10" 
+        <div
+          className="fixed inset-0 z-10"
           onClick={() => setFilterOpen(false)}
         />
       )}

@@ -1,3 +1,4 @@
+import DebugJson from '@/components/ui/JsonDebug.js';
 import { usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { ArrowRight, CheckCircle, Clock, CreditCard, Crown, Package, Star, Target } from 'lucide-react';
@@ -8,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Input } from './ui/input';
 
-export function UserPackagesBrowser({ allMatches, currentUser }) {
+export function UserPackagesBrowser({ allMatches, currentUser, packages }) {
     const phone = usePage().props.auth.user.phone;
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
@@ -18,13 +19,150 @@ export function UserPackagesBrowser({ allMatches, currentUser }) {
 
     // Package data from admin (matching SportPackagesPage)
     const availablePackages = [
-        // ... (same as previous implementation)
+        {
+            id: packages.find((packageSelected) => packageSelected.name === 'Full Time Scores Daily')?.id,
+            name: 'Full-Time Scores Daily',
+            description: 'Professional match outcome predictions',
+            price: 99,
+            originalPrice: 149,
+            duration: 'Daily',
+            tips: '15 Tips',
+            accuracy: '88%+',
+            category: 'match-outcomes',
+            features: [
+                'Home/Away/Draw predictions',
+                'Double chance selections',
+                'Professional match analysis',
+                'Risk level indicators',
+                '24/7 Customer support',
+            ],
+            popular: false,
+            color: 'from-blue-500 to-blue-600',
+        },
+        {
+            id: packages.find((packageSelected) => packageSelected.name === 'Full Time Scores Weekly')?.id,
+            name: 'Full-Time Scores Weekly',
+            description: 'Complete weekly match predictions',
+            price: 599,
+            originalPrice: 899,
+            duration: 'Weekly',
+            tips: '17 Tips/Day',
+            accuracy: '90%+',
+            category: 'match-outcomes',
+            features: [
+                'Daily professional predictions',
+                'Multiple leagues coverage',
+                'Home/Away/Draw analysis',
+                'Double chance options',
+                'Risk assessment reports',
+                'Telegram VIP group access',
+                'Priority customer support',
+            ],
+            popular: true,
+            color: 'from-orange-500 to-red-500',
+        },
+        {
+            id: packages.find((packageSelected) => packageSelected.name === 'Over/Under Market Daily')?.id,
+            name: 'Over & Under Markets Daily',
+            description: 'Goal-based market predictions',
+            price: 29,
+            originalPrice: 49,
+            duration: 'Daily',
+            tips: '5 Tips',
+            accuracy: '86%+',
+            category: 'goal-markets',
+            features: ['Over/Under 1.5 goals', 'Over/Under 2.5 goals', 'Over/Under 3.5 goals', 'Goal market analysis', 'Low risk selections'],
+            popular: false,
+            color: 'from-green-500 to-green-600',
+        },
+        {
+            id: packages.find((packageSelected) => packageSelected.name === 'Over/Under Market Weekly')?.id,
+            name: 'Over & Under Markets Weekly',
+            description: 'Weekly goal market coverage',
+            price: 199,
+            originalPrice: 299,
+            duration: 'Weekly',
+            tips: '7 Tips/Day',
+            accuracy: '88%+',
+            category: 'goal-markets',
+            features: [
+                'Daily goal predictions',
+                'Multiple over/under markets',
+                'Statistical analysis',
+                'Form-based selections',
+                'WhatsApp support',
+                'Weekly performance reports',
+            ],
+            popular: false,
+            color: 'from-teal-500 to-teal-600',
+        },
+        {
+            id: packages.find((packageSelected) => packageSelected.name === 'Sport Pesa Mega Jackpot')?.id,
+            name: 'Mega Jackpot Prediction',
+            description: 'Multi-fixture jackpot tips',
+            price: 49,
+            originalPrice: 79,
+            duration: 'Weekly',
+            tips: '15 Fixtures',
+            accuracy: '85%+',
+            category: 'jackpots',
+            features: [
+                '15-fixture jackpot tips',
+                'Multiple outcome analysis',
+                'Risk-balanced selections',
+                'Jackpot-specific strategy',
+                'Historical performance data',
+            ],
+            popular: false,
+            color: 'from-purple-500 to-purple-600',
+        },
+        {
+            id: packages.find((packageSelected) => packageSelected.name === 'Goal-No Goal Daily')?.id,
+            name: 'Both Teams Score Daily',
+            description: 'BTTS specialized predictions',
+            price: 39,
+            originalPrice: 59,
+            duration: 'Daily',
+            tips: '8 Tips',
+            accuracy: '89%+',
+            category: 'btts',
+            features: [
+                'Both teams to score tips',
+                'Goal/No Goal analysis',
+                'Team scoring patterns',
+                'Defensive analysis',
+                'High accuracy selections',
+            ],
+            popular: false,
+            color: 'from-red-500 to-red-600',
+        },
+        {
+            id: packages.find((packageSelected) => packageSelected.name === 'Goal-No Goal Weekly')?.id,
+            name: 'Goal Goal/No Goal Weekly',
+            description: 'Weekly BTTS comprehensive package',
+            price: 149,
+            originalPrice: 229,
+            duration: 'Weekly',
+            tips: '10 Tips/Day',
+            accuracy: '91%+',
+            category: 'btts',
+            features: [
+                'Daily BTTS predictions',
+                'GG/NG market analysis',
+                'Team form assessment',
+                'Scoring statistics',
+                'Weekly strategy reports',
+                'Telegram group access',
+            ],
+            popular: false,
+            color: 'from-pink-500 to-pink-600',
+        },
     ];
 
     // Filter packages based on search and filters
     const filteredPackages = availablePackages.filter((pkg) => {
-        const matchesSearch =
-            pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) || pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'all' || pkg.category === selectedCategory;
         const matchesDuration = selectedDuration === 'all' || pkg.duration.toLowerCase() === selectedDuration;
 
@@ -32,6 +170,7 @@ export function UserPackagesBrowser({ allMatches, currentUser }) {
     });
 
     const handlePurchase = (packageData) => {
+
         axios
             .post(route('package.purchase'), {
                 data: {

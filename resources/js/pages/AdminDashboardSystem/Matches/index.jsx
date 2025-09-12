@@ -7,13 +7,13 @@ import { Button } from '@/pages/tips-moto/components/ui/button.js';
 import { Badge } from '../../tips-moto/components/ui/badge.js';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/pages/tips-moto/components/ui/table.js';
 import AdminLayout from '@/layouts/AdminLayout/adminLayout.jsx';
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { Search, Filter, Download, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 
 const MATCHES_PER_PAGE = 10;
 
 export default function MatchesPage() {
-    const { matches, onAddMatch, onMatchSave, onTipsUpdate } = usePage().props
+    const { matches, onMatchSave, onTipsUpdate } = usePage().props
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('All');
     const [filterOpen, setFilterOpen] = useState(false);
@@ -90,29 +90,39 @@ export default function MatchesPage() {
 
     // Handle adding a new match - pass through to parent
     const handleAddMatch = (newMatchData) => {
-        onAddMatch(newMatchData);
-        // Reset to first page to potentially show the new match
-        setCurrentPage(1);
+        router.post(route('adminDashboard.matches.create'), newMatchData,{
+            success: () => {
+                window.location.reload();
+            },
+            error: () => {
+                console.log("error");
+            },
+        });
     };
 
     // Handle match updates from the detail view - pass through to parent
+// Handle match updates from the detail view
     const handleMatchSave = (matchId, updatedFields) => {
-        onMatchSave(matchId, updatedFields);
+        // Send update request to server
+        router.put(route('adminDashboard.matches.update',[matchId]), updatedFields, {
+            onSuccess: (page) => {
+                console.log("Match updated successfully");
 
-        // Also update the selected match if it's currently being viewed
-        if (selectedMatch && selectedMatch.id === matchId) {
-            setSelectedMatch(prev => ({ ...prev, ...updatedFields }));
-        }
-    };
+                // Call parent's onMatchSave if it exists (for any additional logic)
+                if (onMatchSave) {
+                    onMatchSave(matchId, updatedFields);
+                }
 
-    // Handle tips updates from the detail view - pass through to parent
-    const handleTipsUpdate = (matchId, newTips) => {
-        onTipsUpdate(matchId, newTips);
-
-        // Also update the selected match if it's currently being viewed
-        if (selectedMatch && selectedMatch.id === matchId) {
-            setSelectedMatch(prev => ({ ...prev, tips: newTips.length, tipsData: newTips }));
-        }
+                // Update the selected match if it's currently being viewed
+                if (selectedMatch && selectedMatch.id === matchId) {
+                    setSelectedMatch(prev => ({ ...prev, ...updatedFields }));
+                }
+            },
+            onError: (errors) => {
+                console.log("Update failed:", errors);
+                // Handle errors - maybe show a toast notification
+            },
+        });
     };
 
     const getStatusBadgeColor = (status) => {
@@ -165,7 +175,7 @@ export default function MatchesPage() {
                 match={selectedMatch}
                 onBack={handleBackToMatches}
                 onSave={handleMatchSave}
-                onTipsUpdate={handleTipsUpdate}
+                setSelectedTipMatch = {setSelectedMatch}
             />
         );
     }

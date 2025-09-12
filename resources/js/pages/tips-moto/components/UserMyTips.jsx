@@ -174,40 +174,6 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches ,userPackage
                 </TabsList>
 
                 <TabsContent value="tips" className="space-y-4">
-                    {/* Filters */}
-                    <Card>
-                        {/*<CardContent className="p-4">*/}
-                        {/*    <div className="flex flex-col gap-4 sm:flex-row">*/}
-                        {/*        <Select value={selectedFilter} onValueChange={setSelectedFilter}>*/}
-                        {/*            <SelectTrigger className="w-full sm:w-[200px]">*/}
-                        {/*                <SelectValue placeholder="Filter by type" />*/}
-                        {/*            </SelectTrigger>*/}
-                        {/*            <SelectContent>*/}
-                        {/*                <SelectItem value="all">All Tips</SelectItem>*/}
-                        {/*                <SelectItem value="free">Free Tips</SelectItem>*/}
-                        {/*                <SelectItem value="premium">Premium Tips</SelectItem>*/}
-                        {/*            </SelectContent>*/}
-                        {/*        </Select>*/}
-
-                        {/*        <Select value={selectedStatus} onValueChange={setSelectedStatus}>*/}
-                        {/*            <SelectTrigger className="w-full sm:w-[200px]">*/}
-                        {/*                <SelectValue placeholder="Filter by status" />*/}
-                        {/*            </SelectTrigger>*/}
-                        {/*            <SelectContent>*/}
-                        {/*                <SelectItem value="all">All Status</SelectItem>*/}
-                        {/*                <SelectItem value="won">Won</SelectItem>*/}
-                        {/*                <SelectItem value="lost">Lost</SelectItem>*/}
-                        {/*                <SelectItem value="pending">Pending</SelectItem>*/}
-                        {/*            </SelectContent>*/}
-                        {/*        </Select>*/}
-
-                        {/*        <Button variant="outline" className="w-full sm:w-auto">*/}
-                        {/*            <Download className="mr-2 h-4 w-4" />*/}
-                        {/*            Export Tips*/}
-                        {/*        </Button>*/}
-                        {/*    </div>*/}
-                        {/*</CardContent>*/}
-                    </Card>
 
                     {/* Tips List */}
                     <div className="space-y-4">

@@ -303,7 +303,9 @@ export function UserDashboardOverview({ currentUser, allMatches }: UserDashboard
                                 </p>
                                 <Button variant="outline"
                                         className="border-orange-500 text-orange-500 hover:bg-orange-50">
-                                    Browse Premium Tips
+                                    <Link href={route('dashboard.packages')}>
+                                        Browse Premium Tips
+                                    </Link>
                                 </Button>
                             </div>
                         )}

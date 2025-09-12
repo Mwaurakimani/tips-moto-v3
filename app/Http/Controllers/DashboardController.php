@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use App\Models\MatchModel;
 use App\Models\Tip;
 use App\Models\Subscription;
+use Inertia\Response;
 
 class DashboardController extends AbstractTipController
 {
@@ -22,7 +23,7 @@ class DashboardController extends AbstractTipController
         $this->tips = Tip::whereDate('created_at', Carbon::today())->pluck('id')->toArray();
     }
 
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request): Response
     {
         $user = $request->user();
 
@@ -48,12 +49,15 @@ class DashboardController extends AbstractTipController
         ]);
     }
 
-    public function packages(Request $request): \Inertia\Response
+    public function packages(Request $request): Response
     {
         $user = $request->user();
 
+        $counter = 1;
+
         // Get available packages/subscription plans
-        $packages = SubscriptionPlan::where('is_active', true)->get();
+        $packages = SubscriptionPlan::where('is_active', true)
+            ->get();
 
         // Get matches for package preview
         $matches = MatchModel::with(['tips', 'homeTeam', 'awayTeam', 'league'])
@@ -68,7 +72,7 @@ class DashboardController extends AbstractTipController
     }
 
     /** Reused logic injected into myTipsCopy */
-    public function myTips(Request $request): \Inertia\Response
+    public function myTips(Request $request): Response
     {
         $limit = $this->readAndClampLimit($request, 100);   // default 20 for dashboard page size
         $ids = $this->parseIds($request, $this->tips ?? []);
@@ -93,7 +97,7 @@ class DashboardController extends AbstractTipController
         ]);
     }
 
-    public function account(Request $request): \Inertia\Response
+    public function account(Request $request): Response
     {
         $user = $request->user();
 

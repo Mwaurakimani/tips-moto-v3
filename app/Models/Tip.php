@@ -18,6 +18,9 @@ class Tip extends Model
         'free_for_date' => 'date',
         'publish_at' => 'datetime',
         'settled_at' => 'datetime',
+        'odds' => 'decimal:2',
+        'prediction_value' => 'integer',
+        'confidence' => 'integer',
     ];
 
     public function match(): BelongsTo

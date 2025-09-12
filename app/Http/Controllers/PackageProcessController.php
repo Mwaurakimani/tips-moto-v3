@@ -12,7 +12,7 @@ use Inertia\Inertia;
 class PackageProcessController extends Controller
 {
     public $planToGroups = [
-        'Full Time Scores Daily' => ['1X_X2_12'],
+        'Full Time Scores Daily' => ['1_X_2'],
         'Full Time Scores Weekly' => ['1_X_2'],
         'Over/Under Market Daily' => [],
         'Over/Under Market Weekly' => [],

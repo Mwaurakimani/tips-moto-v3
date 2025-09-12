@@ -1,4 +1,4 @@
-import { 
+import {
   Target,
   BarChart3,
   Shield,
@@ -52,7 +52,7 @@ export const testimonials = [
   },
   {
     name: 'Grace Wanjiku',
-    location: 'Mombasa, Kenya', 
+    location: 'Mombasa, Kenya',
     rating: 5,
     comment: 'The VIP package is worth every shilling. The personal tipster and detailed analysis have helped me make informed betting decisions.',
     avatar: ''
@@ -79,19 +79,19 @@ export const heroStats = [
 ];
 
 export const heroFeatures = [
-  {
-    icon: Zap,
-    title: 'Real-Time Alerts',
-    description: 'Get instant notifications for new tips and match updates'
-  },
-  {
-    icon: Award,
-    title: 'Expert Analysis',
-    description: 'Professional tipsters with proven track records'
-  },
-  {
-    icon: Shield,
-    title: 'Secure Platform',
-    description: 'Safe and secure betting environment with VIP protection'
-  }
+  // {
+  //   icon: Zap,
+  //   title: 'Real-Time Alerts',
+  //   description: 'Get instant notifications for new tips and match updates'
+  // },
+  // {
+  //   icon: Award,
+  //   title: 'Expert Analysis',
+  //   description: 'Professional tipsters with proven track records'
+  // },
+  // {
+  //   icon: Shield,
+  //   title: 'Secure Platform',
+  //   description: 'Safe and secure betting environment with VIP protection'
+  // }
 ];

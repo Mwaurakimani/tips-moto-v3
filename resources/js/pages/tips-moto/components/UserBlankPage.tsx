@@ -308,12 +308,12 @@ export function UserTipsPage({ onBackToHome, onBackToAdmin }: UserTipsPageProps)
 
                 {/* Contact Info */}
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-3 text-gray-300">
-                    <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                      <Phone className="h-4 w-4 text-orange-400" />
-                    </div>
-                    <span className="text-sm">+254 712 345 678</span>
-                  </div>
+                  {/*<div className="flex items-center space-x-3 text-gray-300">*/}
+                  {/*  <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center">*/}
+                  {/*    <Phone className="h-4 w-4 text-orange-400" />*/}
+                  {/*  </div>*/}
+                  {/*  <span className="text-sm">+254 712 345 678</span>*/}
+                  {/*</div>*/}
                   <div className="flex items-center space-x-3 text-gray-300">
                     <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center">
                       <Mail className="h-4 w-4 text-orange-400" />

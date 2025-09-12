@@ -315,28 +315,36 @@ export function UserAccountPage({ currentUser }) {
                     </CardContent>
                 </Card>
 
-                {/* Quick Actions & Preferences */}
-                <div className="space-y-6">
-                    {/* Subscription Info */}
-                    <Card className="border-none shadow-lg">
-                        <CardHeader>
-                            <CardTitle className="flex items-center space-x-2">
-                                <Crown className="h-5 w-5 text-orange-500" />
-                                <span>Subscription</span>
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="rounded-xl bg-gradient-to-r from-purple-50 to-violet-50 p-4 text-center dark:from-purple-950/30 dark:to-violet-950/30">
-                                <h3 className="mb-1 font-semibold text-purple-900 dark:text-purple-100">
-                                    {currentUser?.subscriptionTier || 'Premium'} Plan
-                                </h3>
-                                <p className="mb-3 text-sm text-purple-700 dark:text-purple-300">
-                                    Expires: {'18/08/205'}
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                 {/*Quick Actions & Preferences*/}
+                {/*<div className="space-y-6">*/}
+                {/*    /!* Subscription Info *!/*/}
+                {/*    <Card className="border-none shadow-lg">*/}
+                {/*        <CardHeader>*/}
+                {/*            <CardTitle className="flex items-center space-x-2">*/}
+                {/*                <Crown className="h-5 w-5 text-orange-500" />*/}
+                {/*                <span>Subscription</span>*/}
+                {/*            </CardTitle>*/}
+                {/*        </CardHeader>*/}
+                {/*        <CardContent className="space-y-4">*/}
+                {/*            <div className="rounded-xl bg-gradient-to-r from-purple-50 to-violet-50 p-4 text-center dark:from-purple-950/30 dark:to-violet-950/30">*/}
+                {/*                <h3 className="mb-1 font-semibold text-purple-900 dark:text-purple-100">*/}
+                {/*                    {currentUser?.subscriptionTier || 'Premium'} Plan*/}
+                {/*                </h3>s*/}
+                {/*                <p className="mb-3 text-sm text-purple-700 dark:text-purple-300">*/}
+                {/*                    Expires: {'18/08/205'}*/}
+                {/*                </p>*/}
+                {/*            </div>*/}
+                {/*            <div className="rounded-xl bg-gradient-to-r from-purple-50 to-violet-50 p-4 text-center dark:from-purple-950/30 dark:to-violet-950/30">*/}
+                {/*                <h3 className="mb-1 font-semibold text-purple-900 dark:text-purple-100">*/}
+                {/*                    {currentUser?.subscriptionTier || 'Premium'} Plan*/}
+                {/*                </h3>*/}
+                {/*                <p className="mb-3 text-sm text-purple-700 dark:text-purple-300">*/}
+                {/*                    Expires: {'18/08/205'}*/}
+                {/*                </p>*/}
+                {/*            </div>*/}
+                {/*        </CardContent>*/}
+                {/*    </Card>*/}
+                {/*</div>*/}
             </div>
         </div>
     );

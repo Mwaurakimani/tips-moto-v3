@@ -6,7 +6,6 @@ import { UserPackagesBrowser } from '@/pages/tips-moto/components/UserPackagesBr
 export default function DashboardPackages() {
     const { props } = usePage();
     const { packages = [], matches = [] } = props;
-
     const currentUser = props.auth?.user;
 
     return (
