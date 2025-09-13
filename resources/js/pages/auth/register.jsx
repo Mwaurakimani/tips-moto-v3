@@ -117,8 +117,10 @@ export default function UserSignUpPage() {
             {/* Header */}
             <div className="relative z-10 flex items-center justify-between p-6">
                 <Link href={route('home')} className="flex items-center space-x-3 text-white transition-colors hover:text-orange-500">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-red-500">
-                        <TrendingUp className="h-5 w-5 text-white" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r  ">
+                        <div className="flex h-15 w-15 items-center justify-center rounded-lg">
+                            <img src="/storage/system/logo_light.png" alt="" className={'h-full w-full object-contain'} />
+                        </div>
                     </div>
                     <span className="text-xl font-bold">Tips Moto</span>
                 </Link>
@@ -137,7 +139,7 @@ export default function UserSignUpPage() {
                         <div className="space-y-4">
                             <h1 className="text-4xl leading-tight font-bold text-white lg:text-5xl">
                                 Start Your{' '}
-                                <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">Winning Journey</span>
+                                <span className="bg-gradient-to-r   bg-clip-text text-transparent">Winning Journey</span>
                             </h1>
                             <p className="max-w-lg text-xl text-gray-300">
                                 Join thousands of successful bettors and get access to expert predictions with your free trial.

@@ -53,7 +53,7 @@ export function AdminLoginPage({ onAdminLogin, onGoToUserLogin, onBackToHomepage
     // Simulate API call delay
     setTimeout(() => {
       const credential = adminCredentials[formData.email as keyof typeof adminCredentials];
-      
+
       if (credential && credential.password === formData.password) {
         onAdminLogin({
           email: formData.email,
@@ -89,12 +89,14 @@ export function AdminLoginPage({ onAdminLogin, onGoToUserLogin, onBackToHomepage
           onClick={onBackToHomepage}
           className="flex items-center space-x-3 text-white hover:text-orange-500 transition-colors"
         >
-          <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-            <TrendingUp className="h-5 w-5 text-white" />
+          <div className="w-8 h-8 bg-gradient-to-r   rounded-lg flex items-center justify-center">
+              <div className="flex h-15 w-15 items-center justify-center rounded-lg">
+                  <img src="/storage/system/logo_light.png" alt="" className={'h-full w-full object-contain'} />
+              </div>
           </div>
           <span className="text-xl font-bold">Tips Moto</span>
         </button>
-        
+
         <button
           onClick={onGoToUserLogin}
           className="text-gray-400 hover:text-gray-300 text-sm"
@@ -112,13 +114,15 @@ export function AdminLoginPage({ onAdminLogin, onGoToUserLogin, onBackToHomepage
       <div className="relative flex items-center justify-center min-h-[calc(100vh-88px)] p-4">
 
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        
+
         {/* Left Side - Branding & Features */}
         <div className="space-y-8 text-center lg:text-left">
           {/* Logo */}
           <div className="flex items-center justify-center lg:justify-start space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
-              <TrendingUp className="h-7 w-7 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-r   rounded-xl flex items-center justify-center">
+                <div className="flex h-15 w-15 items-center justify-center rounded-lg">
+                    <img src="/storage/system/logo_light.png" alt="" className={'h-full w-full object-contain'} />
+                </div>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Tips Moto</h1>
@@ -184,7 +188,7 @@ export function AdminLoginPage({ onAdminLogin, onGoToUserLogin, onBackToHomepage
             <CardTitle className="text-2xl text-white">Admin Login</CardTitle>
             <p className="text-gray-400">Access your admin dashboard</p>
           </CardHeader>
-          
+
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -230,8 +234,8 @@ export function AdminLoginPage({ onAdminLogin, onGoToUserLogin, onBackToHomepage
                 </Alert>
               )}
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isLoading}
                 className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg transition-colors"
               >
@@ -242,7 +246,7 @@ export function AdminLoginPage({ onAdminLogin, onGoToUserLogin, onBackToHomepage
             {/* Demo Login */}
             <div className="text-center space-y-3">
               <div className="text-sm text-gray-500">Demo Access</div>
-              <Button 
+              <Button
                 type="button"
                 variant="outline"
                 onClick={handleDemoLogin}

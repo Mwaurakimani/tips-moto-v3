@@ -58,8 +58,10 @@ export function UserDashboardHeader({ currentUser, onLogout, onBackToHomepage }:
                 {/* Logo */}
                 <div className="flex items-center">
                     <button onClick={onBackToHomepage} className="flex items-center space-x-2 transition-opacity hover:opacity-80">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-red-500">
-                            <TrendingUp className="h-5 w-5 text-white" />
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r  ">
+                            <div className="flex h-15 w-15 items-center justify-center rounded-lg">
+                                <img src="/storage/system/logo-dark.png" alt="" className={'h-full w-full object-contain'} />
+                            </div>
                         </div>
                         <span className="hidden bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-lg font-bold text-transparent sm:block">
                             Tips Moto

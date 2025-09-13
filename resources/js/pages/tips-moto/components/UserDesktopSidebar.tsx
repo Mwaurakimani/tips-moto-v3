@@ -29,8 +29,10 @@ export function UserDesktopSidebar({ currentPage, onPageChange, currentUser, isO
       <div className="flex flex-col h-full">
         {/* Logo */}
         <div className="flex items-center space-x-3 p-6 border-b border-orange-500/20">
-          <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-            <TrendingUp className="h-6 w-6 text-white" />
+          <div className="w-10 h-10 bg-gradient-to-r   rounded-lg flex items-center justify-center">
+              <div className="flex h-15 w-15 items-center justify-center rounded-lg">
+                  <img src="/storage/system/logo-dark.png" alt="" className={'h-full w-full object-contain'} />
+              </div>
           </div>
           <span className="font-bold text-xl bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
             Tips Moto

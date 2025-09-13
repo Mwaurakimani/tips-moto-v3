@@ -107,8 +107,10 @@ export function UserSignUpPage({ onUserLogin, onGoToLogin, onGoToAdminLogin, onB
             {/* Header */}
             <div className="relative z-10 flex items-center justify-between p-6">
                 <button onClick={onBackToHomepage} className="flex items-center space-x-3 text-white transition-colors hover:text-orange-500">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-red-500">
-                        <TrendingUp className="h-5 w-5 text-white" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r  ">
+                        <div className="flex h-15 w-15 items-center justify-center rounded-lg">
+                            <img src="/storage/system/logo_light.png" alt="" className={'h-full w-full object-contain'} />
+                        </div>
                     </div>
                     <span className="text-xl font-bold">Tips Moto</span>
                 </button>

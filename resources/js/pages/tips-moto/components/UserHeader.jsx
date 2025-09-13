@@ -116,11 +116,10 @@ export function UserHeader({ currentPage }) {
         return (
             <div className="flex items-center">
                 <div className="flex cursor-pointer items-center space-x-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-red-500">
-                        <TrendingUp className="h-5 w-5 text-white" />
-                    </div>
                     <Link href={route('home')} className="text-xl font-bold text-white">
-                        Tips Moto
+                        <div className="flex h-15 w-15 items-center justify-center rounded-lg">
+                            <img src="/storage/system/logo_light.png" alt="" className={'h-full w-full object-contain'} />
+                        </div>
                     </Link>
                 </div>
             </div>
