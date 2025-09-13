@@ -215,10 +215,10 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches ,userPackage
                                                     <p className="text-sm text-muted-foreground">Prediction</p>
                                                     <p className="font-medium">{getPredictionText(tip)}</p>
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm text-muted-foreground">Odds</p>
-                                                    <p className="font-medium">{tip.odds || 'N/A'}</p>
-                                                </div>
+                                                {/*<div>*/}
+                                                {/*    <p className="text-sm text-muted-foreground">Odds</p>*/}
+                                                {/*    <p className="font-medium">{tip.odds || 'N/A'}</p>*/}
+                                                {/*</div>*/}
                                             </div>
                                         </div>
                                     </div>
