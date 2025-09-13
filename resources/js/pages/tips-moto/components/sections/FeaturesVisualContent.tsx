@@ -1,8 +1,8 @@
-import { 
-  TrendingUp, 
-  BarChart3, 
-  Target, 
-  Clock, 
+import {
+  TrendingUp,
+  BarChart3,
+  Target,
+  Clock,
   Trophy,
   Users,
   CheckCircle,
@@ -32,7 +32,7 @@ export function FeaturesVisualContent({ activeFeature, features }: FeaturesVisua
     if (activeFeature === 1) { // Data-Driven Insights is index 1
       // Reset and animate bars with staggered timing
       setChartBars([0, 0, 0, 0, 0, 0, 0]);
-      
+
       chartTargets.forEach((height, index) => {
         setTimeout(() => {
           setChartBars(prev => {
@@ -60,15 +60,15 @@ export function FeaturesVisualContent({ activeFeature, features }: FeaturesVisua
                 <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white text-xs">Live Analytics</Badge>
               </div>
             </div>
-            
+
             {/* Analytics Cards */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 border border-gray-600/50">
                 <div className="text-3xl font-bold text-orange-500">92%</div>
                 <div className="text-sm text-gray-300">Accuracy</div>
                 <div className="w-full bg-gray-700/50 rounded-full h-1.5 mt-2">
-                  <div 
-                    className="bg-gradient-to-r from-orange-500 to-yellow-400 h-1.5 rounded-full transition-all duration-1000 ease-out" 
+                  <div
+                    className="bg-gradient-to-r from-orange-500 to-yellow-400 h-1.5 rounded-full transition-all duration-1000 ease-out"
                     style={{ width: '92%' }}
                   ></div>
                 </div>
@@ -127,14 +127,14 @@ export function FeaturesVisualContent({ activeFeature, features }: FeaturesVisua
                   <span className="text-green-400 text-sm">↑ 12%</span>
                 </div>
               </div>
-              
+
               {/* Animated Chart Bars */}
               <div className="flex items-end space-x-2 h-24 mb-3">
                 {chartBars.map((height, i) => (
                   <div key={i} className="flex-1 relative group cursor-pointer">
-                    <div 
+                    <div
                       className="w-full bg-gradient-to-t from-orange-500 to-orange-400 rounded-t-sm transition-all duration-700 ease-out hover:from-orange-400 hover:to-yellow-400 hover:scale-105"
-                      style={{ 
+                      style={{
                         height: `${height}%`,
                         transformOrigin: 'bottom'
                       }}
@@ -142,7 +142,7 @@ export function FeaturesVisualContent({ activeFeature, features }: FeaturesVisua
                       {/* Subtle glow effect on hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20 rounded-t-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
-                    
+
                     {/* Animated tooltip */}
                     <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100">
                       <div className="bg-black/90 text-orange-400 text-xs font-semibold px-2 py-1 rounded border border-orange-500/30 whitespace-nowrap">
@@ -152,7 +152,7 @@ export function FeaturesVisualContent({ activeFeature, features }: FeaturesVisua
                   </div>
                 ))}
               </div>
-              
+
               <div className="flex justify-between text-xs text-gray-500">
                 <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
               </div>
@@ -191,7 +191,7 @@ export function FeaturesVisualContent({ activeFeature, features }: FeaturesVisua
                 <div className="text-4xl font-bold text-green-400 mb-1">5,000+</div>
                 <div className="text-sm text-gray-300">Satisfied Members</div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-orange-500">127</div>
@@ -348,7 +348,7 @@ export function FeaturesVisualContent({ activeFeature, features }: FeaturesVisua
               {[
                 { league: 'Premier League', accuracy: '94%', color: 'bg-green-500' },
                 { league: 'La Liga', accuracy: '91%', color: 'bg-blue-500' },
-                { league: 'Bundesliga', accuracy: '88%', color: 'bg-yellow-500' },
+                { league: 'Bundesliga', accuracy: '90%', color: 'bg-yellow-500' },
                 { league: 'Serie A', accuracy: '89%', color: 'bg-purple-500' }
               ].map((league, i) => (
                 <div key={i} className="flex items-center justify-between bg-black/20 rounded-lg p-3 border border-gray-700/50">
@@ -431,15 +431,15 @@ export function FeaturesVisualContent({ activeFeature, features }: FeaturesVisua
         <div
           key={index}
           className={`absolute inset-0 transition-all duration-700 ease-out ${
-            index === activeFeature 
-              ? 'opacity-100 translate-y-0' 
+            index === activeFeature
+              ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-8'
           }`}
         >
           <div className="w-full h-full bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-3xl p-6 lg:p-8 border border-gray-700 shadow-2xl shadow-black/50 relative overflow-hidden">
             {/* Background glow effect */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-full blur-3xl"></div>
-            
+
             <div className="relative h-full overflow-y-auto">
               {renderFeatureContent(index)}
             </div>

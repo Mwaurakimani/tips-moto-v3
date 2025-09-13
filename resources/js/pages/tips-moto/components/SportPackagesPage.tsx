@@ -46,7 +46,7 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
       originalPrice: 'KES 149',
       duration: 'Daily',
       tips: '15 Tips',
-      accuracy: '88%+',
+      accuracy: '90%+',
       features: [
         'Home/Away/Draw predictions',
         'Double chance selections',
@@ -105,7 +105,7 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
       originalPrice: 'KES 299',
       duration: 'Weekly',
       tips: '7 Tips/Day',
-      accuracy: '88%+',
+      accuracy: '90%+',
       features: [
         'Daily goal predictions',
         'Multiple over/under markets',

@@ -33,7 +33,7 @@ export default function Welcome() {
 
     // Calculate profit projection
     const calculateProfit = () => {
-        const avgSuccessRate = 0.88; // 88% success rate
+        const avgSuccessRate = 0.90; // 90% success rate
         const avgOdds = 1.75; // Average odds
         const totalTips = tipsPerWeek[0] * 4.33 * timeFrame[0]; // Tips per week * weeks per month * months
         const successfulTips = Math.floor(totalTips * avgSuccessRate);
@@ -121,7 +121,7 @@ export default function Welcome() {
                                 </span>
                             </h2>
                             <p className="mx-auto mb-8 max-w-3xl text-xl text-gray-400">
-                                Calculate how much you could earn using our expert tips consistently. Based on our proven 88% accuracy rate.
+                                Calculate how much you could earn using our expert tips consistently. Based on our proven 90% accuracy rate.
                             </p>
                         </div>
 
@@ -220,7 +220,7 @@ export default function Welcome() {
                                                 <Target className="h-5 w-5 text-orange-400" />
                                                 <h4 className="font-semibold text-white">Success Rate</h4>
                                             </div>
-                                            <div className="text-2xl font-bold text-orange-400">88%</div>
+                                            <div className="text-2xl font-bold text-orange-400">90%</div>
                                             <p className="mt-1 text-sm text-gray-400">Our proven accuracy rate</p>
                                         </CardContent>
                                     </Card>

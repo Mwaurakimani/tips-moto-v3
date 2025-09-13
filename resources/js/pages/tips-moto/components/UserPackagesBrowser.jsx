@@ -27,7 +27,7 @@ export function UserPackagesBrowser({ allMatches, currentUser, packages }) {
             originalPrice: 149,
             duration: 'Daily',
             tips: '15 Tips',
-            accuracy: '88%+',
+            accuracy: '90%+',
             category: 'match-outcomes',
             features: [
                 'Home/Away/Draw predictions',
@@ -83,7 +83,7 @@ export function UserPackagesBrowser({ allMatches, currentUser, packages }) {
             originalPrice: 299,
             duration: 'Weekly',
             tips: '7 Tips/Day',
-            accuracy: '88%+',
+            accuracy: '90%+',
             category: 'goal-markets',
             features: [
                 'Daily goal predictions',
