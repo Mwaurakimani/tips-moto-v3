@@ -150,7 +150,7 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches ,userPackage
                         return 'Unknown';
                 }
 
-            case 'GG-NG': // Note: Database shows GG-NG, not GG_NG
+            case 'GG_NG': // Note: Database shows GG-NG, not GG_NG
                 switch (tip.prediction_value) {
                     case -1:
                         return 'Both Teams to Score';
@@ -167,13 +167,13 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches ,userPackage
 
     return (
         <div className="space-y-6 pb-20 xl:pb-6">
-            <Tabs defaultValue="tips" className="space-y-4">
+            <Tabs defaultValue="packages" className="space-y-4">
                 <TabsList>
-                    <TabsTrigger value="tips">My Tips</TabsTrigger>
+                    {true && <TabsTrigger value="tips">My Tips</TabsTrigger>}
                     <TabsTrigger value="packages">My Packages</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="tips" className="space-y-4">
+                {true && <TabsContent value="tips" className="space-y-4">
 
                     {/* Tips List */}
                     <div className="space-y-4">
@@ -238,7 +238,7 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches ,userPackage
                             </CardContent>
                         </Card>
                     )}
-                </TabsContent>
+                </TabsContent>}
 
                 <TabsContent value="packages" className="space-y-4">
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
