@@ -88,6 +88,7 @@ export function UserDashboardOverview({ currentUser, allMatches }: UserDashboard
                 time: tip.match.kickoff_at,
                 tip: tip.prediction_value,
                 odds: tip.odds || '',
+                pick_label:tip.pick_label,
                 confidence: tip.confidence || (
                     tip.risk_level === 'low' ? 'High' :
                         tip.risk_level === 'mid' ? 'Medium' : 'Low'
@@ -270,10 +271,10 @@ export function UserDashboardOverview({ currentUser, allMatches }: UserDashboard
                                                 <span
                                                     className="text-sm text-gray-600 dark:text-gray-400">Prediction:</span>
                                                 <span
-                                                    className="font-semibold text-orange-600 dark:text-orange-400">{tip.tip}</span>
+                                                    className="font-semibold text-orange-600 dark:text-orange-400">{tip.pick_label}</span>
                                             </div>
                                             <div className="flex items-center space-x-3">
-                                                <span className="font-bold text-lg">{tip.odds}</span>
+                                                {/*<span className="font-bold text-lg">{tip.odds}</span>*/}
                                                 {/*<Button size="sm" className="bg-orange-500 hover:bg-orange-600">*/}
                                                 {/*    View Details*/}
                                                 {/*</Button>*/}
