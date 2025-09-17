@@ -94,8 +94,7 @@ class DashboardController extends AbstractTipController
         // If you specifically need pagination objects for the Inertia table,
         // you can wrap $tips into a simple manual paginator, otherwise pass as-is.
         return Inertia::render('UserDashboard/DashboardMyTips', [
-            'userTips' => [],
-//            'userTips' => TipResource::collection($tips),
+            'userTips' => TipResource::collection($tips),
             'matches' => $matches,
             'activePackages' => (new UserpackagesController())->getActivePackages()
         ]);

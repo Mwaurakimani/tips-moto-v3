@@ -44,7 +44,7 @@ trait TipFetcher
         ]);
     }
 
-    protected function fetchByIdsPreservingOrder(Builder $base, Collection $ids, int $limit): \Illuminate\Database\Eloquent\Collection
+    protected function fetchByIdsPreservingOrder(Builder $base, Collection $ids, int $limit)
     {
         $idArray = $ids->all();
         $count   = count($idArray);
@@ -52,7 +52,7 @@ trait TipFetcher
 
         return $base
             ->whereIn('id', $idArray)
-            ->orderByRaw("FIELD(id, $placeholders)", $idArray)
+//            ->orderByRaw("FIELD(id, $placeholders)", $idArray)
             ->limit(min($limit, $count))
             ->get();
     }
