@@ -86,6 +86,8 @@ class DashboardController extends AbstractTipController
 
         $matches = MatchModel::with(['tips', 'homeTeam', 'awayTeam', 'league'])
             ->whereIn('id', $matchIds)
+            ->where('kickoff_at', '>=', now())
+            ->orderBy('kickoff_at', 'desc')
             ->get();
 
         // If you specifically need pagination objects for the Inertia table,
