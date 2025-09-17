@@ -175,13 +175,7 @@ class TipController extends Controller
 
         // Fallback: "free today" logic
         $tips = $base
-            ->where('is_free', 1)
             ->whereDate('free_for_date', Carbon::today())
-            ->where(function ($q) {
-                $q->whereNull('publish_at')
-                    ->orWhere('publish_at', '<=', now());
-            })
-            ->orderByDesc('publish_at')
             ->limit($limit)
             ->get();
 
