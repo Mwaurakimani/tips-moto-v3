@@ -63,7 +63,7 @@ trait TipFetcher
             ->where('is_free', 1)
             ->whereDate('free_for_date', Carbon::today())
             ->where(function ($q) {
-                $q->whereNull('publish_at')->orWhere('publish_at', '<=', now());
+                $q->whereNull('publish_at')->orWhere('publish_at', '>', now()->startOfDay());
             })
             ->orderByDesc('publish_at')
             ->limit($limit)
