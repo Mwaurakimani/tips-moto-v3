@@ -82,6 +82,8 @@ class DashboardController extends AbstractTipController
             ? $this->fetchByIdsPreservingOrder($base, $ids, $limit)
             : $this->fetchFreeToday($base, $limit);
 
+        dd($tips);
+
         $matchIds = $tips->pluck('match_id')->filter()->unique()->values();
 
         $matches = MatchModel::with(['tips', 'homeTeam', 'awayTeam', 'league'])
