@@ -45,8 +45,7 @@ export default function UserLoginPage({ onGoToSignUp, onBackToHomepage }) {
         <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
             {/* Header */}
             <div className="relative z-10 flex items-center justify-between p-6">
-                <button
-                    onClick={onBackToHomepage}
+                <Link as={'button'} href={route('home')}
                     className="flex items-center space-x-3 text-white hover:text-orange-500 transition-colors"
                 >
                     <div className="w-8 h-8 bg-gradient-to-r   rounded-lg flex items-center justify-center">
@@ -55,7 +54,7 @@ export default function UserLoginPage({ onGoToSignUp, onBackToHomepage }) {
                         </div>
                     </div>
                     <span className="text-xl font-bold">Tips Moto</span>
-                </button>
+                </Link>
             </div>
 
             {/* Login Section */}
@@ -179,12 +178,12 @@ export default function UserLoginPage({ onGoToSignUp, onBackToHomepage }) {
                                 {/* Sign Up Link */}
                                 <p className="text-gray-400 text-sm">
                                     Don't have an account?{' '}
-                                    <button
+                                    <Link as={'button'} href={route('register')}
                                         onClick={onGoToSignUp}
                                         className="text-orange-500 hover:text-orange-400 font-medium"
                                     >
                                         Sign up for free
-                                    </button>
+                                    </Link>
                                 </p>
                             </div>
                         </CardContent>
