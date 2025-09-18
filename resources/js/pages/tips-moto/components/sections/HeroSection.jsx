@@ -57,20 +57,27 @@ export function HeroSection({ todaysFreeTips }) {
                         {/* CTA buttons */}
                         <div className="flex flex-col gap-4 sm:flex-row">
                             <Button
+                                className="transform rounded-2xl  bg-orange-500 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-orange-600 hover:shadow-xl"
                                 size="lg"
-                                // onClick={onGetStarted}
-                                className="transform rounded-2xl bg-orange-500 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-orange-600 hover:shadow-xl"
                             >
-                                Start Free Trial
-                                <ArrowRight className="ml-2 h-5 w-5" />
+                                <Link href={route('register')}
+                                      className="flex items-center"
+                                >
+                                    Start Free Trial
+                                    <ArrowRight className="ml-2 h-5 w-5" />
+                                </Link>
                             </Button>
+
                             <Button
+                                className="rounded-2xl border-2 border-gray-600 bg-gray-700 px-8 py-4 text-lg text-white transition-all duration-300 hover:border-gray-500 hover:bg-gray-800 hover:text-white"
                                 size="lg"
                                 variant="outline"
-                                // onClick={onViewTips}
-                                className="rounded-2xl border-2 border-gray-600 bg-gray-700 px-8 py-4 text-lg text-white transition-all duration-300 hover:border-gray-500 hover:bg-gray-800 hover:text-white"
+                            >
+                            <Link href={route('dashboard.my-tips')}
+                                className="flex items-center"
                             >
                                 View Today's Tips
+                            </Link>
                             </Button>
                         </div>
 
