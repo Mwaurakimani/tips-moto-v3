@@ -1,4 +1,4 @@
-import { usePage,Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { ArrowRight, Star } from 'lucide-react';
 import { heroFeatures, heroStats } from '../constants/homepage-data';
 import { Avatar, AvatarFallback } from '../ui/avatar';
@@ -57,12 +57,10 @@ export function HeroSection({ todaysFreeTips }) {
                         {/* CTA buttons */}
                         <div className="flex flex-col gap-4 sm:flex-row">
                             <Button
-                                className="transform rounded-2xl  bg-orange-500 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-orange-600 hover:shadow-xl"
+                                className="transform rounded-2xl bg-orange-500 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-orange-600 hover:shadow-xl"
                                 size="lg"
                             >
-                                <Link href={route('register')}
-                                      className="flex items-center"
-                                >
+                                <Link href={route('register')} className="flex items-center">
                                     Start Free Trial
                                     <ArrowRight className="ml-2 h-5 w-5" />
                                 </Link>
@@ -73,11 +71,9 @@ export function HeroSection({ todaysFreeTips }) {
                                 size="lg"
                                 variant="outline"
                             >
-                            <Link href={route('dashboard.my-tips')}
-                                className="flex items-center"
-                            >
-                                View Today's Tips
-                            </Link>
+                                <Link href={route('dashboard.my-tips')} className="flex items-center">
+                                    View Today's Tips
+                                </Link>
                             </Button>
                         </div>
 
@@ -135,7 +131,9 @@ export function HeroSection({ todaysFreeTips }) {
                                                     {user ? (
                                                         <span className="font-bold text-orange-400">{tip.pick_label}</span>
                                                     ) : (
-                                                            <Link href={route('login')}  className={'rounded bg-orange-400 px-3 py-2 text-white'}>Log In to view</Link>
+                                                        <Link href={route('login')} className={'rounded bg-orange-400 px-3 py-2 text-white'}>
+                                                            Log In to view
+                                                        </Link>
                                                     )}
                                                 </div>
                                             </div>
@@ -173,7 +171,9 @@ export function HeroSection({ todaysFreeTips }) {
                                         // onClick={onViewTips}
                                         className="w-full rounded-2xl bg-orange-500 py-3 text-white hover:bg-orange-600"
                                     >
-                                        {todaysFreeTips.length > 0 ? 'View Premium Tips' : 'View Premium Tips'}
+                                        <Link href={route('dashboard.packages')} className="flex items-center">
+                                            {todaysFreeTips.length > 0 ? 'View Premium Tips' : 'View Premium Tips'}
+                                        </Link>
                                     </Button>
                                 </div>
                             </div>

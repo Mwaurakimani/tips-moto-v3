@@ -147,15 +147,15 @@ class PostMatchesController extends Controller
 
                             $predictionValue = match ($tipType) {
                                 '1X_X2_12' => match ($tipData['result']) {
-                                    -1 => 'Home win/Draw',
+                                    1 => 'Home win/Draw',
                                     0 => 'Away win/Draw',
-                                    1 => 'Home win/Away win',
+                                    -1 => 'Home win/Away win',
                                     default => null,
                                 },
                                 '1_X_2' => match ($tipData['result']) {
-                                    -1 => '1',
+                                    1 => '1',
                                     0 => 'x',
-                                    1 => '2',
+                                    -1 => '2',
                                     default => null,
                                 },
                                 'GG_NG' => match ($tipData['result']) {

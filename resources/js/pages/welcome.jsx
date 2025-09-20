@@ -268,11 +268,12 @@ export default function Welcome() {
                                 {/* CTA Button */}
                                 <Button
                                     size="lg"
-                                    // onClick={handleGetStarted}
                                     className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-4 text-lg font-bold text-white shadow-lg shadow-orange-500/25 hover:from-orange-600 hover:to-red-600"
                                 >
-                                    Start Earning With Our Tips
-                                    <ArrowRight className="ml-2 h-5 w-5" />
+                                    <Link className={"flex items-center justify-center"} href={route('register')}>
+                                        Start Earning With Our Tips
+                                        <ArrowRight className="ml-2 h-5 w-5" />
+                                    </Link>
                                 </Button>
                             </div>
                         </div>
