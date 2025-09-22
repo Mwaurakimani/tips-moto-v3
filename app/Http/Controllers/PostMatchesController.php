@@ -175,7 +175,7 @@ class PostMatchesController extends Controller
                                 [
                                     'prediction_value' => $tipData['result'] ?? null,
                                     'risk_level'       => $riskLevel,
-                                    'is_free'          => 1,
+                                    'is_free'          => 0,
                                     'free_for_date'    => Carbon::today(),
                                 ]
                             );
