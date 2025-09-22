@@ -6,6 +6,8 @@ use App\Models\League;
 use App\Models\MatchModel;
 use App\Models\Team;
 use App\Models\Tip;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -220,7 +222,7 @@ class MatchController extends Controller
 
             return redirect()->back()->with('success', 'Tip deleted successfully');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->with('error', 'Failed to delete tip');
         }
     }
@@ -230,8 +232,8 @@ class MatchController extends Controller
         // Validate the incoming request
         $validated = $request->validate([
             'tipType' => 'required|string|max:40',
-            'subType' => 'required|string|max:100',
-            'value' => 'required|string|max:20',
+//            'subType' => 'required|string|max:100',
+            'value' => 'required',
             'prediction' => 'required|string|max:255',
             'riskLevel' => 'required|in:low,mid,high',
             'winningStatus' => 'required|in:pending,won,lost,void,canceled',
@@ -239,14 +241,14 @@ class MatchController extends Controller
         ]);
 
         // Map frontend values to database structure
-        $predictionValue = $this->mapPredictionValue($validated['tipType'], $validated['value']);
-        $predictionType = $this->mapPredictionType($validated['subType']);
+        $predictionType = $this->mapPredictionType($validated['tipType']);
+        $predictionValue = $this->upddatePredictionValue($validated['tipType'],$validated['prediction']);
 
         // Update the tip
         $tip->update([
             'prediction_type' => $predictionType,
             'prediction_value' => $predictionValue,
-            'pick_label' => $validated['value'],
+            'pick_label' => $validated['prediction'],
             'risk_level' => $validated['riskLevel'],
             'is_free' => $validated['free'],
             'free_for_date' => $validated['free'] ? now()->toDateString() : null,
@@ -255,7 +257,10 @@ class MatchController extends Controller
             'status' => in_array($validated['winningStatus'], ['won', 'lost', 'void']) ? 'settled' : 'pending',
         ]);
 
-        return redirect()->back()->with('success', 'Tip updated successfully');
+        return redirect()->back()->with([
+            'success'=> 'Tip updated successfully',
+            'match' => $tip->match,
+        ]);
     }
 
     /**
@@ -317,6 +322,7 @@ class MatchController extends Controller
 
         return 0; // Default value
     }
+
     private function generateShortName($teamName): string
     {
         // Simple logic to generate short name
@@ -333,6 +339,60 @@ class MatchController extends Controller
             }
             return $shortName;
         }
+    }
+
+    private function upddatePredictionValue($tipType, $prediction): int|RedirectResponse|null
+    {
+        $predictionValue = null;
+
+        switch ($tipType) {
+            case '1_X_2':
+                switch ($prediction) {
+                    case 'Home Win':
+                        $predictionValue = 1;
+                        break;
+                    case 'Draw':
+                        $predictionValue = 0;
+                        break;
+                    case 'Away Win':
+                        $predictionValue = -1;
+                        break;
+                    default:
+                        return redirect()->back()->with('error', 'Invalid prediction');
+                }
+                break;
+            case '1X_X2_12':
+                switch ($prediction) {
+                    case 'Home Win or Draw':
+                        $predictionValue = 1;
+                        break;
+                    case 'Draw or Away':
+                        $predictionValue = 0;
+                        break;
+                    case 'Home win or Away Win':
+                        $predictionValue = -1;
+                        break;
+                    default:
+                        return redirect()->back()->with('error', 'Invalid prediction');
+                }
+                break;
+            case 'GG_NG':
+                switch ($prediction) {
+                    case 'GG':
+                        $predictionValue = 1;
+                        break;
+                    case 'NG':
+                        $predictionValue = -1;
+                        break;
+                    default:
+                        return redirect()->back()->with('error', 'Invalid prediction');
+                }
+                break;
+            default:
+                dd("here");
+        }
+
+        return $predictionValue;
     }
 }
 
