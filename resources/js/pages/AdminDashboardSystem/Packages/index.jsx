@@ -298,7 +298,7 @@ export default function Index() {
                                             </TableCell>
                                             <TableCell className="text-gray-600 dark:text-gray-400">{subscription.features.for}</TableCell>
                                             <TableCell>{getDescriptionBadge(subscription.features.category)}</TableCell>
-                                            <TableCell className="font-medium">{subscription.features.tips}</TableCell>
+                                            <TableCell className="font-medium">{subscription.tipsData.length}</TableCell>
                                             <TableCell className="font-medium text-green-600">KES {subscription.price.toLocaleString()}</TableCell>
                                             <TableCell>
                                                 <Badge variant="outline">{subscription.interval_count} {subscription.interval}</Badge>
