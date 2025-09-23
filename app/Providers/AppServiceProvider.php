@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\SystemClasses\DataExtractors\JackpotExtractor;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -26,5 +27,8 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(60)
                 ->by($request->user()?->id ?: $request->ip());
         });
+
+
+        $this->app->bind(JackpotExtractor::class, JackpotExtractor::class);
     }
 }

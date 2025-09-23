@@ -169,7 +169,6 @@ export function UserMyTips({ currentUserEmail, userTips, allMatches ,userPackage
         <div className="space-y-6 pb-20 xl:pb-6">
             <Tabs defaultValue="packages" className="space-y-4">
                 <TabsList>
-                    {true && <TabsTrigger value="tips">My Tips</TabsTrigger>}
                     <TabsTrigger value="packages">My Packages</TabsTrigger>
                 </TabsList>
 
