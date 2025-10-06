@@ -16,6 +16,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge';
 import { UserHeader } from './UserHeader';
 import { UserFooter } from './UserFooter';
+import { router } from '@inertiajs/react';
 
 interface SportPackagesPageProps {
   sportId: string;
@@ -302,7 +303,7 @@ export function SportPackagesPage({ sportId, sportName, onBackToSports, onBackTo
                 ))}
               </div>
 
-              <Button className={`w-full bg-gradient-to-r ${pkg.color} hover:opacity-90 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg`}>
+              <Button onClick={() => router.get(route('dashboard.packages'))} className={`w-full bg-gradient-to-r ${pkg.color} hover:opacity-90 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg`}>
                 Select {pkg.name}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
