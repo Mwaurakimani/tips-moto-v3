@@ -29,7 +29,7 @@ use App\Models\Transaction;
 use App\Http\Controllers\Api\UserPackagesController;
 use Illuminate\Validation\Rule;
 
-
+//display
 // Public
 Route::get('/leagues', [LeagueController::class, 'index']);
 Route::get('/teams', [TeamController::class, 'index']);
