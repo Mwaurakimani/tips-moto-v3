@@ -3,6 +3,7 @@
 use App\Http\Controllers\Onit\OnitAuthorisation;
 use App\Models\SubscriptionPlan;
 use App\Models\Transaction;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -91,22 +92,55 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ];
         $transaction->save();
 
+        switch (env('DEFAULT_PAYMENT_METHOD','ONIT')){
+            case 'ONIT':
+                $onit = new OnitAuthorisation();
+                $onit->authenticate();
+                $response = $onit->deposit([
+                    "originatorRequestId" => "AD-" . $request_id,
+                    "destinationAccount" => "0001650000001",
+                    "sourceAccount" => $phoneNumber,
+                    "amount" => intVal($package->price),
+                    "channel" => "MPESA",
+                    "product" => "CA05",
+                    "event" => "",
+                    "narration" => "Test",
+                    "callbackUrl" => route('onit_callback')
+                ]);
 
-        $onit = new OnitAuthorisation();
-        $onit->authenticate();
-        $response = $onit->deposit([
-            "originatorRequestId" => "AD-" . $request_id,
-            "destinationAccount" => "0001650000001",
-            "sourceAccount" => $phoneNumber,
-            "amount" => intVal($package->price),
-            "channel" => "MPESA",
-            "product" => "CA05",
-            "event" => "",
-            "narration" => "Test",
-            "callbackUrl" => route('onit_callback')
-        ]);
+                Log::info('Transaction processed', $response);
+                break;
+            case 'TIPNYPESA':
+                try {
+                    $client = new Client();
 
-        Log::info('Transaction processed', $response);
+                    $response = $client->post(
+                        'https://api.tinypesa.com/api/v1/express/initialize/?username=TipsMoto',
+                        [
+                            'headers' => [
+                                'Accept' => 'application/json',
+                                'Apikey' => env('TINYPESA_API_KEY'),
+                                'Content-Type' => 'application/json'
+                            ],
+                            'body' => json_encode([
+                                'amount' => intVal($package->price),
+                                'msisdn' => $phoneNumber,
+                                'account_no' => 'TP-'.$request_id,
+                                'username' => 'TipsMoto',
+                            ]),
+                            'verify' => false // for development only
+                        ]
+                    );
+                } catch (\Exception $e) {
+                    Log::error('Error initializing transaction: ' . $e->getMessage());
+                }
+
+                break;
+            default:
+                abort('500','Payment Service is down.Please Try again later');
+        }
+
+
 
         return json_encode($response);
     })->name('package.purchase');

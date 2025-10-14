@@ -8,6 +8,7 @@ import { Calendar, Clock, DollarSign, Edit, Info, Save, Target, X } from 'lucide
 import { usePackageEdit } from '../hooks';
 import { getStatusBadgeProps, getDescriptionBadgeProps, formatCurrency, formatDate } from '../utils';
 import { toast } from 'sonner';
+import DebugJson from '@/components/ui/JsonDebug.js';
 
 export function PackageInfoCard({ subscription, onUpdateSubscription }) {
     const {
@@ -43,18 +44,18 @@ export function PackageInfoCard({ subscription, onUpdateSubscription }) {
                     <div className="flex items-center space-x-2">
                         {isEditing ? (
                             <>
-                                <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={handleSave} 
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleSave}
                                     className="text-green-600 hover:text-green-700"
                                 >
                                     <Save className="h-4 w-4" />
                                 </Button>
-                                <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={cancelEditing} 
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={cancelEditing}
                                     className="text-red-600 hover:text-red-700"
                                 >
                                     <X className="h-4 w-4" />
@@ -76,17 +77,38 @@ export function PackageInfoCard({ subscription, onUpdateSubscription }) {
             <CardContent className="space-y-4">
                 {/* Package Name */}
                 {isEditing ? (
-                    <div className="space-y-2">
-                        <Label htmlFor="name" className="text-sm text-gray-600 dark:text-gray-400">
-                            Package Name
-                        </Label>
-                        <Input
-                            id="name"
-                            value={editedPackage.name}
-                            onChange={(e) => updateField('name', e.target.value)}
-                            className="w-full"
-                        />
-                    </div>
+                    <section className={'grid grid-cols-1 gap-4 md:grid-cols-2'}>
+                        <div className="space-y-2">
+                            <Label htmlFor="name" className="text-sm text-gray-600 dark:text-gray-400">
+                                Package Name
+                            </Label>
+                            <Input
+                                id="name"
+                                value={editedPackage.name}
+                                onChange={(e) => updateField('name', e.target.value)}
+                                className="w-full"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="name" className="text-sm text-gray-600 dark:text-gray-400">
+                                For Date
+                            </Label>
+                            <DebugJson data={editedPackage.features}></DebugJson>
+                            <Input
+                                id="for"
+                                type="date"
+                                value={editedPackage.features?.for || ''}
+                                onChange={(e) => {
+                                    updateField('features', {
+                                        ...editedPackage.features,
+                                        for: e.target.value
+                                    });
+                                }}
+                                className="w-full"
+                            />
+                        </div>
+                    </section>
+
                 ) : (
                     <div className="space-y-2">
                         <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
@@ -142,18 +164,16 @@ export function PackageInfoCard({ subscription, onUpdateSubscription }) {
                             <span>Frequency</span>
                         </div>
                         {isEditing ? (
-                            <Select 
-                                value={editedPackage.interval} 
+                            <Select
+                                value={editedPackage.interval}
                                 onValueChange={(value) => updateField('interval', value)}
                             >
                                 <SelectTrigger className="w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Daily">Daily</SelectItem>
-                                    <SelectItem value="Weekly">Weekly</SelectItem>
-                                    <SelectItem value="Monthly">Monthly</SelectItem>
-                                    <SelectItem value="Yearly">Yearly</SelectItem>
+                                    <SelectItem value="day">Daily</SelectItem>
+                                    <SelectItem value="week">Weekly</SelectItem>
                                 </SelectContent>
                             </Select>
                         ) : (

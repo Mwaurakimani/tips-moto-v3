@@ -6,6 +6,7 @@ use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\NoReturn;
 
 class PackageController extends Controller
 {
@@ -18,9 +19,9 @@ class PackageController extends Controller
         ]);
     }
 
+    #[NoReturn]
     public function store(Request $request)
     {
-
         $validated = $request->validate([
             'name' => 'required|string|max:100|unique:subscription_plans,name',
             'description' => 'required|string|in:jackpot,match,premium',
@@ -45,7 +46,8 @@ class PackageController extends Controller
                 'interval' => $validated['interval'],
                 'interval_count' => 1,
                 'trial_days' => 0,
-                'is_active' => $validated['status'] === 'active'
+                'is_active' => $validated['status'] === 'active',
+                'features' => $validated['features'] ?? []
             ]);
 
             return redirect()->back()->with('success', 'Package created successfully!')

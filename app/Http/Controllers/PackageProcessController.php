@@ -118,7 +118,6 @@ class PackageProcessController extends Controller
 
     public function updateTipsData(Request $request, $id)
     {
-
         // Find the subscription plan or fail
         $plan = SubscriptionPlan::findOrFail($id);
 
@@ -130,10 +129,16 @@ class PackageProcessController extends Controller
             ->pluck('id')
             ->toArray();
 
+        if (!empty($request->input('features')['for'])) {
+            $features['for'] = $request->input('features')['for'];
+        }
+
         // Update the plan with the modified features
         $plan->update([
             'features' => $features
         ]);
+
+        dd($plan);
 
         return redirect()->route('adminDashboard.subscriptions')
             ->with('success', 'Tips data updated successfully.');

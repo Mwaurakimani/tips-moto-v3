@@ -264,6 +264,115 @@ Route::post('onit/callback', function (Request $request) {
     return response()->json(['message' => 'Callback processed']);
 })->name('onit_callback');
 
+Route::post('tinypesa/callback', function (Request $request) {
+    Log::info('Tiny callback payload', ['payload' => $request->all()]);
+
+    // --- Normalize our reference ---
+    $originator = (string) $request->input('originatorRequestId', '');
+
+    // If no explicit originatorRequestId, try to parse it from the failure "message"
+    if ($originator === '' && $request->filled('message')) {
+        if (preg_match('/(?:\d+\|)?(ONIT-[A-Za-z0-9\-]+)/', (string)$request->input('message'), $m)) {
+            $originator = $m[1]; // e.g. ONIT-68AF6CCB203CB
+        }
+    }
+
+    // Strip any "clientId|" prefix (e.g. "1003|") and any leading "AD-"
+    $normalizedRef = $originator ? \Illuminate\Support\Str::afterLast($originator, '|') : '';
+    $normalizedRef = preg_replace('/^AD-/', '', $normalizedRef ?? '');
+
+    if ($normalizedRef === '') {
+        Log::warning('Onit callback missing resolvable originator reference', ['payload' => $request->all()]);
+        return response()->json(['message' => 'Missing originator reference'], 422);
+    }
+
+    // --- Determine success vs failure across payload styles ---
+    $statusField      = strtoupper((string) $request->input('status', '')); // sometimes "SUCCESS"
+    $hasSuccessKeys   = $request->has('originatorRequestId') && $request->has('transactionReference');
+    $looksSuccessful  = ($statusField === 'SUCCESS') || $hasSuccessKeys;
+
+    $amountFromCallback = (float) $request->input('amount', 0);
+    $creditAmount       = $amountFromCallback > 0 ? $amountFromCallback : 0.0; // (used in logs)
+
+    $failureReason = (string) ($request->input('message')
+        ?: $request->input('description')
+            ?: 'Onit reported failure');
+
+    // --- Atomic handling with row lock & re-check ---
+    \Illuminate\Support\Facades\DB::transaction(function () use (
+        $normalizedRef,
+        $looksSuccessful,
+        $creditAmount,
+        $failureReason,
+        $request
+    ) {
+        /** @var \App\Models\Transaction $tx */
+        $tx = \App\Models\Transaction::where('provider_ref', $normalizedRef)
+            ->lockForUpdate()
+            ->first();
+
+        if (! $tx) {
+            Log::warning('Transaction not found for callback (inside tx)', ['provider_ref' => $normalizedRef]);
+            // Nothing else to do; return 200 outside
+            return;
+        }
+
+        // If already terminal, do nothing (idempotent)
+        if (in_array($tx->status, ['completed','failed','refunded','canceled'], true)) {
+            return;
+        }
+
+        if ($looksSuccessful) {
+            $tx->update(['status' => 'completed']);
+
+            // Create the subscription from metadata
+            $packageId = data_get($tx->metadata, 'package_id');
+            /** @var \App\Models\SubscriptionPlan $plan */
+            $plan = \App\Models\SubscriptionPlan::findOrFail($packageId);
+            $user = $tx->user;
+
+            $start = now();
+            $end   = match ($plan->interval) {
+                'day'   => $start->copy()->addDays((int) $plan->interval_count),
+                'week'  => $start->copy()->addWeeks((int) $plan->interval_count),
+                'month' => $start->copy()->addMonths((int) $plan->interval_count),
+                'year'  => $start->copy()->addYears((int) $plan->interval_count),
+                default => $start->copy()->addDays((int) data_get($plan->features, 'period_days', 1)),
+            };
+
+            $user->subscriptions()->create([
+                'plan_id'                 => $plan->id,
+                'status'                  => 'active',
+                'start_at'                => $start,
+                'end_at'                  => $end,
+                'gateway_subscription_id' => $tx->id, // matches your admin join
+            ]);
+
+            Log::info('Transaction success processed', [
+                'transaction_id' => $tx->id,
+                'user_id'        => $tx->user_id,
+                'credited'       => $creditAmount,
+                'provider_ref'   => $tx->provider_ref,
+                'provider_txref' => $request->input('transactionReference'),
+            ]);
+        } else {
+            $newDesc = trim(($tx->description ? $tx->description . ' | ' : '') . $failureReason);
+            $tx->update([
+                'status'      => 'failed',
+                'description' => $newDesc,
+            ]);
+
+            Log::info('Transaction failure processed', [
+                'transaction_id' => $tx->id,
+                'reason'         => $failureReason,
+            ]);
+        }
+    });
+
+    // Always 200 to the provider, unless you specifically need to signal failure
+    return response()->json(['message' => 'Callback processed']);
+})->name('onit_callback');
+
 Route::post('/post/matches', PostMatchesController::class);
 
 //updates

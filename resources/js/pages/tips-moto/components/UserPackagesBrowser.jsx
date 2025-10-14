@@ -17,105 +17,48 @@ export function UserPackagesBrowser({ allMatches, currentUser, packages }) {
     const [selectedPackage, setSelectedPackage] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState(phone);
 
-    // Package data from admin (matching SportPackagesPage)
-    const availablePackages = [
-        {
-            id: packages.find((packageSelected) => packageSelected.name === 'Full Time Scores Daily')?.id,
-            name: 'Full-Time Scores Daily',
+    const availablePackages = packages.map((pkg) => {
+        const colors = [
+            'from-blue-500 to-blue-600',
+            'from-orange-500 to-red-500',
+            'from-red-500 to-red-600',
+            'from-pink-500 to-pink-600'
+        ];
+
+        // Generate random accuracy between 80-90% in multiples of 5
+        const accuracies = [80, 85, 90];
+        const randomAccuracy = accuracies[Math.floor(Math.random() * accuracies.length)];
+
+        return {
+            id: pkg.id,
+            name: pkg.name,
             description: 'Professional match outcome predictions',
-            price: 99,
-            originalPrice: 149,
-            duration: 'Daily',
-            tips: '15 Tips',
-            accuracy: '90%+',
-            category: 'match-outcomes',
-            features: [
-                'Home/Away/Draw predictions',
-                'Double chance selections',
-                'Professional match analysis',
-                'Risk level indicators',
-                '24/7 Customer support',
-            ],
-            popular: false,
-            color: 'from-blue-500 to-blue-600',
-        },
-        {
-            id: packages.find((packageSelected) => packageSelected.name === 'Full Time Scores Weekly')?.id,
-            name: 'Full-Time Scores Weekly',
-            description: 'Complete weekly match predictions',
-            price: 599,
-            originalPrice: 899,
-            duration: 'Weekly',
-            tips: '17 Tips/Day',
-            accuracy: '90%+',
-            category: 'match-outcomes',
-            features: [
-                'Daily professional predictions',
-                'Multiple leagues coverage',
-                'Home/Away/Draw analysis',
-                'Double chance options',
-                'Risk assessment reports',
-                'Telegram VIP group access',
-                'Priority customer support',
-            ],
-            popular: true,
-            color: 'from-orange-500 to-red-500',
-        },
-        {
-            id: packages.find((packageSelected) => packageSelected.name === 'Goal-No Goal Daily')?.id,
-            name: 'Both Teams Score Daily',
-            description: 'BTTS specialized predictions',
-            price: 39,
-            originalPrice: 59,
-            duration: 'Daily',
-            tips: '8 Tips',
-            accuracy: '89%+',
-            category: 'btts',
-            features: [
-                'Both teams to score tips',
-                'Goal/No Goal analysis',
-                'Team scoring patterns',
-                'Defensive analysis',
-                'High accuracy selections',
-            ],
-            popular: false,
-            color: 'from-red-500 to-red-600',
-        },
-        {
-            id: packages.find((packageSelected) => packageSelected.name === 'Goal-No Goal Weekly')?.id,
-            name: 'Goal Goal/No Goal Weekly',
-            description: 'Weekly BTTS comprehensive package',
-            price: 149,
-            originalPrice: 229,
-            duration: 'Weekly',
-            tips: '10 Tips/Day',
-            accuracy: '91%+',
-            category: 'btts',
-            features: [
-                'Daily BTTS predictions',
-                'GG/NG market analysis',
-                'Team form assessment',
-                'Scoring statistics',
-                'Weekly strategy reports',
-                'Telegram group access',
-            ],
-            popular: false,
-            color: 'from-pink-500 to-pink-600',
-        },
-    ];
-
-    // Filter packages based on search and filters
-    const filteredPackages = availablePackages.filter((pkg) => {
-        const matchesSearch = pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'all' || pkg.category === selectedCategory;
-        const matchesDuration = selectedDuration === 'all' || pkg.duration.toLowerCase() === selectedDuration;
-
-        return matchesSearch && matchesCategory && matchesDuration;
+            price: pkg.price,
+            originalPrice: parseInt((pkg.price) * 1.4),
+            duration: pkg.interval === "day" ? 'Daily' : 'Weekly',
+            tips: pkg.features.tips,
+            accuracy: `${randomAccuracy}%+`,
+            category: pkg.features.category,
+            popular: pkg.name === 'Full Time Scores Daily',
+            color: colors[Math.floor(Math.random() * colors.length)]
+        }
     });
 
-    const handlePurchase = (packageData) => {
+    // return <DebugJson data={packages}> hi </DebugJson>
 
+    // Filter packages based on search and filters
+    // const filteredPackages = availablePackages.filter((pkg) => {
+    //     const matchesSearch = pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
+    //     const matchesCategory = selectedCategory === 'all' || pkg.category === selectedCategory;
+    //     const matchesDuration = selectedDuration === 'all' || pkg.duration.toLowerCase() === selectedDuration;
+    //
+    //     return matchesSearch && matchesCategory && matchesDuration;
+    // });
+
+    const filteredPackages = availablePackages;
+
+    const handlePurchase = (packageData) => {
         axios
             .post(route('package.purchase'), {
                 data: {
@@ -125,7 +68,7 @@ export function UserPackagesBrowser({ allMatches, currentUser, packages }) {
             })
             .then((response) => {
                 alert('Accept the transaction to complete the purchase');
-                window.location.reload();
+                // window.location.reload();
             });
     };
 
@@ -141,7 +84,7 @@ export function UserPackagesBrowser({ allMatches, currentUser, packages }) {
 
             {/* Packages Grid */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {filteredPackages.map((pkg) => (
+                {availablePackages.map((pkg) => (
                     <Card
                         key={pkg.id}
                         className={`relative border-none shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl ${pkg.popular ? 'ring-2 ring-orange-500/30' : ''}`}
@@ -187,15 +130,15 @@ export function UserPackagesBrowser({ allMatches, currentUser, packages }) {
                         </CardHeader>
 
                         <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                {pkg.features.slice(0, 3).map((feature, index) => (
-                                    <div key={index} className="flex items-center space-x-2">
-                                        <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-500" />
-                                        <span className="text-sm">{feature}</span>
-                                    </div>
-                                ))}
-                                {pkg.features.length > 3 && <p className="text-sm text-muted-foreground">+{pkg.features.length - 3} more features</p>}
-                            </div>
+                            {/*<div className="space-y-2">*/}
+                            {/*    {pkg.features.slice(0, 3).map((feature, index) => (*/}
+                            {/*        <div key={index} className="flex items-center space-x-2">*/}
+                            {/*            <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-500" />*/}
+                            {/*            <span className="text-sm">{feature}</span>*/}
+                            {/*        </div>*/}
+                            {/*    ))}*/}
+                            {/*    {pkg.features.length > 3 && <p className="text-sm text-muted-foreground">+{pkg.features.length - 3} more features</p>}*/}
+                            {/*</div>*/}
 
                             <Dialog open={selectedPackage?.id === pkg.id} onOpenChange={(open) => !open && setSelectedPackage(null)}>
                                 <DialogTrigger asChild>
@@ -254,14 +197,14 @@ export function UserPackagesBrowser({ allMatches, currentUser, packages }) {
 
                                         <div>
                                             <h4 className="mb-3 font-semibold">What's Included:</h4>
-                                            <div className="grid grid-cols-1 gap-2">
-                                                {pkg.features.map((feature, index) => (
-                                                    <div key={index} className="flex items-center space-x-2">
-                                                        <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-500" />
-                                                        <span className="text-sm">{feature}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                            {/*<div className="grid grid-cols-1 gap-2">*/}
+                                            {/*    {pkg.features.map((feature, index) => (*/}
+                                            {/*        <div key={index} className="flex items-center space-x-2">*/}
+                                            {/*            <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-500" />*/}
+                                            {/*            <span className="text-sm">{feature}</span>*/}
+                                            {/*        </div>*/}
+                                            {/*    ))}*/}
+                                            {/*</div>*/}
                                         </div>
                                         <div>
                                             <Input
