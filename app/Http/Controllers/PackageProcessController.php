@@ -138,8 +138,6 @@ class PackageProcessController extends Controller
             'features' => $features
         ]);
 
-        dd($plan);
-
         return redirect()->route('adminDashboard.subscriptions')
             ->with('success', 'Tips data updated successfully.');
 
