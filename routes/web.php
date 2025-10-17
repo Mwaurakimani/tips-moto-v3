@@ -18,7 +18,8 @@ Route::get('/', function (Request $request) {
         ->orderBy('created_at', 'desc')
         ->get())->toArray($request);
     return Inertia::render('welcome', [
-        'todaysFreeTips' => $tips
+        'todaysFreeTips' => $tips,
+        'yesterdaysTips' => $tips
     ]);
 })->name('home');
 

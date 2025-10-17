@@ -25,8 +25,8 @@ class PackageProcessController extends Controller
         'Odi bets weekly jackpot' => ['1X_X2_12', '1_X_2'],
         'Double Chances Daily' => ['1X_X2_12'],
         'Double Chances Weekly' => ['1X_X2_12'],
-        'Goal-No Goal Daily' => [],
-        'Goal-No Goal Weekly' => [],
+        'Goal-No Goal Daily' => ['GG-NG'],
+        'Goal-No Goal Weekly' => ['GG-NG'],
     ];
 
     public function index(): \Inertia\Response
@@ -110,7 +110,7 @@ class PackageProcessController extends Controller
                     'tipType' => $tip->prediction_type,
                     'riskLevel' => $tip->risk_level,
                     'winningStatus' => null,
-                    'time' => $tip->match->kickoff_at?->format('H:i'),
+                    'time' => $tip->match->kickoff_at?->format('d/m/Y H:i'),
                 ];
             });
     }

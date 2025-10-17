@@ -1,24 +1,23 @@
 import HomeLayout from '@/layouts/HomeLayout/HomeLayout.jsx';
-import { UserHeader } from '@/pages/tips-moto/components/UserHeader.jsx';
 import { features, stats, testimonials } from '@/pages/tips-moto/components/constants/homepage-data.js';
 import { HeroSection } from '@/pages/tips-moto/components/sections/HeroSection.jsx';
 import { Button } from '@/pages/tips-moto/components/ui/button.js';
 import { Card, CardContent } from '@/pages/tips-moto/components/ui/card.js';
 import { Label } from '@/pages/tips-moto/components/ui/label.js';
 import { Slider } from '@/pages/tips-moto/components/ui/slider.js';
-import { Head, usePage } from '@inertiajs/react';
-import { ArrowRight, Award, BarChart3, Calculator, DollarSign, Shield, Star, Target, TrendingUp as TrendingUpIcon } from 'lucide-react';
+import { UserHeader } from '@/pages/tips-moto/components/UserHeader.jsx';
+import { Head } from '@inertiajs/react';
+import { ArrowRight, Award, BarChart3, Calculator, CheckCircle, DollarSign, Shield, Star, Target, TrendingUp as TrendingUpIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { fetchAndProcessTodaysFreeTips, getYesterdaysWinningTips } from '@/pages/tips-moto/components/utils/homepage-utils.js';
+// import {  getYesterdaysWinningTips } from '@/pages/tips-moto/components/utils/homepage-utils.js';
+import { Badge } from '@/components/ui/badge.js';
+import DebugJson from '@/components/ui/JsonDebug.js';
 import { FeaturesVisualContent } from '@/pages/tips-moto/components/sections/FeaturesVisualContent.js';
 import { Avatar, AvatarFallback } from '@/pages/tips-moto/components/ui/avatar.js';
 import { UserFooter } from '@/pages/tips-moto/components/UserFooter.js';
 import { Link } from '@inertiajs/react';
 
-export default function Welcome() {
-    console.clear();
-    const { todaysFreeTips } = usePage().props;
-
+export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState('home');
     const [activeFeature, setActiveFeature] = useState(0);
@@ -29,11 +28,13 @@ export default function Welcome() {
     const [tipsPerWeek, setTipsPerWeek] = useState([10]);
     const [timeFrame, setTimeFrame] = useState([12]); // months
 
-    const yesterdaysWinningTips = getYesterdaysWinningTips([]);
+    // const yesterdaysWinningTips = getYesterdaysWinningTips(yesterdaysTips);
+    const yesterdaysWinningTips = yesterdaysTips;
+    console.log(yesterdaysWinningTips);
 
     // Calculate profit projection
     const calculateProfit = () => {
-        const avgSuccessRate = 0.90; // 90% success rate
+        const avgSuccessRate = 0.9; // 90% success rate
         const avgOdds = 1.75; // Average odds
         const totalTips = tipsPerWeek[0] * 4.33 * timeFrame[0]; // Tips per week * weeks per month * months
         const successfulTips = Math.floor(totalTips * avgSuccessRate);
@@ -43,7 +44,7 @@ export default function Welcome() {
         const totalLosses = failedTips * betAmount[0];
         const netProfit = totalWinnings - totalLosses;
         const totalInvestment = totalTips * betAmount[0];
-        const roi = ((netProfit / totalInvestment) * 100);
+        const roi = (netProfit / totalInvestment) * 100;
 
         return {
             totalTips,
@@ -52,7 +53,7 @@ export default function Welcome() {
             totalLosses: Math.round(totalLosses),
             netProfit: Math.round(netProfit),
             totalInvestment: Math.round(totalInvestment),
-            roi: Math.round(roi * 10) / 10 // Round to 1 decimal
+            roi: Math.round(roi * 10) / 10, // Round to 1 decimal
         };
     };
 
@@ -270,7 +271,7 @@ export default function Welcome() {
                                     size="lg"
                                     className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-4 text-lg font-bold text-white shadow-lg shadow-orange-500/25 hover:from-orange-600 hover:to-red-600"
                                 >
-                                    <Link className={"flex items-center justify-center"} href={route('register')}>
+                                    <Link className={'flex items-center justify-center'} href={route('register')}>
                                         Start Earning With Our Tips
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </Link>
@@ -281,23 +282,17 @@ export default function Welcome() {
                 </section>
 
                 {/* Features Section */}
-                <section
-                    id="features"
-                    ref={featuresRef}
-                    className="bg-black features-section"
-                    style={{ '--features-count': features.length }}
-                >
-                    <div className="sticky top-0 h-screen flex items-center">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-
+                <section id="features" ref={featuresRef} className="features-section bg-black" style={{ '--features-count': features.length }}>
+                    <div className="sticky top-0 flex h-screen items-center">
+                        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16">
                                 {/* Left Side - Text Content */}
                                 <div className="space-y-6 lg:space-y-8">
                                     <div className="mb-8 lg:mb-12">
-                                        <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 lg:mb-6">
+                                        <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl lg:mb-6 lg:text-5xl xl:text-6xl">
                                             Why <span className="text-orange-500">Punters</span> Choose Us
                                         </h2>
-                                        <p className="text-lg lg:text-xl text-gray-500">
+                                        <p className="text-lg text-gray-500 lg:text-xl">
                                             {activeFeature + 1} of {features.length}
                                         </p>
                                     </div>
@@ -308,24 +303,24 @@ export default function Welcome() {
                                             className="transition-all duration-700 ease-out"
                                             style={{
                                                 opacity: 1,
-                                                transform: 'translateY(0px)'
+                                                transform: 'translateY(0px)',
                                             }}
                                         >
-                                            <div className="flex items-center space-x-3 lg:space-x-4 mb-4 lg:mb-6">
-                                                <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-orange-500 via-orange-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/25">
+                                            <div className="mb-4 flex items-center space-x-3 lg:mb-6 lg:space-x-4">
+                                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 via-orange-400 to-red-500 shadow-lg shadow-orange-500/25 lg:h-16 lg:w-16">
                                                     {(() => {
                                                         const IconComponent = features[activeFeature].icon;
                                                         return IconComponent ? <IconComponent className="h-8 w-8 text-white" /> : null;
                                                     })()}
                                                 </div>
-                                                <div className="w-16 lg:w-20 h-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
+                                                <div className="h-1 w-16 rounded-full bg-gradient-to-r from-orange-500 to-red-500 lg:w-20"></div>
                                             </div>
 
-                                            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 lg:mb-6">
+                                            <h3 className="mb-4 text-2xl font-bold text-white sm:text-3xl lg:mb-6 lg:text-4xl">
                                                 {features[activeFeature].title}
                                             </h3>
 
-                                            <p className="text-base lg:text-xl text-gray-400 leading-relaxed max-w-lg">
+                                            <p className="max-w-lg text-base leading-relaxed text-gray-400 lg:text-xl">
                                                 {features[activeFeature].description}
                                             </p>
                                         </div>
@@ -348,74 +343,72 @@ export default function Welcome() {
 
                                 {/* Right Side - Enhanced Visual Content */}
                                 <div className="relative">
-                                    <FeaturesVisualContent
-                                        activeFeature={activeFeature}
-                                        features={features}
-                                    />
+                                    <FeaturesVisualContent activeFeature={activeFeature} features={features} />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Yesterday's Winners Section */}
-                {/*{yesterdaysWinningTips.length > 0 && (*/}
-                {/*  <section className="py-16 bg-gray-900">*/}
-                {/*    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">*/}
-                {/*      <div className="text-center mb-12">*/}
-                {/*        <h2 className="text-3xl font-bold text-white mb-4">Yesterday's Winners</h2>*/}
-                {/*        <p className="text-gray-400">See the winning tips from yesterday's matches</p>*/}
-                {/*      </div>*/}
+                {/*Yesterday's Winners Section*/}
+                {yesterdaysWinningTips.length > 0 && false && (
+                    <section className="bg-gray-900 py-16">
+                        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <div className="mb-12 text-center">
+                                <h2 className="mb-4 text-3xl font-bold text-white">Yesterday's Winners</h2>
+                                <p className="text-gray-400">See the winning tips from yesterday's matches</p>
+                            </div>
 
-                {/*      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">*/}
-                {/*        {yesterdaysWinningTips.slice(0, 8).map((tip, index) => (*/}
-                {/*          <Card key={index} className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">*/}
-                {/*            <CardContent className="p-4">*/}
-                {/*              <div className="flex items-center space-x-2 mb-2">*/}
-                {/*                <CheckCircle className="h-4 w-4 text-green-500" />*/}
-                {/*                <Badge className="bg-green-500 text-white text-xs">WON</Badge>*/}
-                {/*              </div>*/}
-                {/*              <h4 className="text-white font-semibold text-sm mb-1">{tip.match}</h4>*/}
-                {/*              <p className="text-gray-400 text-xs mb-2">{tip.league}</p>*/}
-                {/*              <div className="flex justify-between items-center">*/}
-                {/*                <span className="text-orange-400 font-medium text-sm">{tip.tip}</span>*/}
-                {/*                <span className="text-white font-bold">{tip.odds}</span>*/}
-                {/*              </div>*/}
-                {/*            </CardContent>*/}
-                {/*          </Card>*/}
-                {/*        ))}*/}
-                {/*      </div>*/}
-                {/*    </div>*/}
-                {/*  </section>*/}
-                {/*)}*/}
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                {yesterdaysWinningTips.slice(0, 8).map((tip, index) => (
+                                    <Card key={index} className="hover:bg-gray-750 border-gray-700 bg-gray-800 transition-colors">
+                                        <CardContent className="p-4">
+                                            <div className="mb-2 flex items-center space-x-2">
+                                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                                <Badge className="bg-green-500 text-xs text-white">WON</Badge>
+                                            </div>
+                                            <DebugJson data={tip}></DebugJson>
+                                            <h4 className="mb-1 text-sm font-semibold text-white">
+                                                {tip.match.home_team} vs {tip.match.away_team}
+                                            </h4>
+                                            <p className="mb-2 text-xs text-gray-400">{tip.match.league}</p>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-sm font-medium text-orange-400">{tip.prediction_type}</span>
+                                                <span className="text-sm font-medium text-green-400">{tip.prediction_value}</span>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* Testimonials Section */}
-                <section className="py-16 bg-black">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center mb-12">
-                            <h2 className="text-3xl font-bold text-white mb-4">What Our Members Say</h2>
+                <section className="bg-black py-16">
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="mb-12 text-center">
+                            <h2 className="mb-4 text-3xl font-bold text-white">What Our Members Say</h2>
                             <p className="text-gray-400">Join thousands of satisfied bettors</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                             {testimonials.map((testimonial, index) => (
-                                <Card key={index} className="bg-gray-900 border-gray-800">
+                                <Card key={index} className="border-gray-800 bg-gray-900">
                                     <CardContent className="p-6">
-                                        <div className="flex items-center space-x-1 mb-4">
+                                        <div className="mb-4 flex items-center space-x-1">
                                             {[...Array(testimonial.rating)].map((_, i) => (
-                                                <Star key={i} className="h-4 w-4 text-yellow-500 fill-current" />
+                                                <Star key={i} className="h-4 w-4 fill-current text-yellow-500" />
                                             ))}
                                         </div>
-                                        <p className="text-gray-300 mb-4 italic">"{testimonial.comment}"</p>
+                                        <p className="mb-4 text-gray-300 italic">"{testimonial.comment}"</p>
                                         <div className="flex items-center space-x-3">
                                             <Avatar className="h-10 w-10">
-                                                <AvatarFallback className="bg-orange-500 text-white">
-                                                    {testimonial.name.charAt(0)}
-                                                </AvatarFallback>
+                                                <AvatarFallback className="bg-orange-500 text-white">{testimonial.name.charAt(0)}</AvatarFallback>
                                             </Avatar>
                                             <div>
-                                                <p className="text-white font-semibold">{testimonial.name}</p>
-                                                <p className="text-gray-400 text-sm">{testimonial.location}</p>
+                                                <p className="font-semibold text-white">{testimonial.name}</p>
+                                                <p className="text-sm text-gray-400">{testimonial.location}</p>
                                             </div>
                                         </div>
                                     </CardContent>
@@ -426,18 +419,13 @@ export default function Welcome() {
                 </section>
 
                 {/* CTA Section */}
-                <section className="py-16 bg-gradient-to-r from-orange-500 to-red-500">
-                    <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-                        <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Winning?</h2>
-                        <p className="text-xl text-orange-100 mb-8">
-                            Join over 5,000 successful bettors and start your winning journey today.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button
-                                size="lg"
-                                className="bg-white text-orange-500 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-2xl"
-                            >
-                                <Link href={route('register')} className="flex items-center justify-center w-full">
+                <section className="bg-gradient-to-r from-orange-500 to-red-500 py-16">
+                    <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+                        <h2 className="mb-4 text-3xl font-bold text-white">Ready to Start Winning?</h2>
+                        <p className="mb-8 text-xl text-orange-100">Join over 5,000 successful bettors and start your winning journey today.</p>
+                        <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                            <Button size="lg" className="rounded-2xl bg-white px-8 py-4 text-lg font-semibold text-orange-500 hover:bg-gray-100">
+                                <Link href={route('register')} className="flex w-full items-center justify-center">
                                     Get Started Now
                                     <ArrowRight className="ml-2 h-5 w-5" />
                                 </Link>
@@ -445,11 +433,9 @@ export default function Welcome() {
                             <Button
                                 size="lg"
                                 variant="outline"
-                                className="border-2 border-white text-white hover:bg-white hover:text-orange-500 px-8 py-4 text-lg rounded-2xl"
+                                className="rounded-2xl border-2 border-white px-8 py-4 text-lg text-white hover:bg-white hover:text-orange-500"
                             >
-                                <Link href={route('about-us')}>
-                                    Learn More
-                                </Link>
+                                <Link href={route('about-us')}>Learn More</Link>
                             </Button>
                         </div>
                     </div>
@@ -457,7 +443,6 @@ export default function Welcome() {
 
                 {/* Footer */}
                 <UserFooter />
-
             </div>
         </>
     );
