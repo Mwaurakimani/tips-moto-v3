@@ -69,7 +69,7 @@ class PackageProcessController extends Controller
 
                     $baseQuery = Tip::query()
                         ->join('matches as m', 'm.id', '=', 'tips.match_id')
-                        ->where('m.kickoff_at', '>', now());
+                        ->where('m.kickoff_at', '>=', today());
 
                     // Apply filter only if this plan has defined groups
                     if ($filters->isNotEmpty()) {
