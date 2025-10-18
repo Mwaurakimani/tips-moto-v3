@@ -8,6 +8,8 @@ import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { AddPackageDialog } from './AddPackageDialog';
 import { PackageDetailView } from '@/pages/AdminDashboardSystem/Packages/PackageDetailView';
+import { router } from '@inertiajs/react'
+import { toast } from 'sonner';
 
 // Define subscription interface
 interface Subscription {
@@ -521,9 +523,37 @@ export function SubscriptionsPage({ availableTips = [] }: SubscriptionsPageProps
   };
 
   const handleUpdateSubscription = (updatedSubscription: Subscription) => {
-    setSubscriptions(prev => prev.map(sub =>
-      sub.id === updatedSubscription.id ? updatedSubscription : sub
-    ));
+      router.post(route('admin.packages.update', updatedSubscription.id), {
+          ...updatedSubscription
+      }, {
+          onSuccess: (page) => {
+              console.log("done");
+              return;
+              // @ts-ignore
+              setSubscriptions(prev =>
+                  prev.map(sub =>
+                      sub.id === updatedSubscription.id ? page.props.updatedSubscription : sub
+                  )
+              );
+          },
+          onError: (errors) => {
+              // Handle specific errors
+              if (errors) {
+                  // Log errors for debugging
+                  console.error('Update Subscription Errors:', errors);
+
+                  // Show user-friendly error notifications
+                  Object.values(errors).forEach(errorMessage => {
+                      toast.error(errorMessage);
+                  });
+              } else {
+                  // Generic error message
+                  toast.error('Failed to update subscription. Please try again.');
+              }
+          }
+      });
+
+
   };
 
   const handleDeleteSubscription = (subscriptionId: number) => {

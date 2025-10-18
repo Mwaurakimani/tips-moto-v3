@@ -132,13 +132,17 @@ export default function Index() {
     };
 
     const handleUpdateSubscription = (updatedSubscription) => {
-        router.post(
-            route('adminDashboard.updateTipsData', updatedSubscription.id),
+        router.put(
+            route('admin.packages.update', updatedSubscription.id),
             updatedSubscription,
             {
                 preserveScroll: true,
-                onSuccess: () => window.location.reload(),
-                onError: (errors) => console.log(errors),
+                onSuccess: () => {
+                    toast.success('Subscription updated successfully');
+                },
+                onError: (errors) => {
+                    toast.error('Failed to update subscription:contact developer');
+                },
             }
         );
     };

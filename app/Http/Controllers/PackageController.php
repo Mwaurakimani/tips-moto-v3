@@ -73,16 +73,14 @@ class PackageController extends Controller
 
     public function update(Request $request, $id)
     {
-        dump(request()->all());
         $package = SubscriptionPlan::findOrFail($id);
 
         $validated = $request->validate([
             'name' => 'required|string|max:100',
-            'description' => 'required|string|in:jackpot,match,premium',
+            'description' => 'nullable|string|in:jackpot,match,premium',
             'price' => 'required|numeric|min:0.01',
-            'tips_count' => 'required|integer|min:1',
             'interval' => 'required|string|in:day,week,month',
-            'status' => 'required|string|in:active,inactive',
+            'is_active' => 'required|boolean',
             'currency' => 'string|max:3',
             'features' => 'nullable|array'
         ]);
@@ -108,11 +106,13 @@ class PackageController extends Controller
                 'currency' => $validated['currency'] ?? $package->currency,
                 'interval' => $validated['interval'],
                 'features' => $validated['features'] ?? [
-                        'tips_per_period' => $validated['tips_count'],
-                        'package_type' => $validated['description'],
-                        'access_level' => $validated['description'] === 'premium' ? 'premium' : 'standard'
+                        'category' => $validated['features']['category'],
+                        'for' => $validated['features']['for'],
+                        'label' => $validated['features']['label'],
+                        'period_days' => $validated['features']['period_days'],
+                        'tax' => $validated['features']['tax'],
                     ],
-                'is_active' => $validated['status'] === 'active'
+                'is_active' => $validated['is_active'],
             ]);
 
             return redirect()->back()->with('success', 'Package updated successfully!');
@@ -125,7 +125,6 @@ class PackageController extends Controller
                 ->withInput();
         }
     }
-
 
 
     public function destroy($id)
@@ -141,7 +140,7 @@ class PackageController extends Controller
 
             $packageController = new PackageProcessController();
 
-            if (array_key_exists($package->name, $packageController->planToGroups)){
+            if (array_key_exists($package->name, $packageController->planToGroups)) {
                 return redirect()->back()
                     ->withErrors(['message' => 'Cannot delete A core package.']);
             }
