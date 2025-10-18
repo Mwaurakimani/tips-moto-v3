@@ -221,27 +221,32 @@ export function PackageInfoCard({ subscription, onUpdateSubscription }) {
                             </p>
                         )}
                     </div>
-
                     <div className="space-y-2">
                         <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                             <span>Status</span>
                         </div>
                         {isEditing ? (
                             <Select
-                                value={editedPackage.is_active ? 'Active' : 'Inactive'}
-                                onValueChange={(value) => updateField('is_active', value === 'Active')}
+                                value={editedPackage.is_active.toString()} // Convert boolean to string
+                                onValueChange={(value) => {
+                                    // Convert string back to boolean
+                                    updateField('is_active', value === 'true')
+                                }}
                             >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue />
+                                    <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Active">Active</SelectItem>
-                                    <SelectItem value="Inactive">Inactive</SelectItem>
+                                    <SelectItem value='true'>Active</SelectItem>
+                                    <SelectItem value='false'>Inactive</SelectItem>
                                 </SelectContent>
                             </Select>
                         ) : (
-                            <Badge className={statusBadge.className}>
-                                {statusBadge.label}
+                            <Badge
+                                variant={editedPackage.is_active ? 'default' : 'destructive'}
+                                className={statusBadge.className}
+                            >
+                                {editedPackage.is_active ? 'Active' : 'Inactive'}
                             </Badge>
                         )}
                     </div>
