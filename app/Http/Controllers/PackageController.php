@@ -77,13 +77,21 @@ class PackageController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:100',
-            'description' => 'nullable|string|in:jackpot,match,premium',
+            'description' => 'nullable|string|max:255',
+            'category' => 'nullable|string|in:jackpot,match,premium',
             'price' => 'required|numeric|min:0.01',
             'interval' => 'required|string|in:day,week,month',
             'is_active' => 'required|boolean',
-            'currency' => 'string|max:3',
-            'features' => 'nullable|array'
+            'currency' => 'nullable|string|max:3',
+            'features' => 'nullable|array',
+            'tipsData' => 'nullable|array',
+            'tips' => 'nullable|integer'
         ]);
+
+        // Normalize tipsData
+        if (!empty($validated['tipsData'])) {
+            $validated['tipsData'] = collect($validated['tipsData'])->pluck('id')->toArray();
+        }
 
         try {
             // Update slug if name changed
@@ -93,30 +101,34 @@ class PackageController extends Controller
                 $counter = 1;
 
                 while (SubscriptionPlan::where('slug', $slug)->where('id', '!=', $id)->exists()) {
-                    $slug = $originalSlug . '-' . $counter;
+                    $slug = "{$originalSlug}-{$counter}";
                     $counter++;
                 }
+
                 $validated['slug'] = $slug;
             }
 
+            // Merge features safely
+            $features = $validated['features'] ?? [];
+            $features = array_merge($features, [
+                'tips' => $validated['tips'] ?? null,
+                'tips_list' => $validated['tipsData'] ?? [],
+            ]);
+
+            // Update package
             $package->update([
                 'name' => $validated['name'],
                 'slug' => $validated['slug'] ?? $package->slug,
                 'price' => $validated['price'],
                 'currency' => $validated['currency'] ?? $package->currency,
                 'interval' => $validated['interval'],
-                'features' => $validated['features'] ?? [
-                        'category' => $validated['features']['category'],
-                        'for' => $validated['features']['for'],
-                        'label' => $validated['features']['label'],
-                        'period_days' => $validated['features']['period_days'],
-                        'tax' => $validated['features']['tax'],
-                    ],
+                'features' => $features,
                 'is_active' => $validated['is_active'],
+                'description' => $validated['description'] ?? $package->description,
+                'category' => $validated['category'] ?? $package->category ?? null,
             ]);
 
             return redirect()->back()->with('success', 'Package updated successfully!');
-
         } catch (\Exception $e) {
             \Log::error('Package update failed: ' . $e->getMessage());
 
@@ -125,7 +137,6 @@ class PackageController extends Controller
                 ->withInput();
         }
     }
-
 
     public function destroy($id)
     {
