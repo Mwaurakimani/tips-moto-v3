@@ -140,7 +140,7 @@ export default function Index() {
                 onSuccess: () => {
                     toast.success('Subscription updated successfully');
                     setTimeout(() => {
-                        router.visit(route('admin.packages.index'))
+                        window.location.reload()
                     })
                 },
                 onError: (errors) => {
