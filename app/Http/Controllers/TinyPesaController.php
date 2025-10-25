@@ -9,6 +9,6 @@ class TinyPesaController extends Controller
 {
     public function __invoke(Request $requests): void
     {
-        Log::info('TinyPesaController', $requests->all());
+        Log::info($requests->all());
     }
 }
