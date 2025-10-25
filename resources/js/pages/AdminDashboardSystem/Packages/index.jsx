@@ -139,6 +139,9 @@ export default function Index() {
                 preserveScroll: true,
                 onSuccess: () => {
                     toast.success('Subscription updated successfully');
+                    setTimeout(() => {
+                        router.visit(route('admin.packages.index'))
+                    })
                 },
                 onError: (errors) => {
                     toast.error('Failed to update subscription:contact developer');
