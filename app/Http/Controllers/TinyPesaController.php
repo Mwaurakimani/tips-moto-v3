@@ -9,6 +9,6 @@ class TinyPesaController extends Controller
 {
     public function __invoke(Request $requests): void
     {
-        Log::info('TinyPesa Webhook Received');;
+        Log::info('TinyPesa Webhook Received');
     }
 }
