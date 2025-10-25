@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\PostMatchesController;
+use App\Http\Controllers\TinyPesaController;
 use App\Models\League;
 use App\Models\MatchModel;
 use App\Models\SubscriptionPlan;
@@ -264,7 +265,7 @@ Route::post('onit/callback', function (Request $request) {
     return response()->json(['message' => 'Callback processed']);
 })->name('onit_callback');
 
-Route::post('/tinyPesa/response', PostMatchesController::class);
+Route::post('/tinyPesa/response', TinyPesaController::class);
 
 Route::post('tinypesa/callback', function (Request $request) {
     Log::info('Tiny callback payload', ['payload' => $request->all()]);
