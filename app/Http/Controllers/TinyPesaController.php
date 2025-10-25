@@ -9,7 +9,7 @@ class TinyPesaController extends Controller
 {
     public function __invoke(Request $requests): void
     {
-        $body = json_decode((string) $requests->all(),true);
+        $body = json_decode($requests->all(),true);
         Log::info('TinyPesa Webhook:', $body);
     }
 }
