@@ -9,7 +9,7 @@ class TinyPesaController extends Controller
 {
     public function __invoke(Request $requests): void
     {
-        $body = $requests->getContent();
+        $body = json_decode($requests->getContent());
         Log::info( $body);
     }
 }
