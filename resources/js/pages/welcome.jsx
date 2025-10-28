@@ -367,7 +367,7 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
                                                 <CheckCircle className="h-4 w-4 text-green-500" />
                                                 <Badge className="bg-green-500 text-xs text-white">WON</Badge>
                                             </div>
-                                            <DebugJson data={tip}></DebugJson>
+                                            {/*<DebugJson data={tip}></DebugJson>*/}
                                             <h4 className="mb-1 text-sm font-semibold text-white">
                                                 {tip.match.home_team} vs {tip.match.away_team}
                                             </h4>
