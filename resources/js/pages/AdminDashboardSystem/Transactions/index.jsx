@@ -227,7 +227,7 @@ export default function TransactionsPage() {
                                                 <TableCell>
                                                     <div>
                                                         <div className="font-medium text-black dark:text-white">{transaction.user}</div>
-                                                        <div className="text-sm text-gray-500 dark:text-gray-400">{transaction.email}</div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400">{transaction.phone}</div>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
