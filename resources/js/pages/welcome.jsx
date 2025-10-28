@@ -351,7 +351,7 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
                 </section>
 
                 {/*Yesterday's Winners Section*/}
-                {yesterdaysWinningTips.length > 0 && false && (
+                {yesterdaysWinningTips.length > 0 && (
                     <section className="bg-gray-900 py-16">
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="mb-12 text-center">
