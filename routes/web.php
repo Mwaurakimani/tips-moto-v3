@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Resources\TipResource;
 use App\Models\Tip;
+use App\SystemClasses\Repositories\TipRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -10,16 +11,17 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 Route::get('/', function (Request $request) {
+    // Get today's free tips
+    $todaysTips = TipRepository::getTodaysFreeTips();
+    $formattedTodaysTips = TipResource::collection($todaysTips)->toArray($request);
 
-    $tips = TipResource::collection(Tip::with('match.league')
-        ->where('is_free', true)
-        ->where('free_for_date', Carbon::today())
-        ->take(3)
-        ->orderBy('created_at', 'desc')
-        ->get())->toArray($request);
+    // Get yesterday's winning/losing tips
+    $yesterdaysTips = TipRepository::getYesterdaysTips();
+    $formattedYesterdaysTips = TipResource::collection($yesterdaysTips)->toArray($request);
+
     return Inertia::render('welcome', [
-        'todaysFreeTips' => $tips,
-        'yesterdaysTips' => $tips
+        'todaysFreeTips' => $formattedTodaysTips,
+        'yesterdaysTips' => $formattedYesterdaysTips,
     ]);
 })->name('home');
 

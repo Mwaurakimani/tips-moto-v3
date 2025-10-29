@@ -351,7 +351,7 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
                 </section>
 
                 {/*Yesterday's Winners Section*/}
-                {yesterdaysWinningTips.length > 0 && false && (
+                {yesterdaysWinningTips.length > 0 && (
                     <section className="bg-gray-900 py-16">
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="mb-12 text-center">
@@ -374,7 +374,7 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
                                             <p className="mb-2 text-xs text-gray-400">{tip.match.league}</p>
                                             <div className="flex items-center justify-between">
                                                 <span className="text-sm font-medium text-orange-400">{tip.prediction_type}</span>
-                                                <span className="text-sm font-medium text-green-400">{tip.prediction_value}</span>
+                                                <span className="text-sm font-medium text-green-400">{tip.pick_label}</span>
                                             </div>
                                         </CardContent>
                                     </Card>

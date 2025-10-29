@@ -11,24 +11,26 @@ class TipResource extends JsonResource
         $m = $this->whenLoaded('match');
 
         return [
-            'id'               => $this->id,
-            'prediction_type'  => $this->prediction_type,
+            'id' => $this->id,
+            'prediction_type' => $this->prediction_type,
             'prediction_value' => $this->prediction_value,
-            'pick_label'       => $this->pick_label,
-            'odds'             => $this->odds,
-            'confidence'       => $this->confidence,
-            'risk_level'       => $this->risk_level,
-            'is_free'          => (bool) $this->is_free,
-            'free_for_date'    => optional($this->free_for_date)->toDateString() ?: $this->free_for_date,
-            'publish_at'       => optional($this->publish_at)->toDateTimeString() ?: $this->publish_at,
+            'pick_label' => $this->pick_label,
+            'odds' => $this->odds,
+            'confidence' => $this->confidence,
+            'risk_level' => $this->risk_level,
+            'is_free' => (bool)$this->is_free,
+            'free_for_date' => optional($this->free_for_date)->toDateString() ?: $this->free_for_date,
+            'publish_at' => optional($this->publish_at)->toDateTimeString() ?: $this->publish_at,
 
             'match' => $m ? [
-                'id'         => $m->id,
-                'league'     => optional($m->league)->name,
-                'kickoff_at' => (string) $m->kickoff_at,
-                'home_team'  => optional($m->homeTeam)->name,
-                'away_team'  => optional($m->awayTeam)->name,
+                'id' => $m->id,
+                'league' => optional($m->league)->name,
+                'kickoff_at' => (string)$m->kickoff_at,
+                'home_team' => optional($m->homeTeam)->name,
+                'away_team' => optional($m->awayTeam)->name,
             ] : null,
         ];
     }
+
+
 }
