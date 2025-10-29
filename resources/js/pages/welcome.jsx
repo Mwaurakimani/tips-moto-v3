@@ -30,7 +30,6 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
 
     // const yesterdaysWinningTips = getYesterdaysWinningTips(yesterdaysTips);
     const yesterdaysWinningTips = yesterdaysTips;
-    console.log(yesterdaysWinningTips);
 
     // Calculate profit projection
     const calculateProfit = () => {
