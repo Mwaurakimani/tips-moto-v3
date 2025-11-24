@@ -267,6 +267,10 @@ Route::post('onit/callback', function (Request $request) {
 
 Route::post('/tinyPesa/response', TinyPesaController::class);
 
+Route::any('/callback', function (Request $request) {
+    Log::info(json_encode($request->all()));
+});
+
 Route::post('tinypesa/callback', function (Request $request) {
     Log::info('Tiny callback payload', ['payload' => $request->all()]);
 
