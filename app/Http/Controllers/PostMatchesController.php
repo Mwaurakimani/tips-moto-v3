@@ -185,8 +185,8 @@ class PostMatchesController extends Controller
                                     default => null,
                                 },
                                 'GG_NG' => match ($tipData['result']) {
-                                    -1 => 'GG',
-                                    1 => 'NG',
+                                    1 => 'GG',
+                                    -1 => 'NG',
                                     default => null,
                                 },
                                 default => null,

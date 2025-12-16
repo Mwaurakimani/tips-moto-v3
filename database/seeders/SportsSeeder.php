@@ -113,9 +113,9 @@ class SportsSeeder extends Seeder
 
                             case 'GG_NG':
                             default:
-                                $valueOptions = [-1, 1]; // GG, NG
+                                $valueOptions = [-1, 1]; // NG, GG
                                 $value = Arr::random($valueOptions);
-                                $label = $value === -1 ? 'GG' : 'NG';
+                                $label = $value === 1 ? 'GG' : 'NG';
                                 break;
                         }
 
