@@ -6,14 +6,36 @@ use App\Models\Sport;
 use App\Models\Team;
 use App\Models\MatchModel;
 use App\Models\Tip;
+use App\Models\SubscriptionPlan;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PostMatchesController extends Controller
 {
+    /**
+     * Package-to-tip-type mapping
+     * Synchronized with PackageProcessController
+     */
+    protected array $planToGroups = [
+        'Full Time Scores Daily' => ['1_X_2'],
+        'Full Time Scores Weekly' => ['1_X_2'],
+        'Over/Under Market Daily' => ['Over/Under'],
+        'Over/Under Market Weekly' => ['Over/Under'],
+        'Sport Pesa Mega Jackpot' => ['1X_X2_12', '1_X_2'],
+        'Sport Pesa Mid Week Jackpot' => ['1X_X2_12', '1_X_2'],
+        'Mozzart daily jackpot' => ['1X_X2_12', '1_X_2'],
+        'Mozzart weekly jackpot' => ['1X_X2_12', '1_X_2'],
+        'Odi bets weekly jackpot' => ['1X_X2_12', '1_X_2'],
+        'Double Chances Daily' => ['1X_X2_12'],
+        'Double Chances Weekly' => ['1X_X2_12'],
+        'Goal-No Goal Daily' => ['GG_NG'],
+        'Goal-No Goal Weekly' => ['GG_NG'],
+    ];
+
     public function __invoke(Request $request): JsonResponse
     {
         // Accept raw JSON object like: { "max": [...], "avg": [...], "min": [...] }
@@ -31,7 +53,9 @@ class PostMatchesController extends Controller
         $totalProcessed = 0;
         $newMatches     = 0;
         $newTips        = 0;
+        $packagesUpdated = 0;
         $skipped        = [];
+        $createdTipIds  = [];
 
         DB::transaction(function () use (
             $data,
@@ -39,7 +63,9 @@ class PostMatchesController extends Controller
             &$totalProcessed,
             &$newMatches,
             &$newTips,
-            &$skipped
+            &$packagesUpdated,
+            &$skipped,
+            &$createdTipIds
         ) {
             foreach ($data as $confidenceLevel => $matches) {
                 if (!is_iterable($matches)) {
@@ -166,7 +192,7 @@ class PostMatchesController extends Controller
                                 default => null,
                             };
 
-                            Tip::updateOrCreate(
+                            $tip = Tip::updateOrCreate(
                                 [
                                     'match_id'        => $match->id,
                                     'prediction_type' => $tipType,
@@ -177,14 +203,20 @@ class PostMatchesController extends Controller
                                     'risk_level'       => $riskLevel,
                                     'is_free'          => 0,
                                     'free_for_date'    => Carbon::today(),
+                                    'odds'             => $tipData['odds'][0] ?? null,
                                 ]
                             );
 
+                            // Track created tip IDs by type for package assignment
+                            $createdTipIds[$tipType][] = $tip->id;
                             $newTips++;
                         }
                     }
                 }
             }
+
+            // Auto-assign tips to packages
+            $packagesUpdated = $this->assignTipsToPackages($createdTipIds);
         }, 3);
 
         return response()->json([
@@ -192,8 +224,59 @@ class PostMatchesController extends Controller
             'processed'       => $totalProcessed,
             'new_matches'     => $newMatches,
             'new_tips'        => $newTips,
+            'packages_updated' => $packagesUpdated,
             'skipped'         => $skipped,
         ]);
+    }
+
+    /**
+     * Auto-assign created tips to their respective packages based on tip type
+     */
+    protected function assignTipsToPackages(array $tipIdsByType): int
+    {
+        $packagesUpdated = 0;
+
+        // Get all active packages
+        $packages = SubscriptionPlan::where('is_active', true)->get();
+
+        foreach ($packages as $package) {
+            // Get tip types this package should contain
+            $packageTipTypes = $this->planToGroups[$package->name] ?? [];
+
+            if (empty($packageTipTypes)) {
+                continue; // Skip packages with no defined tip types
+            }
+
+            // Get current features
+            $features = $package->features ?? [];
+            $currentTipsList = $features['tips_list'] ?? [];
+
+            // Collect new tip IDs matching this package's tip types
+            $newTipIds = [];
+            foreach ($packageTipTypes as $tipType) {
+                if (isset($tipIdsByType[$tipType])) {
+                    $newTipIds = array_merge($newTipIds, $tipIdsByType[$tipType]);
+                }
+            }
+
+            if (empty($newTipIds)) {
+                continue; // No new tips for this package
+            }
+
+            // Merge with existing tips (avoid duplicates)
+            $updatedTipsList = array_values(array_unique(array_merge($currentTipsList, $newTipIds)));
+
+            // Update package features
+            $features['tips_list'] = $updatedTipsList;
+            $features['tips'] = count($updatedTipsList);
+
+            $package->update(['features' => $features]);
+            $packagesUpdated++;
+
+            Log::info("Package '{$package->name}' updated with " . count($newTipIds) . " new tips. Total: " . count($updatedTipsList));
+        }
+
+        return $packagesUpdated;
     }
 
     private function mapResult($val): string

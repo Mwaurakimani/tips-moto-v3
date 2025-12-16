@@ -11,7 +11,8 @@ export interface Match {
     score_home?: number | null; score_away?: number | null; league?: League; home_team?: Team; away_team?: Team;
 }
 
-export type PredictionType = '1_X_2' | '1X_X2_12' | 'GG-NG';
+// Standardized on underscore format for consistency with backend
+export type PredictionType = '1_X_2' | '1X_X2_12' | 'GG_NG' | 'Over/Under';
 export type RiskLevel = 'low' | 'mid' | 'high';
 export type TipResult = 'pending' | 'won' | 'lost' | 'void' | 'canceled';
 export interface Tip {

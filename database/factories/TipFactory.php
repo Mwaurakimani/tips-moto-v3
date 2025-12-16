@@ -13,7 +13,7 @@ class TipFactory extends Factory
         $labels = ['1','X','2','1/X','X/2','1/2','GG','NG'];
         return [
             'match_id' => MatchModel::factory(),
-            'prediction_type' => fake()->randomElement(['1_X_2','1X_X2_12','GG-NG']),
+            'prediction_type' => fake()->randomElement(['1_X_2','1X_X2_12','GG_NG']),
             'prediction_value' => fake()->randomElement($values),
             'pick_label' => fake()->randomElement($labels),
             'odds' => fake()->randomFloat(2, 1.5, 3.5),

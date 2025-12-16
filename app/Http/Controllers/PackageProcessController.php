@@ -13,11 +13,16 @@ use Inertia\Inertia;
 
 class PackageProcessController extends Controller
 {
+    /**
+     * Package-to-tip-type mapping
+     * IMPORTANT: Uses underscore format (GG_NG, 1_X_2, 1X_X2_12) for consistency
+     * Synchronized with PostMatchesController
+     */
     public $planToGroups = [
         'Full Time Scores Daily' => ['1_X_2'],
         'Full Time Scores Weekly' => ['1_X_2'],
-        'Over/Under Market Daily' => [],
-        'Over/Under Market Weekly' => [],
+        'Over/Under Market Daily' => ['Over/Under'],
+        'Over/Under Market Weekly' => ['Over/Under'],
         'Sport Pesa Mega Jackpot' => ['1X_X2_12', '1_X_2'],
         'Sport Pesa Mid Week Jackpot' => ['1X_X2_12', '1_X_2'],
         'Mozzart daily jackpot' => ['1X_X2_12', '1_X_2'],
@@ -25,8 +30,8 @@ class PackageProcessController extends Controller
         'Odi bets weekly jackpot' => ['1X_X2_12', '1_X_2'],
         'Double Chances Daily' => ['1X_X2_12'],
         'Double Chances Weekly' => ['1X_X2_12'],
-        'Goal-No Goal Daily' => ['GG-NG'],
-        'Goal-No Goal Weekly' => ['GG-NG'],
+        'Goal-No Goal Daily' => ['GG_NG'],  // Changed from GG-NG to GG_NG
+        'Goal-No Goal Weekly' => ['GG_NG'], // Changed from GG-NG to GG_NG
     ];
 
     public function index(): \Inertia\Response

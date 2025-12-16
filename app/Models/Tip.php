@@ -23,6 +23,39 @@ class Tip extends Model
         'confidence' => 'integer',
     ];
 
+    /**
+     * Normalize prediction_type to use underscores (GG_NG, 1_X_2, 1X_X2_12)
+     * Handles both hyphen and underscore formats for backward compatibility
+     */
+    public function setPredictionTypeAttribute($value): void
+    {
+        // Normalize GG-NG to GG_NG (standardize on underscore)
+        $this->attributes['prediction_type'] = str_replace('-', '_', $value);
+    }
+
+    /**
+     * Always return prediction_type with underscores
+     */
+    public function getPredictionTypeAttribute($value): string
+    {
+        // Ensure consistency - replace any hyphens with underscores
+        return str_replace('-', '_', $value);
+    }
+
+    /**
+     * Get display label for prediction type
+     */
+    public function getPredictionTypeDisplayAttribute(): string
+    {
+        return match ($this->prediction_type) {
+            '1_X_2' => 'Full Time Result',
+            '1X_X2_12' => 'Double Chance',
+            'GG_NG' => 'Both Teams Score',
+            'Over/Under' => 'Goals Over/Under',
+            default => $this->prediction_type,
+        };
+    }
+
     public function match(): BelongsTo
     {
         return $this->belongsTo(MatchModel::class, 'match_id');

@@ -95,7 +95,7 @@ class SportsSeeder extends Seeder
                     $freeAssigned = false;
 
                     for ($t = 0; $t < $tipCount; $t++) {
-                        $predictionType = Arr::random(['1_X_2', '1X_X2_12', 'GG-NG']);
+                        $predictionType = Arr::random(['1_X_2', '1X_X2_12', 'GG_NG']);
 
                         // Build a consistent prediction value + label
                         switch ($predictionType) {
@@ -111,7 +111,7 @@ class SportsSeeder extends Seeder
                                 $label = $value === 1 ? '1/X' : ($value === 0 ? 'X/2' : '1/2');
                                 break;
 
-                            case 'GG-NG':
+                            case 'GG_NG':
                             default:
                                 $valueOptions = [-1, 1]; // NG, GG
                                 $value = Arr::random($valueOptions);
