@@ -83,9 +83,30 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
         }
     }, [activeFeature, features.length]);
 
+    //create a timeout to display the pop up after 3 sec
+    useEffect(() => {
+        setTimeout(() => {
+            document.getElementById("display-pop-up").style.display = "block";
+        }, 3000);
+    })
+
+    const closePopUp = () => {
+        document.getElementById("display-pop-up").style.display = "none";
+    }
+
     return (
         <>
             <Head title="Welcome" />
+            <div id={"display-pop-up"} className={"hidden w-screen h-screen bg-black/90 fixed top-0 left-0 z-[1000]"}>
+                <div className={"w-screen h-screen flex items-center justify-center"}>
+                    <div className={"relative h-[400px] overflow-hidden bg-white rounded-md"}>
+                        <button onClick={closePopUp} type={"button"} className={"bg-black/50 px-3 py-1 rounded text-sm  absolute top-1 right-1"} >close</button>
+                        <div className={"h-full"}>
+                            <img className={"w-full h-full object-contain"} src={"/storage/system/marketing/okoa_njaanuary.png"} alt={"Tips Moto V3"}/>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="min-h-screen bg-black">
                 {/* Header */}
                 <UserHeader currentPage="home" />
