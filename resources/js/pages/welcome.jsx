@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback } from '@/pages/tips-moto/components/ui/avatar.j
 import { UserFooter } from '@/pages/tips-moto/components/UserFooter.js';
 import { Link } from '@inertiajs/react';
 
-export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
+export default function Welcome({ todaysFreeTips, yesterdaysTips, todayFreeTipsMessage }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState('home');
     const [activeFeature, setActiveFeature] = useState(0);
@@ -86,7 +86,7 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
     //create a timeout to display the pop up after 3 sec and have it remove the timer after first display
     useEffect(() => {
         const timer = setTimeout(() => {
-            document.getElementById("display-pop-up").style.display = "block";
+            // document.getElementById("display-pop-up").style.display = "block";
         }, 3000);
         return () => clearTimeout(timer);
     }, []);
@@ -114,7 +114,7 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips }) {
                 <UserHeader currentPage="home" />
 
                 {/*Hero Section*/}
-                <HeroSection todaysFreeTips={todaysFreeTips} />
+                <HeroSection todaysFreeTips={todaysFreeTips} todayFreeTipsMessage={todayFreeTipsMessage} />
 
                 {/* Stats Section */}
                 <section className="bg-gray-900 py-16 text-white">

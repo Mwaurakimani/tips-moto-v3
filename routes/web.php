@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomePageController;
 use App\Http\Resources\TipResource;
 use App\Models\Tip;
 use App\SystemClasses\Repositories\TipRepository;
@@ -10,20 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
-Route::get('/', function (Request $request) {
-    // Get today's free tips
-    $todaysTips = TipRepository::getTodaysFreeTips();
-    $formattedTodaysTips = TipResource::collection($todaysTips)->toArray($request);
-
-    // Get yesterday's winning/losing tips
-    $yesterdaysTips = TipRepository::getYesterdaysTips();
-    $formattedYesterdaysTips = TipResource::collection($yesterdaysTips)->toArray($request);
-
-    return Inertia::render('welcome', [
-        'todaysFreeTips' => $formattedTodaysTips,
-        'yesterdaysTips' => $formattedYesterdaysTips,
-    ]);
-})->name('home');
+Route::get('/',[HomePageController::class,'index'])->name('home');
 
 Route::get('/tips', function () {
     return Inertia::render('Home/Pages/Tips');

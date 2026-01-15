@@ -6,8 +6,10 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 
-export function HeroSection({ todaysFreeTips }) {
+export function HeroSection({ todaysFreeTips,todayFreeTipsMessage }) {
     const { user } = usePage().props.auth;
+
+    console.log(todayFreeTipsMessage);
 
     return (
         <section id="home" className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-black to-gray-900 py-12 lg:py-20">
@@ -110,7 +112,7 @@ export function HeroSection({ todaysFreeTips }) {
                                 <div className="space-y-6">
                                     <div className="flex items-center justify-between text-white">
                                         <h3 className="text-xl font-bold">Today's Free Tips</h3>
-                                        <Badge className="bg-green-500 text-white">Live</Badge>
+                                        {/*<Badge className="bg-green-500 text-white">Live</Badge>*/}
                                     </div>
 
                                     <div className="space-y-4">
@@ -128,12 +130,18 @@ export function HeroSection({ todaysFreeTips }) {
                                                     <Badge className="bg-green-500 text-white">Free</Badge>
                                                 </div>
                                                 <div className="flex items-center justify-between">
-                                                    {user ? (
+                                                    {user && todayFreeTipsMessage === "" ? (
                                                         <span className="font-bold text-orange-400">{tip.pick_label}</span>
                                                     ) : (
+                                                        todayFreeTipsMessage === 'Log in to view' ? (
                                                         <Link href={route('login')} className={'rounded bg-orange-400 px-3 py-2 text-white'}>
-                                                            Log In to view
+                                                            {todayFreeTipsMessage}
                                                         </Link>
+                                                            ) : (
+                                                        <Link href={route('dashboard.packages')} className={'rounded bg-orange-400 px-3 py-2 text-white'}>
+                                                            {todayFreeTipsMessage}
+                                                        </Link>
+                                                        )
                                                     )}
                                                 </div>
                                             </div>
