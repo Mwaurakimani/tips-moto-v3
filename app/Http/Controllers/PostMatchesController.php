@@ -264,7 +264,8 @@ class PostMatchesController extends Controller
             }
 
             // Merge with existing tips (avoid duplicates)
-            $updatedTipsList = array_values(array_unique(array_merge($currentTipsList, $newTipIds)));
+//            $updatedTipsList = array_values(array_unique(array_merge($currentTipsList, $newTipIds)));
+            $updatedTipsList = array_values(array_unique($newTipIds));
 
             // Update package features
             $features['tips_list'] = $updatedTipsList;

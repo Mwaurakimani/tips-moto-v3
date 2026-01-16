@@ -96,6 +96,7 @@ export function PackageDetailView({ subscription, onBack, onUpdateSubscription, 
 
                     {/*    /!* Quick Actions *!/*/}
                     <PackageQuickActions onDeleteClick={handleDeleteClick} />
+
                 </div>
             </div>
 
