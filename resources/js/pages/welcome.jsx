@@ -11,7 +11,6 @@ import { ArrowRight, Award, BarChart3, Calculator, CheckCircle, DollarSign, Shie
 import { useEffect, useRef, useState } from 'react';
 // import {  getYesterdaysWinningTips } from '@/pages/tips-moto/components/utils/homepage-utils.js';
 import { Badge } from '@/components/ui/badge.js';
-import DebugJson from '@/components/ui/JsonDebug.js';
 import { FeaturesVisualContent } from '@/pages/tips-moto/components/sections/FeaturesVisualContent.js';
 import { Avatar, AvatarFallback } from '@/pages/tips-moto/components/ui/avatar.js';
 import { UserFooter } from '@/pages/tips-moto/components/UserFooter.js';
@@ -86,25 +85,30 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips, todayFreeTipsM
     //create a timeout to display the pop up after 3 sec and have it remove the timer after first display
     useEffect(() => {
         const timer = setTimeout(() => {
-            // document.getElementById("display-pop-up").style.display = "block";
+            document.getElementById("display-pop-up").style.display = "block";
         }, 3000);
         return () => clearTimeout(timer);
     }, []);
 
-
     const closePopUp = () => {
-        document.getElementById("display-pop-up").style.display = "none";
-    }
+        document.getElementById('display-pop-up').style.display = 'none';
+    };
 
     return (
         <>
             <Head title="Welcome" />
-            <div id={"display-pop-up"} className={"hidden w-screen h-screen bg-black/90 fixed top-0 left-0 z-[1000]"}>
-                <div className={"w-screen h-screen flex items-center justify-center"}>
-                    <div className={"relative h-[400px] overflow-hidden bg-white rounded-md"}>
-                        <button onClick={closePopUp} type={"button"} className={"bg-black/50 px-3 py-1 rounded text-sm  absolute top-1 right-1"} >close</button>
-                        <div className={"h-full"}>
-                            <img className={"w-full h-full object-contain"} src={"/storage/system/marketing/okoa_njaanuary.png"} alt={"Tips Moto V3"}/>
+            <div id={'display-pop-up'} className={'fixed top-0 left-0 z-[1000] hidden h-screen w-screen bg-black/90'}>
+                <div className={'flex h-screen w-screen items-center justify-center'}>
+                    <div className={'relative h-[400px] overflow-hidden rounded-md bg-white'}>
+                        <button onClick={closePopUp} type={'button'} className={'absolute top-1 right-1 rounded bg-black/50 px-3 py-1 text-sm'}>
+                            close
+                        </button>
+                        <div className={'h-full'}>
+                            <img
+                                className={'h-full w-full object-contain'}
+                                src={'/storage/system/marketing/okoa_njaanuary.png'}
+                                alt={'Tips Moto V3'}
+                            />
                         </div>
                     </div>
                 </div>
