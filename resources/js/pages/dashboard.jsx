@@ -6,7 +6,7 @@ import { UserDashboardOverview } from '@/pages/tips-moto/components/UserDashboar
 
 export default function Dashboard() {
     const { props } = usePage();
-    const { matches = [], stats = {} } = props;
+    const { matches = [], stats = {}, todayFreeTipsMessage = '' } = props;
 
     // Get user from layout context or props
     const currentUser = props.auth?.user;
@@ -18,6 +18,7 @@ export default function Dashboard() {
                 currentUser={currentUser}
                 allMatches={matches}
                 stats={stats}
+                todayFreeTipsMessage={todayFreeTipsMessage}
             />
         </>
     );

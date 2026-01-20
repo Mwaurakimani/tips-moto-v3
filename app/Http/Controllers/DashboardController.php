@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Api\UserPackagesController;
 use App\Http\Resources\TipResource;
 use App\Models\SubscriptionPlan;
+use App\Models\User;
+use App\SystemClasses\Repositories\TipRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -27,14 +29,14 @@ class DashboardController extends AbstractTipController
     {
         $user = $request->user();
 
-        $tips = TipResource::collection(Tip::with('match.league')
-            ->where('is_free', true)
-            ->where('free_for_date', Carbon::today())
-            ->take(3)
-            ->orderBy('created_at', 'desc')
-            ->get())->toArray($request);
+        // Get access control message
+        $todayFreeTipsMessage = $this->getDisplayMessage();
 
-        // Get user's matches and stats
+        // Fetch today's free tips using repository
+        $todaysTips = TipRepository::getTodaysFreeTips(3);
+        $formattedTips = TipResource::collection($todaysTips)->toArray($request);
+
+        // Get user's upcoming matches and stats
         $matches = MatchModel::with(['tips', 'homeTeam', 'awayTeam', 'league'])
             ->where('kickoff_at', '>=', now())
             ->take(10)
@@ -44,8 +46,9 @@ class DashboardController extends AbstractTipController
         ];
 
         return Inertia::render('dashboard', [
-            'matches' => $tips,
+            'matches' => $formattedTips,
             'stats' => $stats,
+            'todayFreeTipsMessage' => $todayFreeTipsMessage,
         ]);
     }
 
@@ -105,5 +108,28 @@ class DashboardController extends AbstractTipController
         $user = $request->user();
 
         return Inertia::render('UserDashboard/DashboardAccount');
+    }
+
+    private function getDisplayMessage(): string
+    {
+        if (!auth()->check())
+            return "Log in to view";
+
+        // check if the diffrence between now and the user's created_at is greater than 3 days'
+        $createdAtIsGreaterThan3Days = User::where('id', auth()->id())->first()->created_at < now()->subDays(3);
+
+        /*
+         * check if the user has any premium package active
+         * the subscription is considered active when the end_at is greater than now and status is active
+         */
+        $hasNoPremiumPackageActive = Subscription::where('user_id', auth()->id())
+                ->where('end_at', '>', now())
+                ->where('status', 'active')
+                ->count() === 0;
+
+        if ($createdAtIsGreaterThan3Days && $hasNoPremiumPackageActive)
+            return "Purchase at least one premium package to view";
+
+        return "";
     }
 }

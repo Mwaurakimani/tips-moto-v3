@@ -58,7 +58,7 @@ export default function ForgotPassword({ status }) {
                             {status && (
                                 <Alert className="border-green-500/30 bg-green-500/10">
                                     <AlertDescription className="text-green-400">
-                                        {status}
+                                        {status} Remember to check your spam folder if you don't receive an email.'
                                     </AlertDescription>
                                 </Alert>
                             )}
