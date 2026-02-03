@@ -85,7 +85,7 @@ export default function Welcome({ todaysFreeTips, yesterdaysTips, todayFreeTipsM
     //create a timeout to display the pop up after 3 sec and have it remove the timer after first display
     useEffect(() => {
         const timer = setTimeout(() => {
-            document.getElementById("display-pop-up").style.display = "block";
+            // document.getElementById("display-pop-up").style.display = "block";
         }, 3000);
         return () => clearTimeout(timer);
     }, []);
