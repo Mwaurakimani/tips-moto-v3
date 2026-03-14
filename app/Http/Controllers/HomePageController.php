@@ -37,7 +37,7 @@ class HomePageController extends Controller
             return "Log in to view";
 
         // check if the diffrence between now and the user's created_at is greater than 3 days'
-        $createdAtIsGreaterThan3Days = User::where('id', auth()->id())->first()->created_at < now()->subDays(3);
+        $createdAtIsGreaterThan3Days = User::where('id', auth()->id())->first()->created_at < now()->subDays(7);
 
         /*
          * check if the user has any premium package active
